@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D36C5C03-D5AC-4294-99FD-B4A7FE9AAA9C</string>
+	<key>IDESourceControlProjectName</key>
+	<string>PushChatStarter</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>FBC97554AB7E2F373A911D58966AD82998910072</key>
+		<string>https://github.com/harnk/ios-whereru.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>PushChatStarter/PushChatStarter.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>FBC97554AB7E2F373A911D58966AD82998910072</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/harnk/ios-whereru.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FBC97554AB7E2F373A911D58966AD82998910072</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FBC97554AB7E2F373A911D58966AD82998910072</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ios-whereru</string>
+		</dict>
+	</array>
+</dict>
+</plist>
