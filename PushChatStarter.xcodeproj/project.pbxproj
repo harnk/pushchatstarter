@@ -35,6 +35,7 @@
 		61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EDE170425EA0049C6F9 /* ComposeViewController.m */; };
 		61489EE2170427810049C6F9 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE1170427800049C6F9 /* ChatViewController.m */; };
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
+		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
 		9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
 		9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
@@ -81,6 +82,7 @@
 		61489EE1170427800049C6F9 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		61489EE3170427A70049C6F9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		61489EE4170427A80049C6F9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
 		9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		A18058E202D844758047AD1F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +185,7 @@
 		61489EBA17041CB20049C6F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */,
 				61489EBD17041E370049C6F9 /* BubbleLefthand.png */,
 				61489EBE17041E370049C6F9 /* BubbleRighthand.png */,
 			);
@@ -271,6 +274,7 @@
 				61489EA217041C660049C6F9 /* InfoPlist.strings in Resources */,
 				61489EAA17041C660049C6F9 /* Default.png in Resources */,
 				61489EAC17041C660049C6F9 /* Default@2x.png in Resources */,
+				9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */,
 				61489EAE17041C660049C6F9 /* Default-568h@2x.png in Resources */,
 				61489EB117041C660049C6F9 /* MainStoryboard.storyboard in Resources */,
 				61489EBF17041E370049C6F9 /* BubbleLefthand.png in Resources */,

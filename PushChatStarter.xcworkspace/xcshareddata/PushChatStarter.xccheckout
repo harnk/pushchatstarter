@@ -10,31 +10,31 @@
 	<string>PushChatStarter</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>FBC97554AB7E2F373A911D58966AD82998910072</key>
-		<string>https://github.com/harnk/ios-whereru.git</string>
+		<key>9F7D7F62DE495A6A249A2A075CC7BEA62533AABB</key>
+		<string>https://github.com/harnk/pushchatstarter.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PushChatStarter/PushChatStarter.xcworkspace</string>
+	<string>PushChatStarter.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>FBC97554AB7E2F373A911D58966AD82998910072</key>
-		<string>../..</string>
+		<key>9F7D7F62DE495A6A249A2A075CC7BEA62533AABB</key>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/harnk/ios-whereru.git</string>
+	<string>https://github.com/harnk/pushchatstarter.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>FBC97554AB7E2F373A911D58966AD82998910072</string>
+	<string>9F7D7F62DE495A6A249A2A075CC7BEA62533AABB</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>FBC97554AB7E2F373A911D58966AD82998910072</string>
+			<string>9F7D7F62DE495A6A249A2A075CC7BEA62533AABB</string>
 			<key>IDESourceControlWCCName</key>
-			<string>ios-whereru</string>
+			<string>PushChatStarter</string>
 		</dict>
 	</array>
 </dict>
