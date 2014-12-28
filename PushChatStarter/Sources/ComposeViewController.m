@@ -96,7 +96,7 @@
              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
          } else {
              NSLog(@"Find request sent to all devices");
-//             [self userDidCompose:text];
+//             [self dismissViewControllerAnimated:YES completion:nil];
          }
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
          if ([self isViewLoaded]) {
@@ -141,7 +141,8 @@
 
 - (IBAction)cancelAction
 {
-	[self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+//	[self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)findAction {

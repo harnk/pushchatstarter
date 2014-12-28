@@ -30,5 +30,7 @@
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 
+- (NSString *)deviceLocation;
+
 @end
 

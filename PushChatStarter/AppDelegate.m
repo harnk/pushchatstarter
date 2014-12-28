@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ChatViewController.h"
+#import "ComposeViewController.h"
 #import "DataModel.h"
 #import "Message.h"
 
@@ -55,7 +56,15 @@ void ShowErrorAlert(NSString* text)
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
     
     NSLog(@"Received notification: %@", userInfo);
-    [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+    
+    NSString *extra = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+
+    if([extra isEqualToString:@"whereru"]) {
+        NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
+        [self postImhere:asker];
+    } else {
+        [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+    }
     
     if(application.applicationState == UIApplicationStateInactive) {
         
@@ -174,6 +183,37 @@ void ShowErrorAlert(NSString* text)
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+-(void)postImhere:(NSString *)asker
+{
+    
+    NSLog(@"Respond to WhereRU with Im Here back to asker");
+
+    ComposeViewController *getLocationData;
+    getLocationData = [[ComposeViewController alloc] init];
+    [getLocationData.locationManager startUpdatingLocation];
+    NSLog(@"Im here: %@",[getLocationData deviceLocation]);
+    
+    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
+    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+    
+    DataModel *dataModel = chatViewController.dataModel;
+    
+    NSString *text = @"Hey Im Here";
+    
+    NSDictionary *params = @{@"cmd":@"imhere",
+                             @"user_id":[dataModel userId],
+                             @"asker":asker,
+                             @"location":[getLocationData deviceLocation],
+                             @"text":text};
+    
+    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    [client
+     postPath:@"/whereru/api/api.php"
+     parameters:params
+     success:nil failure:nil];
+    
 }
 
 - (void)postUpdateRequest
