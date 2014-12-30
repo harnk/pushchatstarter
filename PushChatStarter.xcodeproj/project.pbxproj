@@ -36,6 +36,7 @@
 		61489EE2170427810049C6F9 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE1170427800049C6F9 /* ChatViewController.m */; };
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
+		9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */; };
 		9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
 		9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,8 @@
 		61489EE3170427A70049C6F9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		61489EE4170427A80049C6F9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
+		9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowMapViewController.h; sourceTree = "<group>"; };
+		9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowMapViewController.m; sourceTree = "<group>"; };
 		9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		A18058E202D844758047AD1F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,6 +213,8 @@
 				61489ED1170422A20049C6F9 /* DataModel.m */,
 				61489ED2170422A20049C6F9 /* Message.h */,
 				61489ED3170422A20049C6F9 /* Message.m */,
+				9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */,
+				9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 				61489ED5170422A20049C6F9 /* Message.m in Sources */,
 				61489ED9170424080049C6F9 /* SpeechBubbleView.m in Sources */,
 				61489EDC170424CB0049C6F9 /* MessageTableViewCell.m in Sources */,
+				9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */,
 				61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */,
 				61489EE2170427810049C6F9 /* ChatViewController.m in Sources */,
 				61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */,

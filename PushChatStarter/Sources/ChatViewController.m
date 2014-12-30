@@ -7,6 +7,7 @@
 //
 
 #import "ChatViewController.h"
+#import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "LoginViewController.h"
 #import "Message.h"
@@ -186,6 +187,16 @@
 	composeController.delegate = self;
     composeController.client = _client;
 	[self presentViewController:composeController animated:YES completion:nil];
+}
+
+- (IBAction)mapAction
+{
+    // Show the Compose screen
+    ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
+    mapController.dataModel = _dataModel;
+    mapController.delegate = self;
+    mapController.client = _client;
+    [self presentViewController:mapController animated:YES completion:nil];
 }
 
 @end
