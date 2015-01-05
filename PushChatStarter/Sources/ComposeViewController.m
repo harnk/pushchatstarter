@@ -7,6 +7,7 @@
 //
 
 #import "ComposeViewController.h"
+#import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "Message.h"
 
@@ -147,6 +148,7 @@
 
 - (IBAction)findAction {
     [self postFindRequest];
+    [self mapAction];
 }
 
 - (IBAction)saveAction
@@ -185,4 +187,15 @@
 	[self updateBytesRemaining:newText];
 	return YES;
 }
+
+- (IBAction)mapAction
+{
+    // Show the Map screen
+    ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
+    mapController.dataModel = _dataModel;
+    mapController.delegate = self;
+    mapController.client = _client;
+    [self presentViewController:mapController animated:YES completion:nil];
+}
+
 @end
