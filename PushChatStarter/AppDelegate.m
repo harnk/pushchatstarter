@@ -190,22 +190,42 @@ void ShowErrorAlert(NSString* text)
     
     NSLog(@"Respond to WhereRU with Im Here back to asker");
 
+    
+    
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+#ifdef __IPHONE_8_0
+    if(IS_OS_8_OR_LATER) {
+        // Use one or the other, not both. Depending on what you put in info.plist
+        //        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager requestAlwaysAuthorization];
+    }
+#endif
+    [self.locationManager startUpdatingLocation];
+    NSLog(@"Im over here %@", [self deviceLocation]);
+
+    
+    
+    
+    
+    
     ComposeViewController *getLocationData;
     getLocationData = [[ComposeViewController alloc] init];
-    [getLocationData.locationManager startUpdatingLocation];
-    NSLog(@"Im here: %@",[getLocationData deviceLocation]);
+//    [getLocationData.locationManager startUpdatingLocation];
+//    NSLog(@"Im here: %@",[getLocationData deviceLocation]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
     ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
     
     DataModel *dataModel = chatViewController.dataModel;
     
-    NSString *text = @"Hey Im Here";
+    NSString *text = @"Im Here";
     
     NSDictionary *params = @{@"cmd":@"imhere",
                              @"user_id":[dataModel userId],
                              @"asker":asker,
-                             @"location":[getLocationData deviceLocation],
+                             @"location":[self deviceLocation],
                              @"text":text};
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
@@ -214,6 +234,10 @@ void ShowErrorAlert(NSString* text)
      parameters:params
      success:nil failure:nil];
     
+}
+
+- (NSString *)deviceLocation {
+    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
 }
 
 - (void)postUpdateRequest
