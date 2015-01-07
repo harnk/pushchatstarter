@@ -194,6 +194,9 @@
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" type="default" id="hKK-OE-TYU"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Tw-hF-AKJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

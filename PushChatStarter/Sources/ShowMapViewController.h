@@ -21,11 +21,12 @@
 - (void)didSaveMessage:(Message*)message atIndex:(int)index;
 @end
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>{
     CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
 
+@property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;

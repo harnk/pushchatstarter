@@ -191,7 +191,7 @@ void ShowErrorAlert(NSString* text)
     NSLog(@"Respond to WhereRU with Im Here back to asker");
 
     
-    
+//    SCXTT clean this shit up
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
