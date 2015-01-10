@@ -64,6 +64,7 @@ void ShowErrorAlert(NSString* text)
         [self postImhere:asker];
     } else {
         [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
     }
     
     if(application.applicationState == UIApplicationStateInactive) {

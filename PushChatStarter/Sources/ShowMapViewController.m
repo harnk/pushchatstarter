@@ -48,11 +48,17 @@
     ann.subtitle = @"Surfing Beach";
     [self.mapView addAnnotation:ann];
     
-    [NSTimer scheduledTimerWithTimeInterval: 5
+    [NSTimer scheduledTimerWithTimeInterval: 0.001
                                      target: self
                                    selector: @selector(changeRegion)
                                    userInfo: nil
-                                    repeats: YES];
+                                    repeats: NO];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMap:)
+                                                 name:@"receivedNewMessage"
+                                               object:nil];
+
     
 }
 
@@ -70,6 +76,33 @@
     return view;
 }
 
+-(void) updatePointsOnMap:(NSNotification *)notification {
+    NSLog(@"IN ShowMapViewController wanting badly to post new locations pins");
+    NSDictionary *dict = [notification userInfo];
+    NSLog(@"I passed in userInfo into dict");
+    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"]);
+    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
+    NSLog(@"lat = %@", strings[0]);
+    NSLog(@"lon = %@", strings[1]);
+    
+    for (id<MKAnnotation> ann in _mapView.annotations)
+    {
+        if ([ann.title isEqualToString:@"User1"])
+        {
+            NSLog(@"found user1");
+            CLLocationCoordinate2D location;
+//            location = [[dict valueForKey:@"aps"] valueForKey:@"loc"];
+            
+//            location.latitude = BE2_LATITUDE + rndV1;
+//            location.longitude = BE2_LONGITUDE + rndV2;
+            location.latitude = [strings[0] doubleValue];
+            location.longitude = [strings[1] doubleValue];
+            ann.coordinate = location;
+            break;
+        }
+    }
+}
+
 -(void) changeRegion {
     NSLog(@"changeRegion is called");
     
@@ -80,8 +113,8 @@
         {
             NSLog(@"found user1");
             CLLocationCoordinate2D location;
-            float rndV1 = (((float)arc4random()/0x100000000)*0.001);
-            float rndV2 = (((float)arc4random()/0x100000000)*0.001);
+            float rndV1 = (((float)arc4random()/0x100000000)*0.101);
+            float rndV2 = (((float)arc4random()/0x100000000)*0.101);
             location.latitude = BE2_LATITUDE + rndV1;
             location.longitude = BE2_LONGITUDE + rndV2;
             ann.coordinate = location;
