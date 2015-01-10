@@ -42,11 +42,33 @@
     CLLocationCoordinate2D location;
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
+    //*******************************************************************
     VBAnnotation *ann = [[VBAnnotation alloc] initWithPosition:location];
     [ann setCoordinate:location];
-    ann.title = @"User1";
-    ann.subtitle = @"Surfing Beach";
+    ann.title = @"Harnk";
+    ann.subtitle = @"Today, 11:19 AM";
     [self.mapView addAnnotation:ann];
+    
+    //*******************************************************************
+    VBAnnotation *ann2 = [[VBAnnotation alloc] initWithPosition:location];
+    [ann2 setCoordinate:location];
+    ann2.title = @"steve";
+    ann2.subtitle = @"Today, 11:19 AM";
+    [self.mapView addAnnotation:ann2];
+    
+    //*******************************************************************
+    VBAnnotation *ann3 = [[VBAnnotation alloc] initWithPosition:location];
+    [ann3 setCoordinate:location];
+    ann3.title = @"SN6Plus";
+    ann3.subtitle = @"Today, 11:19 AM";
+    [self.mapView addAnnotation:ann3];
+    
+    //*******************************************************************
+    VBAnnotation *ann4 = [[VBAnnotation alloc] initWithPosition:location];
+    [ann4 setCoordinate:location];
+    ann4.title = @"Patty";
+    ann4.subtitle = @"Today, 11:19 AM";
+    [self.mapView addAnnotation:ann4];
     
     [NSTimer scheduledTimerWithTimeInterval: 0.001
                                      target: self
@@ -77,29 +99,26 @@
 }
 
 -(void) updatePointsOnMap:(NSNotification *)notification {
-    NSLog(@"IN ShowMapViewController wanting badly to post new locations pins");
     NSDictionary *dict = [notification userInfo];
-    NSLog(@"I passed in userInfo into dict");
     NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"]);
     NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
     NSLog(@"lat = %@", strings[0]);
     NSLog(@"lon = %@", strings[1]);
+    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+    NSLog(@"who=%@",who);
     
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
-        if ([ann.title isEqualToString:@"User1"])
+        if ([ann.title isEqualToString:@"Harnk"])
         {
-            NSLog(@"found user1");
+            NSLog(@"found Harnk");
             CLLocationCoordinate2D location;
-//            location = [[dict valueForKey:@"aps"] valueForKey:@"loc"];
-            
-//            location.latitude = BE2_LATITUDE + rndV1;
-//            location.longitude = BE2_LONGITUDE + rndV2;
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
             ann.coordinate = location;
             break;
         }
+        
     }
 }
 
