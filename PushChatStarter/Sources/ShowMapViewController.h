@@ -10,6 +10,8 @@
 #import <MapKit/MapKit.h>
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "ComposeViewController.h"
+
 #define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
 @class ShowMapViewController;
@@ -31,6 +33,7 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+
 
 - (NSString *)deviceLocation;
 

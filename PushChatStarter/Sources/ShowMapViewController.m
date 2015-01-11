@@ -12,11 +12,11 @@
 #import "Message.h"
 
 // Carpinteria
-#define CA_LATITUDE 41.739414
-#define CA_LONGITUDE -86.099170
+#define CA_LATITUDE 37
+#define CA_LONGITUDE -95
 // Beach
-#define BE_LATITUDE 41.739474
-#define BE_LONGITUDE -86.098960
+#define BE_LATITUDE 0
+#define BE_LONGITUDE 0
 #define BE2_LATITUDE 41.736207
 #define BE2_LONGITUDE -86.098724
 
@@ -35,8 +35,8 @@
     MKCoordinateRegion region;
     region.center.latitude = CA_LATITUDE;
     region.center.longitude = CA_LONGITUDE;
-    region.span.latitudeDelta = SPAN_VALUE;
-    region.span.longitudeDelta = SPAN_VALUE;
+    region.span.latitudeDelta = 50.1f;
+    region.span.longitudeDelta = 50.1f;
     [self.mapView setRegion:region animated:NO];
     
     CLLocationCoordinate2D location;
@@ -47,6 +47,8 @@
     [ann setCoordinate:location];
     ann.title = @"Harnk";
     ann.subtitle = @"Today, 11:19 AM";
+    ann.pinColor = MKPinAnnotationColorRed;
+
     [self.mapView addAnnotation:ann];
     
     //*******************************************************************
@@ -54,6 +56,8 @@
     [ann2 setCoordinate:location];
     ann2.title = @"steve";
     ann2.subtitle = @"Today, 11:19 AM";
+    ann2.pinColor = MKPinAnnotationColorGreen;
+
     [self.mapView addAnnotation:ann2];
     
     //*******************************************************************
@@ -61,6 +65,8 @@
     [ann3 setCoordinate:location];
     ann3.title = @"SN6Plus";
     ann3.subtitle = @"Today, 11:19 AM";
+    ann3.pinColor = MKPinAnnotationColorPurple;
+
     [self.mapView addAnnotation:ann3];
     
     //*******************************************************************
@@ -68,7 +74,24 @@
     [ann4 setCoordinate:location];
     ann4.title = @"Patty";
     ann4.subtitle = @"Today, 11:19 AM";
+    ann4.pinColor = MKPinAnnotationColorRed;
     [self.mapView addAnnotation:ann4];
+    
+    //*******************************************************************
+    VBAnnotation *ann5 = [[VBAnnotation alloc] initWithPosition:location];
+    [ann5 setCoordinate:location];
+    ann5.title = @"jackie";
+    ann5.subtitle = @"Today, 11:19 AM";
+    ann5.pinColor = MKPinAnnotationColorPurple;
+    [self.mapView addAnnotation:ann5];
+    
+    //*******************************************************************
+    VBAnnotation *ann6 = [[VBAnnotation alloc] initWithPosition:location];
+    [ann6 setCoordinate:location];
+    ann6.title = @"ED";
+    ann6.subtitle = @"Today, 11:19 AM";
+    ann6.pinColor = MKPinAnnotationColorGreen;
+    [self.mapView addAnnotation:ann6];
     
     [NSTimer scheduledTimerWithTimeInterval: 0.001
                                      target: self
@@ -84,10 +107,50 @@
     
 }
 
+- (IBAction)findAction {
+    [self postFindRequest];
+//    [self mapAction];
+}
+
+- (void)postFindRequest
+{
+    //    [_messageTextView resignFirstResponder];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"whereru", nil);
+    
+    //    NSString *text = self.messageTextView.text;
+    NSString *text = @"Hey WhereRU?";
+    
+    NSDictionary *params = @{@"cmd":@"find",
+                             @"user_id":[_dataModel userId],
+                             @"location":[self deviceLocation],
+                             @"text":text};
+    
+    [_client
+     postPath:@"/whereru/api/api.php"
+     parameters:params
+     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
+         if (operation.response.statusCode != 200) {
+             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+         } else {
+             NSLog(@"Find request sent to all devices");
+             //             [self dismissViewControllerAnimated:YES completion:nil];
+         }
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         if ([self isViewLoaded]) {
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             ShowErrorAlert([error localizedDescription]);
+         }
+     }];
+    
+}
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
-    view.pinColor = MKPinAnnotationColorPurple;
+    view.pinColor = MKPinAnnotationColorRed;
     view.enabled = YES;
     view.animatesDrop = YES;
     view.canShowCallout = YES;
@@ -107,12 +170,16 @@
     NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
     NSLog(@"who=%@",who);
     
+    CLLocationCoordinate2D location;
+    MKCoordinateRegion region;
+    
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
-        if ([ann.title isEqualToString:@"Harnk"])
+        NSLog(@"moving points checking ann.title is %@",ann.title);
+        
+        if ([ann.title isEqualToString:who])
         {
-            NSLog(@"found Harnk");
-            CLLocationCoordinate2D location;
+            NSLog(@"found %@ moving %@", who, who);
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
             ann.coordinate = location;
@@ -120,6 +187,14 @@
         }
         
     }
+
+    region.center.latitude = location.latitude;
+    region.center.longitude = location.longitude;
+    region.span.latitudeDelta = SPAN_VALUE;
+    region.span.longitudeDelta = SPAN_VALUE;
+    [self.mapView setRegion:region animated:YES];
+
+    
 }
 
 -(void) changeRegion {
