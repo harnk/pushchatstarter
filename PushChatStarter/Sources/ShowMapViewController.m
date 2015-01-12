@@ -170,13 +170,19 @@
     NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
     NSLog(@"who=%@",who);
     
-    CLLocationCoordinate2D location;
+    CLLocationCoordinate2D location, southWest, northEast;
     MKCoordinateRegion region;
+    
+    // seed the region values to set the span later to include all the pins
+    southWest.latitude = [strings[0] doubleValue];
+    southWest.longitude = [strings[1] doubleValue];
+    northEast = southWest;
     
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
         NSLog(@"moving points checking ann.title is %@",ann.title);
         
+        // Move the updated pin to its new locations
         if ([ann.title isEqualToString:who])
         {
             NSLog(@"found %@ moving %@", who, who);
@@ -185,15 +191,29 @@
             ann.coordinate = location;
             break;
         }
-        
+        // reset the span to include each and every pin as you go thru the list
+        //ignore the 0,0 uninitialize annotations
+        if (ann.coordinate.latitude != 0) {
+            southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
+            southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
+            northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
+            northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
+        }
     }
 
-    region.center.latitude = location.latitude;
-    region.center.longitude = location.longitude;
-    region.span.latitudeDelta = SPAN_VALUE;
-    region.span.longitudeDelta = SPAN_VALUE;
-    [self.mapView setRegion:region animated:YES];
+    CLLocation *locSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+    CLLocation *locNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+    
+    // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+    CLLocationDistance meters = [locSouthWest getDistanceFrom:locNorthEast];
 
+    region.center.latitude = (southWest.latitude + northEast.latitude) / 2.0;
+    region.center.longitude = (southWest.longitude + northEast.longitude) / 2.0;
+    region.span.latitudeDelta = meters / 111319.5;
+    region.span.longitudeDelta = 0.0;
+    
+    MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
+    [_mapView setRegion:savedRegion animated:YES];
     
 }
 
