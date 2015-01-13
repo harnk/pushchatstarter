@@ -187,15 +187,25 @@
                                     <constraint firstAttribute="height" constant="326" id="bzo-mF-Huf"/>
                                 </constraints>
                             </mapView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
+                                <rect key="frame" x="0.0" y="372" width="320" height="176"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="176" id="lD5-iz-4aH"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Tog-1q-ick" secondAttribute="bottom" type="default" id="4mE-X0-idw"/>
                             <constraint firstItem="VQp-91-hsq" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" type="default" id="9CL-0s-Qst"/>
                             <constraint firstItem="VQp-91-hsq" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" type="default" id="9lJ-MU-aFC"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" type="default" id="CB3-gA-sT4"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" type="default" id="EW7-fA-QvO"/>
                             <constraint firstItem="VQp-91-hsq" firstAttribute="top" secondItem="D5z-zi-4jS" secondAttribute="top" type="default" id="Lbm-fx-Qf7"/>
-                            <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" type="default" id="R8a-An-utp"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" type="default" id="a3M-Ft-rlQ"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" type="default" id="XgE-n7-4ec"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" type="default" id="hKK-OE-TYU"/>
+                            <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" type="default" id="jgH-wX-jae"/>
                         </constraints>
                     </view>
                     <connections>

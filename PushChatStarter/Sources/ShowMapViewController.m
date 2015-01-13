@@ -17,6 +17,9 @@
 // Beach
 #define BE_LATITUDE 0
 #define BE_LONGITUDE 0
+// Reston hotel
+//#define BE_LATITUDE 38.960663
+//#define BE_LONGITUDE -77.423423
 #define BE2_LATITUDE 41.736207
 #define BE2_LONGITUDE -86.098724
 
