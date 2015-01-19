@@ -110,6 +110,11 @@
     
 }
 
+- (NSString *)deviceLocation {
+    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
+}
+
+
 - (IBAction)findAction {
     [self postFindRequest];
 //    [self mapAction];
@@ -153,7 +158,7 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
-    view.pinColor = MKPinAnnotationColorRed;
+    view.pinColor = MKPinAnnotationColorGreen;
     view.enabled = YES;
     view.animatesDrop = YES;
     view.canShowCallout = YES;

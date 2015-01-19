@@ -14,18 +14,6 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Auj-Bl-rAu">
-                                <rect key="frame" x="0.0" y="44" width="320" height="161"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="161" id="CWg-PV-I76"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <connections>
-                                    <outlet property="delegate" destination="PVS-JL-Wjs" id="blB-u0-kPU"/>
-                                </connections>
-                            </textView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gxE-Rq-EUV">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <items>
@@ -44,7 +32,7 @@
                                 </items>
                             </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aEc-Vi-EnP">
-                                <rect key="frame" x="124" y="213" width="72" height="23"/>
+                                <rect key="frame" x="124" y="44" width="72" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="d00-Xz-3de"/>
                                     <constraint firstAttribute="height" constant="22" id="kDi-ak-Yum"/>
@@ -61,17 +49,29 @@
                                     <action selector="findAction" destination="PVS-JL-Wjs" eventType="touchUpInside" id="zXy-gb-2Gq"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Auj-Bl-rAu">
+                                <rect key="frame" x="0.0" y="66" width="320" height="161"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="161" id="CWg-PV-I76"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <connections>
+                                    <outlet property="delegate" destination="PVS-JL-Wjs" id="blB-u0-kPU"/>
+                                </connections>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="gxE-Rq-EUV" firstAttribute="trailing" secondItem="oZS-E7-u9U" secondAttribute="trailing" type="default" id="7fm-x7-F2Q"/>
+                            <constraint firstItem="Auj-Bl-rAu" firstAttribute="leading" secondItem="oZS-E7-u9U" secondAttribute="leading" type="default" id="7zb-0A-MWF"/>
+                            <constraint firstItem="aEc-Vi-EnP" firstAttribute="centerX" secondItem="gxE-Rq-EUV" secondAttribute="centerX" type="default" id="EMn-fV-piA"/>
+                            <constraint firstItem="aEc-Vi-EnP" firstAttribute="top" secondItem="gxE-Rq-EUV" secondAttribute="bottom" type="default" id="GI5-vI-vJj"/>
                             <constraint firstItem="gxE-Rq-EUV" firstAttribute="leading" secondItem="Auj-Bl-rAu" secondAttribute="leading" type="default" id="I9A-0k-aHi"/>
-                            <constraint firstItem="gxE-Rq-EUV" firstAttribute="leading" secondItem="oZS-E7-u9U" secondAttribute="leading" type="default" id="RHK-yz-ppU"/>
-                            <constraint firstItem="aEc-Vi-EnP" firstAttribute="top" secondItem="Auj-Bl-rAu" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="SKP-uq-3ps"/>
+                            <constraint firstAttribute="trailing" secondItem="Auj-Bl-rAu" secondAttribute="trailing" type="default" id="IP0-5F-TmV"/>
                             <constraint firstItem="gxE-Rq-EUV" firstAttribute="top" secondItem="oZS-E7-u9U" secondAttribute="top" type="default" id="UGB-P2-kKa"/>
-                            <constraint firstItem="aEc-Vi-EnP" firstAttribute="centerX" secondItem="Auj-Bl-rAu" secondAttribute="centerX" type="default" id="eMh-t6-vAl"/>
+                            <constraint firstItem="Auj-Bl-rAu" firstAttribute="top" secondItem="oZS-E7-u9U" secondAttribute="top" constant="66" id="hay-eR-XGE"/>
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="trailing" secondItem="gxE-Rq-EUV" secondAttribute="trailing" type="default" id="ib9-hC-BvO"/>
-                            <constraint firstItem="Auj-Bl-rAu" firstAttribute="top" secondItem="gxE-Rq-EUV" secondAttribute="bottom" type="default" id="xDB-0V-LN2"/>
                         </constraints>
                     </view>
                     <connections>
@@ -92,8 +92,12 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <mapView key="tableFooterView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="Jgu-ox-8iO">
+                            <rect key="frame" x="0.0" y="66" width="320" height="228"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </mapView>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="message_id" textLabel="nez-Is-lS4" style="IBUITableViewCellStyleDefault" id="d87-OW-MeW" customClass="MessageTableViewCell">
+                            <tableViewCell contentMode="top" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="message_id" textLabel="nez-Is-lS4" style="IBUITableViewCellStyleDefault" id="d87-OW-MeW" customClass="MessageTableViewCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -164,24 +168,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VQp-91-hsq">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <items>
-                                    <navigationItem title="Title" id="hKw-sC-Z6p">
-                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="M6O-kQ-1iN">
-                                            <connections>
-                                                <action selector="cancelAction" destination="jkb-oK-o03" id="3Ft-RK-L66"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="WhereRU" id="K9N-cP-620">
-                                            <connections>
-                                                <action selector="findAction" destination="jkb-oK-o03" id="Yc8-xq-xlV"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
                                 <rect key="frame" x="0.0" y="44" width="320" height="326"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="326" id="bzo-mF-Huf"/>
@@ -194,6 +181,23 @@
                                     <constraint firstAttribute="height" constant="176" id="lD5-iz-4aH"/>
                                 </constraints>
                             </tableView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VQp-91-hsq">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <items>
+                                    <navigationItem title="WhereRU" id="hKw-sC-Z6p">
+                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="M6O-kQ-1iN">
+                                            <connections>
+                                                <action selector="cancelAction" destination="jkb-oK-o03" id="3Ft-RK-L66"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Update" id="K9N-cP-620">
+                                            <connections>
+                                                <action selector="findAction" destination="jkb-oK-o03" id="Yc8-xq-xlV"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>

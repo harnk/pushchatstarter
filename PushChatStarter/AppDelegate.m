@@ -39,8 +39,8 @@ void ShowErrorAlert(NSString* text)
     message.date = [NSDate date];
     message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
     
-//    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+//    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
     
     NSMutableArray *parts = [NSMutableArray arrayWithArray:[alertValue componentsSeparatedByString:@": "]];
     message.senderName = [parts objectAtIndex:0];
@@ -58,18 +58,21 @@ void ShowErrorAlert(NSString* text)
     NSLog(@"Received notification: %@", userInfo);
     
     NSString *extra = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+    NSString *alert = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
 
     if([extra isEqualToString:@"whereru"]) {
         NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
         [self postImhere:asker];
     } else {
-        [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+        if ([alert rangeOfString:@"Im Here"].location == NSNotFound) {
+            [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
     }
     
     if(application.applicationState == UIApplicationStateInactive) {
         
-        NSLog(@"Inactive");
+        NSLog(@"Inactive: application.applicationState == UIApplicationStateInactive");
         
         //Show the view with the content of the push
         
@@ -77,7 +80,7 @@ void ShowErrorAlert(NSString* text)
         
     } else if (application.applicationState == UIApplicationStateBackground) {
         
-        NSLog(@"Background");
+        NSLog(@"Background: application.applicationState == UIApplicationStateBackground");
         
         //Refresh the local model
         
@@ -145,7 +148,7 @@ void ShowErrorAlert(NSString* text)
     return YES;
 }
 
-
+// This is a delegate method that should get called in the background
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     NSLog(@"########### Received Background Fetch ###########");
@@ -192,7 +195,7 @@ void ShowErrorAlert(NSString* text)
     NSLog(@"Respond to WhereRU with Im Here back to asker");
 
     
-//    SCXTT clean this shit up
+//    SCXTT clean this crap up
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
@@ -204,11 +207,9 @@ void ShowErrorAlert(NSString* text)
     }
 #endif
     [self.locationManager startUpdatingLocation];
-    NSLog(@"Im over here %@", [self deviceLocation]);
 
-    
-    
-    
+    NSLog(@"Im over here %@", [self deviceLocation]);
+        
     
     
     ComposeViewController *getLocationData;
@@ -228,6 +229,8 @@ void ShowErrorAlert(NSString* text)
                              @"asker":asker,
                              @"location":[self deviceLocation],
                              @"text":text};
+    
+    NSLog(@"Doing API Call with %@", params);
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
