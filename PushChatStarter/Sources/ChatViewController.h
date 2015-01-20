@@ -7,6 +7,8 @@
 //
 
 #import "ComposeViewController.h"
+#import <MapKit/MapKit.h>
+#import <MapKit/MKAnnotation.h>
 
 @class DataModel;
 
@@ -16,5 +18,6 @@
 @interface ChatViewController : UITableViewController <ComposeDelegate>
 
 @property (nonatomic, strong, readonly) DataModel* dataModel;
+@property (nonatomic, weak) IBOutlet MKMapView *mapView;
 
 @end

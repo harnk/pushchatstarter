@@ -38,6 +38,30 @@
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];	
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.mapView setDelegate:self];
+    
+    MKCoordinateRegion region;
+    region.span.latitudeDelta = 50.1f;
+    region.span.longitudeDelta = 50.1f;
+    [self.mapView setRegion:region animated:NO];
+    
+//    [NSTimer scheduledTimerWithTimeInterval: 0.001
+//                                     target: self
+//                                   selector: @selector(changeRegion)
+//                                   userInfo: nil
+//                                    repeats: NO];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(updatePointsOnMap:)
+//                                                 name:@"receivedNewMessage"
+//                                               object:nil];
+//    
+    
+}
+
+
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (![_dataModel joinedChat])

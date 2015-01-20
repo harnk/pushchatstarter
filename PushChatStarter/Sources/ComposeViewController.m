@@ -35,7 +35,7 @@
 #endif
     [self.locationManager startUpdatingLocation];
     NSLog(@"%@", [self deviceLocation]);
-    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated

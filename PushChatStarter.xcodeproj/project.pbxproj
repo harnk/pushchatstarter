@@ -39,6 +39,8 @@
 		9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */; };
 		9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
 		9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
+		9E702E971A6CB1C700D0E91E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E961A6CB1C700D0E91E /* Images.xcassets */; };
+		9E702E991A6CB4BF00D0E91E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */; };
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +91,8 @@
 		9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowMapViewController.m; sourceTree = "<group>"; };
 		9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		9E702E961A6CB1C700D0E91E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../WhereRU/Images.xcassets; sourceTree = "<group>"; };
+		9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		9E81F9FB1A5CD8A000310C40 /* VBAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBAnnotation.h; sourceTree = "<group>"; };
 		9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBAnnotation.m; sourceTree = "<group>"; };
 		A18058E202D844758047AD1F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,6 +164,8 @@
 				61489EA717041C660049C6F9 /* AppDelegate.m */,
 				61489EB217041C660049C6F9 /* ViewController.h */,
 				61489EB317041C660049C6F9 /* ViewController.m */,
+				9E702E961A6CB1C700D0E91E /* Images.xcassets */,
+				9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */,
 				61489EAF17041C660049C6F9 /* MainStoryboard.storyboard */,
 				61489EBA17041CB20049C6F9 /* Resources */,
 				61489E9E17041C660049C6F9 /* Supporting Files */,
@@ -282,7 +288,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				61489EA217041C660049C6F9 /* InfoPlist.strings in Resources */,
+				9E702E971A6CB1C700D0E91E /* Images.xcassets in Resources */,
 				61489EAA17041C660049C6F9 /* Default.png in Resources */,
+				9E702E991A6CB4BF00D0E91E /* LaunchScreen.xib in Resources */,
 				61489EAC17041C660049C6F9 /* Default@2x.png in Resources */,
 				9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */,
 				61489EAE17041C660049C6F9 /* Default-568h@2x.png in Resources */,
@@ -421,6 +429,7 @@
 			baseConfigurationReference = CA74DB54E5F2B5D84B2548E0 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -430,7 +439,8 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "armv7 armv7s";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -440,6 +450,7 @@
 			baseConfigurationReference = 4C4B2E0A364E8CC966827582 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -448,7 +459,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "armv7 armv7s";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

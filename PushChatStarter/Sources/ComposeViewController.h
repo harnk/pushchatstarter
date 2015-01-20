@@ -19,8 +19,7 @@
 - (void)didSaveMessage:(Message*)message atIndex:(int)index;
 @end
 
-// The Compose screen lets the user write a new message
-@interface ComposeViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate>{
+@interface ComposeViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate>{
     CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
@@ -29,6 +28,7 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+
 
 - (NSString *)deviceLocation;
 
