@@ -33,7 +33,8 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
-
+@property (nonatomic, retain) CLLocation *mapViewSouthWest;
+@property (nonatomic, retain) CLLocation *mapViewNorthEast;
 
 - (NSString *)deviceLocation;
 

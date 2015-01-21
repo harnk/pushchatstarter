@@ -169,6 +169,17 @@
     return view;
 }
 
+- (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
+    
+    region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
+    region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
+    region.span.latitudeDelta = meters / 111319.5;
+    region.span.longitudeDelta = 0.0;
+    
+    MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
+    [_mapView setRegion:savedRegion animated:YES];
+}
+
 -(void) updatePointsOnMap:(NSNotification *)notification {
     NSDictionary *dict = [notification userInfo];
     NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"]);
@@ -209,19 +220,13 @@
         }
     }
 
-    CLLocation *locSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-    CLLocation *locNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+    _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+    _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
     
     // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-    CLLocationDistance meters = [locSouthWest getDistanceFrom:locNorthEast];
+    CLLocationDistance meters = [_mapViewSouthWest getDistanceFrom:_mapViewNorthEast];
 
-    region.center.latitude = (southWest.latitude + northEast.latitude) / 2.0;
-    region.center.longitude = (southWest.longitude + northEast.longitude) / 2.0;
-    region.span.latitudeDelta = meters / 111319.5;
-    region.span.longitudeDelta = 0.0;
-    
-    MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
-    [_mapView setRegion:savedRegion animated:YES];
+    [self reCenterMap:region meters:meters];
     
 }
 
