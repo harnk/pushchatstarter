@@ -180,19 +180,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
-                                <rect key="frame" x="0.0" y="44" width="600" height="326"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="326" id="bzo-mF-Huf"/>
-                                </constraints>
-                            </mapView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
-                                <rect key="frame" x="0.0" y="424" width="600" height="176"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="176" id="lD5-iz-4aH"/>
-                                </constraints>
-                            </tableView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VQp-91-hsq">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <items>
@@ -210,18 +197,29 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
+                                <rect key="frame" x="0.0" y="44" width="600" height="408"/>
+                            </mapView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
+                                <rect key="frame" x="0.0" y="460" width="600" height="140"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="140" id="OOz-HP-qSS"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Tog-1q-ick" secondAttribute="bottom" id="4mE-X0-idw"/>
-                            <constraint firstItem="VQp-91-hsq" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="9CL-0s-Qst"/>
-                            <constraint firstItem="VQp-91-hsq" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" id="9lJ-MU-aFC"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="CB3-gA-sT4"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" id="EW7-fA-QvO"/>
-                            <constraint firstItem="VQp-91-hsq" firstAttribute="top" secondItem="D5z-zi-4jS" secondAttribute="top" id="Lbm-fx-Qf7"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="XgE-n7-4ec"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" id="hKK-OE-TYU"/>
-                            <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="jgH-wX-jae"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="EpZ-5t-Egx"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="H5m-Bv-wJY"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="trailing" secondItem="VQp-91-hsq" secondAttribute="trailing" id="Lb1-VB-StP"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" id="NFa-Ze-ilW"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="VQp-91-hsq" secondAttribute="leading" id="R3X-V3-WhK"/>
+                            <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="UmN-PI-wah"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dGe-K4-epq"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="8" symbolic="YES" id="dUz-iq-8fH"/>
+                            <constraint firstItem="VQp-91-hsq" firstAttribute="top" secondItem="D5z-zi-4jS" secondAttribute="top" id="tN0-qj-7FS"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="ydx-9f-dVf"/>
                         </constraints>
                     </view>
                     <connections>
@@ -230,7 +228,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Tw-hF-AKJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="615" y="-863.02816901408448"/>
+            <point key="canvasLocation" x="615" y="-864"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Ixo-Ar-85R">

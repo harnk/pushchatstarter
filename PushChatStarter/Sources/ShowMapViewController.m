@@ -45,56 +45,56 @@
     CLLocationCoordinate2D location;
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
-    //*******************************************************************
-    VBAnnotation *ann = [[VBAnnotation alloc] initWithPosition:location];
-    [ann setCoordinate:location];
-    ann.title = @"Harnk";
-    ann.subtitle = @"Today, 11:19 AM";
-    ann.pinColor = MKPinAnnotationColorRed;
-
-    [self.mapView addAnnotation:ann];
-    
-    //*******************************************************************
-    VBAnnotation *ann2 = [[VBAnnotation alloc] initWithPosition:location];
-    [ann2 setCoordinate:location];
-    ann2.title = @"steve";
-    ann2.subtitle = @"Today, 11:19 AM";
-    ann2.pinColor = MKPinAnnotationColorGreen;
-
-    [self.mapView addAnnotation:ann2];
-    
-    //*******************************************************************
-    VBAnnotation *ann3 = [[VBAnnotation alloc] initWithPosition:location];
-    [ann3 setCoordinate:location];
-    ann3.title = @"SN6Plus";
-    ann3.subtitle = @"Today, 11:19 AM";
-    ann3.pinColor = MKPinAnnotationColorPurple;
-
-    [self.mapView addAnnotation:ann3];
-    
-    //*******************************************************************
-    VBAnnotation *ann4 = [[VBAnnotation alloc] initWithPosition:location];
-    [ann4 setCoordinate:location];
-    ann4.title = @"Patty";
-    ann4.subtitle = @"Today, 11:19 AM";
-    ann4.pinColor = MKPinAnnotationColorRed;
-    [self.mapView addAnnotation:ann4];
-    
-    //*******************************************************************
-    VBAnnotation *ann5 = [[VBAnnotation alloc] initWithPosition:location];
-    [ann5 setCoordinate:location];
-    ann5.title = @"jackie";
-    ann5.subtitle = @"Today, 11:19 AM";
-    ann5.pinColor = MKPinAnnotationColorPurple;
-    [self.mapView addAnnotation:ann5];
-    
-    //*******************************************************************
-    VBAnnotation *ann6 = [[VBAnnotation alloc] initWithPosition:location];
-    [ann6 setCoordinate:location];
-    ann6.title = @"ED";
-    ann6.subtitle = @"Today, 11:19 AM";
-    ann6.pinColor = MKPinAnnotationColorGreen;
-    [self.mapView addAnnotation:ann6];
+//    //*******************************************************************
+//    VBAnnotation *ann = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann setCoordinate:location];
+//    ann.title = @"Harnk";
+//    ann.subtitle = @"Today, 11:19 AM";
+//    ann.pinColor = MKPinAnnotationColorRed;
+//
+//    [self.mapView addAnnotation:ann];
+//    
+//    //*******************************************************************
+//    VBAnnotation *ann2 = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann2 setCoordinate:location];
+//    ann2.title = @"steve";
+//    ann2.subtitle = @"Today, 11:19 AM";
+//    ann2.pinColor = MKPinAnnotationColorGreen;
+//
+//    [self.mapView addAnnotation:ann2];
+//    
+//    //*******************************************************************
+//    VBAnnotation *ann3 = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann3 setCoordinate:location];
+//    ann3.title = @"SN6Plus";
+//    ann3.subtitle = @"Today, 11:19 AM";
+//    ann3.pinColor = MKPinAnnotationColorPurple;
+//
+//    [self.mapView addAnnotation:ann3];
+//    
+//    //*******************************************************************
+//    VBAnnotation *ann4 = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann4 setCoordinate:location];
+//    ann4.title = @"Patty";
+//    ann4.subtitle = @"Today, 11:19 AM";
+//    ann4.pinColor = MKPinAnnotationColorRed;
+//    [self.mapView addAnnotation:ann4];
+//    
+//    //*******************************************************************
+//    VBAnnotation *ann5 = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann5 setCoordinate:location];
+//    ann5.title = @"jackie";
+//    ann5.subtitle = @"Today, 11:19 AM";
+//    ann5.pinColor = MKPinAnnotationColorPurple;
+//    [self.mapView addAnnotation:ann5];
+//    
+//    //*******************************************************************
+//    VBAnnotation *ann6 = [[VBAnnotation alloc] initWithPosition:location];
+//    [ann6 setCoordinate:location];
+//    ann6.title = @"ED";
+//    ann6.subtitle = @"Today, 11:19 AM";
+//    ann6.pinColor = MKPinAnnotationColorGreen;
+//    [self.mapView addAnnotation:ann6];
     
     [NSTimer scheduledTimerWithTimeInterval: 0.001
                                      target: self
@@ -158,7 +158,7 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
-    view.pinColor = MKPinAnnotationColorGreen;
+    view.pinColor = MKPinAnnotationColorPurple;
     view.enabled = YES;
     view.animatesDrop = YES;
     view.canShowCallout = YES;
@@ -181,6 +181,7 @@
 }
 
 -(void) updatePointsOnMap:(NSNotification *)notification {
+    BOOL whoFound = NO;
     NSDictionary *dict = [notification userInfo];
     NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"]);
     NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
@@ -197,19 +198,11 @@
     southWest.longitude = [strings[1] doubleValue];
     northEast = southWest;
     
+    
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
         NSLog(@"moving points checking ann.title is %@",ann.title);
         
-        // Move the updated pin to its new locations
-        if ([ann.title isEqualToString:who])
-        {
-            NSLog(@"found %@ moving %@", who, who);
-            location.latitude = [strings[0] doubleValue];
-            location.longitude = [strings[1] doubleValue];
-            ann.coordinate = location;
-            break;
-        }
         // reset the span to include each and every pin as you go thru the list
         //ignore the 0,0 uninitialize annotations
         if (ann.coordinate.latitude != 0) {
@@ -218,6 +211,28 @@
             northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
             northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
         }
+        // Move the updated pin to its new locations
+        if ([ann.title isEqualToString:who])
+        {
+            NSLog(@"found %@ moving %@", who, who);
+            whoFound = YES;
+            location.latitude = [strings[0] doubleValue];
+            location.longitude = [strings[1] doubleValue];
+            ann.coordinate = location;
+            break;
+        }
+    }
+    // new who so add addAnnotation and set coordinate
+    if (!whoFound) {
+        NSLog(@"Adding new who %@", who);
+        VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
+        annNew.title = who;
+        annNew.subtitle = @"Today, 11:19 AM";
+        annNew.pinColor = MKPinAnnotationColorGreen;
+        location.latitude = [strings[0] doubleValue];
+        location.longitude = [strings[1] doubleValue];
+        [annNew setCoordinate:location];
+        [self.mapView addAnnotation:annNew];
     }
 
     _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
