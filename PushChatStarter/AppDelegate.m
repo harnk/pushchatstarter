@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ChatViewController.h"
 #import "ComposeViewController.h"
+#import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "Message.h"
 
@@ -33,6 +34,9 @@ void ShowErrorAlert(NSString* text)
     ChatViewController *chatViewController =
     (ChatViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
+    ShowMapViewController *showMapViewController =
+    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    
     DataModel *dataModel = chatViewController.dataModel;
     
     Message *message = [[Message alloc] init];
@@ -49,8 +53,10 @@ void ShowErrorAlert(NSString* text)
     
     int index = [dataModel addMessage:message];
     
-    if (updateUI)
+    if (updateUI) {
         [chatViewController didSaveMessage:message atIndex:index];
+//        [showMapViewController didSaveMessage:message atIndex:index];
+    }
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
