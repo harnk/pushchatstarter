@@ -198,13 +198,13 @@
                                 </items>
                             </navigationBar>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
-                                <rect key="frame" x="0.0" y="44" width="600" height="408"/>
+                                <rect key="frame" x="0.0" y="44" width="600" height="367"/>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
-                                <rect key="frame" x="0.0" y="460" width="600" height="140"/>
+                                <rect key="frame" x="0.0" y="411" width="600" height="189"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="140" id="OOz-HP-qSS"/>
+                                    <constraint firstAttribute="height" constant="189" id="3X7-tx-FTa"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="JVW-H3-eGG">
@@ -222,16 +222,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="EpZ-5t-Egx"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="H5m-Bv-wJY"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="trailing" secondItem="VQp-91-hsq" secondAttribute="trailing" id="Lb1-VB-StP"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" id="NFa-Ze-ilW"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="VQp-91-hsq" secondAttribute="leading" id="R3X-V3-WhK"/>
-                            <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="UmN-PI-wah"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dGe-K4-epq"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="8" symbolic="YES" id="dUz-iq-8fH"/>
-                            <constraint firstItem="VQp-91-hsq" firstAttribute="top" secondItem="D5z-zi-4jS" secondAttribute="top" id="tN0-qj-7FS"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="ydx-9f-dVf"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="0N8-8L-43p"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="I6F-dn-Oaj"/>
+                            <constraint firstItem="VQp-91-hsq" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="Kl9-sI-tJU"/>
+                            <constraint firstItem="VQp-91-hsq" firstAttribute="top" secondItem="D5z-zi-4jS" secondAttribute="top" id="Vdk-t7-ZgV"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VQp-91-hsq" secondAttribute="bottom" id="WgC-u2-3tK"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="VQp-91-hsq" secondAttribute="leading" id="Wox-Xn-nNc"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="trailing" secondItem="VQp-91-hsq" secondAttribute="trailing" id="iL8-ZF-DtZ"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" id="jrx-5g-8zH"/>
+                            <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="nj0-eT-rcR"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="xCO-ib-k7v"/>
                         </constraints>
                     </view>
                     <connections>
