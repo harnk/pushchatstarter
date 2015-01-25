@@ -74,6 +74,13 @@
     CLLocationCoordinate2D location;
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
+
+// SCXTT this below aint worken
+    UIBarButtonItem *btnCamera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(share)];
+    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
+    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, btnCamera, nil] animated:NO];
+
 //    //*******************************************************************
 //    VBAnnotation *ann = [[VBAnnotation alloc] initWithPosition:location];
 //    [ann setCoordinate:location];

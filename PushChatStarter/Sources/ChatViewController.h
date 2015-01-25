@@ -19,5 +19,6 @@
 
 @property (nonatomic, strong, readonly) DataModel* dataModel;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property(nonatomic, copy) NSArray *rightBarButtonItems;
 
 @end

@@ -23,7 +23,7 @@
 - (void)didSaveMessage:(Message*)message atIndex:(int)index;
 @end
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, UITableViewDelegate, UITableViewDataSource>{
     CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }

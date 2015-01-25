@@ -57,8 +57,11 @@
 //                                             selector:@selector(updatePointsOnMap:)
 //                                                 name:@"receivedNewMessage"
 //                                               object:nil];
-//    
-    
+//
+    UIBarButtonItem *btnCamera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(share)];
+    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(loadBeeconSite)];
+    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, btnCamera, nil] animated:NO];
 }
 
 
@@ -159,6 +162,17 @@
     
 	[self presentViewController:loginController animated:YES completion:nil];
 }
+
+- (IBAction)showMapViewControllerAction
+{
+    // Show the Map screen
+    ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
+    mapController.dataModel = _dataModel;
+    mapController.delegate = self;
+    mapController.client = _client;
+    [self presentViewController:mapController animated:YES completion:nil];
+}
+
 
 - (void)userDidLeave
 {
