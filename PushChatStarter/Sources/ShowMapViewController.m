@@ -9,6 +9,7 @@
 #import "ShowMapViewController.h"
 #import "VBAnnotation.h"
 #import "DataModel.h"
+#import "LoginViewController.h"
 #import "Message.h"
 #import "MessageTableViewCell.h"
 #import "SpeechBubbleView.h"
@@ -28,11 +29,76 @@
 
 #define SPAN_VALUE 0.005f
 
-@interface ShowMapViewController ()
-
+@interface ShowMapViewController () {
+    AFHTTPClient *_client;
+}
 @end
 
 @implementation ShowMapViewController
+
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _dataModel = [[DataModel alloc] init];
+        [_dataModel loadMessages];
+        _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    }
+    return self;
+}
+
+- (void)scrollToNewestMessage
+{
+    // The newest message is at the bottom of the table
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:(self.dataModel.messages.count - 1) inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.mapView setDelegate:self];
+    
+    MKCoordinateRegion region;
+    region.center.latitude = CA_LATITUDE;
+    region.center.longitude = CA_LONGITUDE;
+    region.span.latitudeDelta = 50.1f;
+    region.span.longitudeDelta = 50.1f;
+    [self.mapView setRegion:region animated:NO];
+    
+    CLLocationCoordinate2D location;
+    location.latitude = BE_LATITUDE;
+    location.longitude = BE_LONGITUDE;
+    
+    [NSTimer scheduledTimerWithTimeInterval: 0.001
+                                     target: self
+                                   selector: @selector(changeRegion)
+                                   userInfo: nil
+                                    repeats: NO];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMap:)
+                                                 name:@"receivedNewMessage"
+                                               object:nil];
+    
+    UIBarButtonItem *btnExit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
+    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
+    
+    
+    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    [self.navigationItem setLeftBarButtonItem:leftBarButton];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
+//    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
+    
+}
+
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (![_dataModel joinedChat])
+    {
+        [self showLoginViewController];
+    }
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -57,103 +123,135 @@
     else
     {
         [self scrollToNewestMessage];
+//        [self findAction];
     }
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self.mapView setDelegate:self];
-    
-    MKCoordinateRegion region;
-    region.center.latitude = CA_LATITUDE;
-    region.center.longitude = CA_LONGITUDE;
-    region.span.latitudeDelta = 50.1f;
-    region.span.longitudeDelta = 50.1f;
-    [self.mapView setRegion:region animated:NO];
-    
-    CLLocationCoordinate2D location;
-    location.latitude = BE_LATITUDE;
-    location.longitude = BE_LONGITUDE;
+#pragma mark -
+#pragma mark - UITableViewDataSource
 
-// SCXTT this below aint worken
-    UIBarButtonItem *btnCamera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(share)];
-    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, btnCamera, nil] animated:NO];
+- (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.dataModel.messages.count;
+}
 
-//    //*******************************************************************
-//    VBAnnotation *ann = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann setCoordinate:location];
-//    ann.title = @"Harnk";
-//    ann.subtitle = @"Today, 11:19 AM";
-//    ann.pinColor = MKPinAnnotationColorRed;
-//
-//    [self.mapView addAnnotation:ann];
-//    
-//    //*******************************************************************
-//    VBAnnotation *ann2 = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann2 setCoordinate:location];
-//    ann2.title = @"steve";
-//    ann2.subtitle = @"Today, 11:19 AM";
-//    ann2.pinColor = MKPinAnnotationColorGreen;
-//
-//    [self.mapView addAnnotation:ann2];
-//    
-//    //*******************************************************************
-//    VBAnnotation *ann3 = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann3 setCoordinate:location];
-//    ann3.title = @"SN6Plus";
-//    ann3.subtitle = @"Today, 11:19 AM";
-//    ann3.pinColor = MKPinAnnotationColorPurple;
-//
-//    [self.mapView addAnnotation:ann3];
-//    
-//    //*******************************************************************
-//    VBAnnotation *ann4 = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann4 setCoordinate:location];
-//    ann4.title = @"Patty";
-//    ann4.subtitle = @"Today, 11:19 AM";
-//    ann4.pinColor = MKPinAnnotationColorRed;
-//    [self.mapView addAnnotation:ann4];
-//    
-//    //*******************************************************************
-//    VBAnnotation *ann5 = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann5 setCoordinate:location];
-//    ann5.title = @"jackie";
-//    ann5.subtitle = @"Today, 11:19 AM";
-//    ann5.pinColor = MKPinAnnotationColorPurple;
-//    [self.mapView addAnnotation:ann5];
-//    
-//    //*******************************************************************
-//    VBAnnotation *ann6 = [[VBAnnotation alloc] initWithPosition:location];
-//    [ann6 setCoordinate:location];
-//    ann6.title = @"ED";
-//    ann6.subtitle = @"Today, 11:19 AM";
-//    ann6.pinColor = MKPinAnnotationColorGreen;
-//    [self.mapView addAnnotation:ann6];
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString* CellIdentifier = @"MessageCellIdentifier";
     
-    [NSTimer scheduledTimerWithTimeInterval: 0.001
-                                     target: self
-                                   selector: @selector(changeRegion)
-                                   userInfo: nil
-                                    repeats: NO];
+    MessageTableViewCell* cell = (MessageTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+        cell = [[MessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePointsOnMap:)
-                                                 name:@"receivedNewMessage"
-                                               object:nil];
+    Message* message = (self.dataModel.messages)[indexPath.row];
+    [cell setMessage:message];
+    return cell;
+}
 
+#pragma mark -
+#pragma mark UITableView Delegate
+
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    // This function is called before cellForRowAtIndexPath, once for each cell.
+    // We calculate the size of the speech bubble here and then cache it in the
+    // Message object, so we don't have to repeat those calculations every time
+    // we draw the cell. We add 16px for the label that sits under the bubble.
+    Message* message = (self.dataModel.messages)[indexPath.row];
+    message.bubbleSize = [SpeechBubbleView sizeForText:message.text];
+    return message.bubbleSize.height + 16;
+}
+
+#pragma mark -
+#pragma mark ComposeDelegate
+
+- (void)didSaveMessage:(Message*)message atIndex:(int)index
+{
+    // This method is called when the user presses Save in the Compose screen,
+    // but also when a push notification is received. We remove the "There are
+    // no messages" label from the table view's footer if it is present, and
+    // add a new row to the table view with a nice animation.
+    if ([self isViewLoaded])
+    {
+        self.tableView.tableFooterView = nil;
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        [self scrollToNewestMessage];
+    }
+}
+
+#pragma mark -
+#pragma mark Actions
+
+- (void) showLoginViewController {
+    LoginViewController* loginController = (LoginViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    loginController.dataModel = _dataModel;
+    
+    loginController.client = _client;
+    
+    [self presentViewController:loginController animated:YES completion:nil];
+}
+
+- (void)userDidLeave
+{
+    [self.dataModel setJoinedChat:NO];
+    
+    // Show the Login screen. This requires the user to join a new
+    // chat room before he can return to the chat screen.
+    [self showLoginViewController];
+}
+
+- (void)postLeaveRequest {
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    hud.labelText = NSLocalizedString(@"Signing Out", nil);
+    
+    NSDictionary *params = @{@"cmd":@"leave",
+                             @"user_id":[_dataModel userId]};
+    //    [ApplicationDelegate.client
+    [_client
+     postPath:@"/whereru/api/api.php"
+     parameters:params
+     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         if ([self isViewLoaded]) {
+             [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+             if (operation.response.statusCode != 200) {
+                 ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
+             } else {
+                 [self userDidLeave];
+             }
+         }
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         if ([self isViewLoaded]) {
+             [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+             ShowErrorAlert([error localizedDescription]);
+         }
+     }];
     
 }
 
-- (NSString *)deviceLocation {
-    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
+- (IBAction)exitAction
+{
+    //	[self userDidLeave];
+    [self postLeaveRequest];
 }
 
+- (IBAction)composeAction
+{
+    // Show the Compose screen
+    ComposeViewController* composeController = (ComposeViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ComposeViewController"];
+    composeController.dataModel = _dataModel;
+    composeController.delegate = self;
+    composeController.client = _client;
+    [self presentViewController:composeController animated:YES completion:nil];
+}
 
 - (IBAction)findAction {
     [self postFindRequest];
 //    [self mapAction];
+}
+
+- (NSString *)deviceLocation {
+    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
 }
 
 - (void)postFindRequest
@@ -190,6 +288,9 @@
      }];
     
 }
+
+#pragma mark -
+#pragma mark Map
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
@@ -330,66 +431,6 @@
 {
     //	[self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark -
-#pragma mark ComposeDelegate
-
-- (void)didSaveMessage:(Message*)message atIndex:(int)index
-{
-    // This method is called when the user presses Save in the Compose screen,
-    // but also when a push notification is received. We remove the "There are
-    // no messages" label from the table view's footer if it is present, and
-    // add a new row to the table view with a nice animation.
-    if ([self isViewLoaded])
-    {
-        self.tableView.tableFooterView = nil;
-        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-        [self scrollToNewestMessage];
-    }
-}
-
-#pragma mark -
-#pragma mark - UITableViewDataSource
-
-- (void)scrollToNewestMessage
-{
-    // The newest message is at the bottom of the table
-    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:(self.dataModel.messages.count - 1) inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-}
-
-
-- (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.dataModel.messages.count;
-}
-
-- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"MessageCellIdentifier";
-    
-    MessageTableViewCell* cell = (MessageTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-        cell = [[MessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    
-    Message* message = (self.dataModel.messages)[indexPath.row];
-    [cell setMessage:message];
-    return cell;
-}
-
-#pragma mark -
-#pragma mark UITableView Delegate
-
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    // This function is called before cellForRowAtIndexPath, once for each cell.
-    // We calculate the size of the speech bubble here and then cache it in the
-    // Message object, so we don't have to repeat those calculations every time
-    // we draw the cell. We add 16px for the label that sits under the bubble.
-    Message* message = (self.dataModel.messages)[indexPath.row];
-    message.bubbleSize = [SpeechBubbleView sizeForText:message.text];
-    return message.bubbleSize.height + 16;
 }
 
 /*

@@ -31,13 +31,14 @@ void ShowErrorAlert(NSString* text)
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ChatViewController *chatViewController =
-    (ChatViewController*)[navigationController.viewControllers  objectAtIndex:0];
+//    ChatViewController *chatViewController =
+//    (ChatViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
     ShowMapViewController *showMapViewController =
     (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-    DataModel *dataModel = chatViewController.dataModel;
+//    DataModel *dataModel = chatViewController.dataModel;
+    DataModel *dataModel = showMapViewController.dataModel;
     
     Message *message = [[Message alloc] init];
     message.date = [NSDate date];
@@ -52,10 +53,10 @@ void ShowErrorAlert(NSString* text)
     message.text = [parts componentsJoinedByString:@": "];
     
     int index = [dataModel addMessage:message];
-    
+
     if (updateUI) {
-        [chatViewController didSaveMessage:message atIndex:index];
-//        [showMapViewController didSaveMessage:message atIndex:index];
+//        [chatViewController didSaveMessage:message atIndex:index];
+        [showMapViewController didSaveMessage:message atIndex:index];
     }
 }
 
@@ -224,9 +225,12 @@ void ShowErrorAlert(NSString* text)
 //    NSLog(@"Im here: %@",[getLocationData deviceLocation]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+    ShowMapViewController *showMapViewController =
+    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-    DataModel *dataModel = chatViewController.dataModel;
+//    DataModel *dataModel = chatViewController.dataModel;
+    DataModel *dataModel = showMapViewController.dataModel;
     
     NSString *text = @"Im Here";
     
@@ -253,9 +257,12 @@ void ShowErrorAlert(NSString* text)
 - (void)postUpdateRequest
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+    ShowMapViewController *showMapViewController =
+    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-    DataModel *dataModel = chatViewController.dataModel;
+//    DataModel *dataModel = chatViewController.dataModel;
+    DataModel *dataModel = showMapViewController.dataModel;
     
     NSDictionary *params = @{@"cmd":@"update",
                              @"user_id":[dataModel userId],
@@ -270,9 +277,13 @@ void ShowErrorAlert(NSString* text)
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+    ShowMapViewController *showMapViewController =
+    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-    DataModel *dataModel = chatViewController.dataModel;
+//    DataModel *dataModel = chatViewController.dataModel;
+    DataModel *dataModel = showMapViewController.dataModel;
+    
     NSString *oldToken = [dataModel deviceToken];
     
     NSString *newToken = [deviceToken description];

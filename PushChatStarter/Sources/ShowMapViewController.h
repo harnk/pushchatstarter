@@ -6,24 +6,19 @@
 //  Copyright (c) 2014 Ray Wenderlich. All rights reserved.
 //
 
+#import "ComposeViewController.h"
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
-#import "ComposeViewController.h"
 
 #define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
 @class ShowMapViewController;
 @class DataModel;
-@class Message;
+//@class Message;
 
-// The delegate protocol for the Compose screen
-@protocol ComposeDelegate <NSObject>
-- (void)didSaveMessage:(Message*)message atIndex:(int)index;
-@end
-
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, UITableViewDelegate, UITableViewDataSource>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate>{
     CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
@@ -33,8 +28,11 @@
 
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
-@property (nonatomic, assign) DataModel* dataModel;
+@property (nonatomic, strong, readonly) DataModel* dataModel;
+//@property (nonatomic, strong) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
+@property(nonatomic, copy) NSArray *rightBarButtonItems;
+
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;

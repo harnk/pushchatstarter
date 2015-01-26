@@ -192,7 +192,7 @@
 {
     // Show the Map screen
     ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
-    mapController.dataModel = _dataModel;
+//    mapController.dataModel = _dataModel;
     mapController.delegate = self;
     mapController.client = _client;
     [self presentViewController:mapController animated:YES completion:nil];

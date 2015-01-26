@@ -46,24 +46,12 @@
     region.span.latitudeDelta = 50.1f;
     region.span.longitudeDelta = 50.1f;
     [self.mapView setRegion:region animated:NO];
-    
-//    [NSTimer scheduledTimerWithTimeInterval: 0.001
-//                                     target: self
-//                                   selector: @selector(changeRegion)
-//                                   userInfo: nil
-//                                    repeats: NO];
-//    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(updatePointsOnMap:)
-//                                                 name:@"receivedNewMessage"
-//                                               object:nil];
-//
+
     UIBarButtonItem *btnCamera = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(share)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(loadBeeconSite)];
     UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, btnCamera, nil] animated:NO];
 }
-
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -167,7 +155,7 @@
 {
     // Show the Map screen
     ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
-    mapController.dataModel = _dataModel;
+//    mapController.dataModel = _dataModel;
     mapController.delegate = self;
     mapController.client = _client;
     [self presentViewController:mapController animated:YES completion:nil];
