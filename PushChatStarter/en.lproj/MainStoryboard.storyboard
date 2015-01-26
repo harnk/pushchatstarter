@@ -183,7 +183,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
-                        <outlet property="chgMapType" destination="Cxp-Po-E0T" id="q7c-WB-Dxp"/>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
                         <outlet property="tableView" destination="Tog-1q-ick" id="IkC-BC-ZYC"/>
                     </connections>
