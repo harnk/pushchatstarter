@@ -147,7 +147,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
                                 <rect key="frame" x="0.0" y="64" width="600" height="279"/>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
@@ -183,6 +183,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
+                        <outlet property="chgMapType" destination="Cxp-Po-E0T" id="q7c-WB-Dxp"/>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
                         <outlet property="tableView" destination="Tog-1q-ick" id="IkC-BC-ZYC"/>
                     </connections>

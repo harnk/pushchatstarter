@@ -79,13 +79,13 @@
                                                  name:@"receivedNewMessage"
                                                object:nil];
     
-    UIBarButtonItem *btnExit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(exitAction)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
     UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     
-    
-    UIBarButtonItem *leftBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
-    [self.navigationItem setLeftBarButtonItem:leftBarButton];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnMapType = [[UIBarButtonItem alloc] initWithTitle:@"Std/Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
+//    [self.navigationItem setLeftBarButtonItem:leftBarButton];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnMapType, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
     
@@ -123,7 +123,8 @@
     else
     {
         [self scrollToNewestMessage];
-//        [self findAction];
+        //Scxtt race condition needs to be fixed - dont do next line until AFTER you get a device token
+        [self findAction];
     }
 }
 
@@ -233,6 +234,18 @@
 {
     //	[self userDidLeave];
     [self postLeaveRequest];
+}
+
+- (IBAction)chgMapAction
+{
+    //	Toggle the map betweem Hybrid and Standard
+    if (self.mapView.mapType == 0) {
+        self.mapView.mapType = MKMapTypeHybrid;
+    } else {
+        self.mapView.mapType = MKMapTypeStandard;
+    }
+    
+
 }
 
 - (IBAction)composeAction

@@ -92,7 +92,9 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 		textRect.origin.x = bubbleRect.origin.x + TextRightMargin;
 	}
 
-	[[UIColor blackColor] set];
+//    [[UIColor blackColor] set];
+    [[UIColor whiteColor] set];
+
 	[_text drawInRect:textRect withFont:font lineBreakMode:NSLineBreakByWordWrapping];
 }
 

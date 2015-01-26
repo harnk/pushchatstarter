@@ -24,7 +24,8 @@ static UIColor* color = nil;
 {
 	if (self == [MessageTableViewCell class])
 	{
-		color = [UIColor colorWithRed:219/255.0 green:226/255.0 blue:237/255.0 alpha:1.0];
+//        color = [UIColor colorWithRed:219/255.0 green:226/255.0 blue:237/255.0 alpha:1.0];
+        color = [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
 	}
 }
 
