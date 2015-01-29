@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Compose View Controller-->
@@ -43,31 +44,16 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aEc-Vi-EnP">
-                                <rect key="frame" x="264" y="64" width="72" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="72" id="a9f-ZS-BHG"/>
-                                    <constraint firstAttribute="height" constant="22" id="e4C-E0-5gp"/>
-                                </constraints>
-                                <state key="normal" title="whereru">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="findAction" destination="PVS-JL-Wjs" eventType="touchUpInside" id="zXy-gb-2Gq"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="gxE-Rq-EUV" firstAttribute="top" secondItem="I1X-iR-uIF" secondAttribute="bottom" id="7dY-wa-jiG"/>
-                            <constraint firstItem="aEc-Vi-EnP" firstAttribute="top" secondItem="I1X-iR-uIF" secondAttribute="bottom" constant="24" id="8nL-yl-gfE"/>
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="leading" secondItem="gxE-Rq-EUV" secondAttribute="leading" id="DWH-qc-99K"/>
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="top" secondItem="gxE-Rq-EUV" secondAttribute="bottom" constant="2" id="K9z-vQ-PaF"/>
                             <constraint firstAttribute="trailing" secondItem="gxE-Rq-EUV" secondAttribute="trailing" id="V98-tn-lGV"/>
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="leading" secondItem="oZS-E7-u9U" secondAttribute="leading" id="aQZ-ik-FUt"/>
                             <constraint firstItem="zBZ-aa-rQl" firstAttribute="top" secondItem="Auj-Bl-rAu" secondAttribute="bottom" constant="373" id="b8Y-E7-L8V"/>
                             <constraint firstItem="gxE-Rq-EUV" firstAttribute="trailing" secondItem="Auj-Bl-rAu" secondAttribute="trailing" id="hRd-qO-xPe"/>
-                            <constraint firstItem="gxE-Rq-EUV" firstAttribute="centerX" secondItem="aEc-Vi-EnP" secondAttribute="centerX" id="kmM-Xl-7Gy"/>
                         </constraints>
                     </view>
                     <connections>
@@ -203,33 +189,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="Smt-aX-cIg">
+                                <rect key="frame" x="0.0" y="-5" width="600" height="611"/>
+                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="i6k-hZ-dOg">
-                                <rect key="frame" x="20" y="20" width="560" height="65"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="65" id="uMG-cV-2ip"/>
-                                </constraints>
-                                <string key="text">This app lets you chat using push notifications. Choose a secret code and share it with your friends. If they join with the same code, you can see each other's messages.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" red="0.29803921568627451" green="0.33727760036496335" blue="0.41565921532846717" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="20" y="20" width="560" height="82"/>
+                                <string key="text">Welcome to WhereRU! This app lets you chat with and see the current locations on a map of anyone else currently in the same room. Choose or create a room name and share it with your friends. If they join the same room, you can see each other's location and messages. You can exit a room at any time and your location will no longer be visible by others.</string>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Your Nickname" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W3y-lu-Did">
                                 <rect key="frame" x="20" y="138" width="560" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="3Ng-46-odH"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Secret Code" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="APA-ft-Z6S">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Room Name To Join or Create" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="APA-ft-Z6S">
                                 <rect key="frame" x="20" y="182" width="560" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="bLG-wN-EPc"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rya-Cr-qla">
                                 <rect key="frame" x="257" y="231" width="87" height="33"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="h3g-S7-yM3"/>
-                                    <constraint firstAttribute="width" constant="87" id="sqo-lZ-oTu"/>
+                                    <constraint firstAttribute="width" constant="87" id="Uo1-KY-sE3"/>
+                                    <constraint firstAttribute="height" constant="33" id="xXH-mW-dVt"/>
                                 </constraints>
                                 <state key="normal" title="Start!">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -237,19 +230,23 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.84705882352941175" green="0.88627450980392153" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="APA-ft-Z6S" firstAttribute="top" secondItem="Rxp-Mo-rW4" secondAttribute="top" constant="182" id="5r3-jq-mY9"/>
-                            <constraint firstAttribute="trailing" secondItem="W3y-lu-Did" secondAttribute="trailing" constant="20" symbolic="YES" id="5zO-Fk-hl5"/>
-                            <constraint firstItem="Rya-Cr-qla" firstAttribute="centerX" secondItem="APA-ft-Z6S" secondAttribute="centerX" id="Kaf-tu-eVQ"/>
-                            <constraint firstAttribute="trailing" secondItem="APA-ft-Z6S" secondAttribute="trailing" constant="20" symbolic="YES" id="TtO-RM-d12"/>
-                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="leading" secondItem="Rxp-Mo-rW4" secondAttribute="leading" constant="20" symbolic="YES" id="Up6-cI-CMU"/>
-                            <constraint firstItem="W3y-lu-Did" firstAttribute="leading" secondItem="Rxp-Mo-rW4" secondAttribute="leading" constant="20" symbolic="YES" id="WNm-07-mTB"/>
-                            <constraint firstItem="W3y-lu-Did" firstAttribute="top" secondItem="Rxp-Mo-rW4" secondAttribute="top" constant="138" id="ckF-Vq-grL"/>
-                            <constraint firstItem="APA-ft-Z6S" firstAttribute="leading" secondItem="Rxp-Mo-rW4" secondAttribute="leading" constant="20" symbolic="YES" id="rD3-M2-1Qn"/>
-                            <constraint firstAttribute="trailing" secondItem="i6k-hZ-dOg" secondAttribute="trailing" constant="20" symbolic="YES" id="yUD-Re-5be"/>
-                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="top" secondItem="Rxp-Mo-rW4" secondAttribute="top" constant="20" symbolic="YES" id="yaM-h0-o9Y"/>
-                            <constraint firstItem="Rya-Cr-qla" firstAttribute="top" secondItem="Rxp-Mo-rW4" secondAttribute="top" constant="231" id="ycK-pa-sMv"/>
+                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="trailing" secondItem="W3y-lu-Did" secondAttribute="trailing" id="6lI-iZ-op7"/>
+                            <constraint firstItem="W3y-lu-Did" firstAttribute="leading" secondItem="APA-ft-Z6S" secondAttribute="leading" id="EQ9-Vl-Sg3"/>
+                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="top" secondItem="Oge-hs-SXG" secondAttribute="bottom" id="HUT-8o-JmL"/>
+                            <constraint firstAttribute="trailing" secondItem="Smt-aX-cIg" secondAttribute="trailing" id="PRD-u9-A0s"/>
+                            <constraint firstItem="APA-ft-Z6S" firstAttribute="top" secondItem="W3y-lu-Did" secondAttribute="bottom" constant="14" id="PcN-Fv-otG"/>
+                            <constraint firstItem="Rya-Cr-qla" firstAttribute="top" secondItem="APA-ft-Z6S" secondAttribute="bottom" constant="19" id="QFE-KP-dVK"/>
+                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="leading" secondItem="W3y-lu-Did" secondAttribute="leading" id="Ri6-TK-oHH"/>
+                            <constraint firstItem="bwD-Md-inB" firstAttribute="top" secondItem="Rya-Cr-qla" secondAttribute="bottom" constant="336" id="UBn-Qh-yiV"/>
+                            <constraint firstItem="i6k-hZ-dOg" firstAttribute="leading" secondItem="Rxp-Mo-rW4" secondAttribute="leadingMargin" constant="4" id="ZK8-9f-TlX"/>
+                            <constraint firstItem="Smt-aX-cIg" firstAttribute="centerX" secondItem="W3y-lu-Did" secondAttribute="centerX" id="Zde-Vm-3zH"/>
+                            <constraint firstItem="Smt-aX-cIg" firstAttribute="leading" secondItem="Rxp-Mo-rW4" secondAttribute="leading" id="etP-ts-3lU"/>
+                            <constraint firstItem="Smt-aX-cIg" firstAttribute="top" secondItem="Rxp-Mo-rW4" secondAttribute="topMargin" constant="-5" id="gIH-v7-1bb"/>
+                            <constraint firstItem="W3y-lu-Did" firstAttribute="top" secondItem="i6k-hZ-dOg" secondAttribute="bottom" constant="36" id="gdf-Xv-WQL"/>
+                            <constraint firstItem="Rya-Cr-qla" firstAttribute="centerX" secondItem="APA-ft-Z6S" secondAttribute="centerX" id="hbE-sJ-Fxi"/>
+                            <constraint firstItem="APA-ft-Z6S" firstAttribute="trailing" secondItem="W3y-lu-Did" secondAttribute="trailing" id="vZj-Bg-S0j"/>
+                            <constraint firstItem="Smt-aX-cIg" firstAttribute="centerY" secondItem="Rxp-Mo-rW4" secondAttribute="centerY" id="xtM-c0-f43"/>
                         </constraints>
                     </view>
                     <connections>
@@ -259,7 +256,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aEi-FS-3y6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-93.75" y="701.40845070422529"/>
+            <point key="canvasLocation" x="-94" y="701"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="CKq-5A-RhK">
@@ -277,4 +274,7 @@
             <point key="canvasLocation" x="-862.5" y="-82.394366197183089"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Splash" width="256" height="256"/>
+    </resources>
 </document>
