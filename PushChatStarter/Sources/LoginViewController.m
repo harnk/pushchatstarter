@@ -21,6 +21,8 @@
 	[super viewDidLoad];
 	self.nicknameTextField.text = [self.dataModel nickname];
 	self.secretCodeTextField.text = [self.dataModel secretCode];
+    _secretCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    _nicknameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 }
 
 - (void)viewWillAppear:(BOOL)animated
