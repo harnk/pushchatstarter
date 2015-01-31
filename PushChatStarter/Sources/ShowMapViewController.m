@@ -83,9 +83,9 @@
     UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
-    UIBarButtonItem *btnMapType = [[UIBarButtonItem alloc] initWithTitle:@"Std/Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
+    _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
 //    [self.navigationItem setLeftBarButtonItem:leftBarButton];
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnMapType, nil] animated:YES];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
     
@@ -238,11 +238,14 @@
 
 - (IBAction)chgMapAction
 {
-    //	Toggle the map betweem Hybrid and Standard
+    //	Toggle the map betweem Satellite Hybrid and Standard
     if (self.mapView.mapType == 0) {
         self.mapView.mapType = MKMapTypeHybrid;
+        _btnMapType.title =@" Map";
     } else {
         self.mapView.mapType = MKMapTypeStandard;
+//        UIBarButtonItem *btnMapType = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
+        _btnMapType.title =@" Sat";
     }
     
 
@@ -304,20 +307,106 @@
 
 #pragma mark -
 #pragma mark Map
+//
+//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+//{
+//    MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
+//    view.pinColor = MKPinAnnotationColorPurple;
+//    view.enabled = YES;
+//    view.animatesDrop = YES;
+//    view.canShowCallout = YES;
+//    
+//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"palmTree.png"]];
+//    view.leftCalloutAccessoryView = imageView;
+//    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//    return view;
+//}
+//
+//
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+
+
+- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(id <MKAnnotation>)annotation
 {
-    MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
-    view.pinColor = MKPinAnnotationColorPurple;
-    view.enabled = YES;
-    view.animatesDrop = YES;
-    view.canShowCallout = YES;
     
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"palmTree.png"]];
-    view.leftCalloutAccessoryView = imageView;
-    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    return view;
+    
+    if (annotation == _mapView.userLocation)
+        return nil;
+    
+    MKPinAnnotationView *pin = (MKPinAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier: @"wrupin"];
+    
+    if (pin == nil)
+        pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: @"wrupin"];
+    else
+        pin.annotation = annotation;
+    
+    //  NSLog(@"%@",annotation.title);
+    
+    NSString *titlename=@"xyz";
+    if ([annotation.title isEqualToString:titlename]) {
+        pin.pinColor = MKPinAnnotationColorPurple;
+        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
+    }
+    else{
+        pin.pinColor= MKPinAnnotationColorGreen;
+    }
+    
+    pin.userInteractionEnabled = YES;
+    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //  //pin.image=[UIImage imageNamed:@"arrest.png"] ;
+    
+    
+    
+    pin.rightCalloutAccessoryView = disclosureButton;
+    //pin.pinColor = MKPinAnnotationColorRed;
+    pin.animatesDrop = YES;
+    [pin setEnabled:YES];
+    [pin setCanShowCallout:YES];
+    return pin;
+    
+    
 }
+
+//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+//{
+//    static NSString *identifier = @"MyLocation";
+//    NSString *img;
+//    
+//    if (annotation == mapView.userLocation)
+//        return nil;
+//
+////    if ([annotation isKindOfClass:[yourAnnotationLocation class]])
+////    {
+//    
+//        MKAnnotationView *view = (MKAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+//        if (view == nil)
+//        {
+//            view = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+//            view.enabled = YES;
+//            view.canShowCallout = YES;
+// 
+//            if (annotation == mapView.userLocation) {
+//              img = @"bluepin22.png";
+//            } else {
+//              img = @"greenpin22.png";
+//            }
+//            
+//            view.image = [UIImage imageNamed:img];//here we use a nice image instead of the default pins
+//            view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//        }
+//        else
+//        {
+//            view.annotation = annotation;
+//        }
+//        return view;
+////    }
+////    
+////    return nil;
+//}
+//
+
+
+
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
     
@@ -378,7 +467,7 @@
         NSLog(@"Adding new who %@", who);
         VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
         annNew.title = who;
-        annNew.subtitle = @"Today, 11:19 AM";
+        annNew.subtitle = @"Today, xx AM";
         annNew.pinColor = MKPinAnnotationColorGreen;
         location.latitude = [strings[0] doubleValue];
         location.longitude = [strings[1] doubleValue];
@@ -414,26 +503,7 @@
             break;
         }
     }
-    
-    //    //region
-    //    MKCoordinateRegion region;
-    //    //center
-    //    CLLocationCoordinate2D center;
-    //    center.latitude = CA_LATITUDE;
-    //    center.longitude = CA_LONGITUDE;
-    //    //span
-    //    MKCoordinateSpan span;
-    //    span.latitudeDelta = SPAN_VALUE;
-    //    span.longitudeDelta = SPAN_VALUE;
-    //
-    //    region.center = center;
-    //    region.span = span;
-    //
-    //    // assign region to map
-    //    [_mapView setRegion:region animated:YES];
-    
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -32,7 +32,7 @@
 //@property (nonatomic, strong) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
-
+@property(nonatomic, copy) UIBarButtonItem *btnMapType;
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;
