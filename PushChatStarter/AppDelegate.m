@@ -12,6 +12,7 @@
 #import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "Message.h"
+#import "Harpy.h"
 
 
 void ShowErrorAlert(NSString* text)
@@ -132,6 +133,29 @@ void ShowErrorAlert(NSString* text)
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     }
     
+    // HARPY BEGIN
+    // Check to see if a newer version of this app is available
+    // Present Window before calling Harpy
+    [self.window makeKeyAndVisible];
+    
+    // Set the App ID for your app
+    [[Harpy sharedInstance] setAppID:@"842897634"];
+    
+    // Set the UIViewController that will present an instance of UIAlertController
+    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
+    
+    // (Optional) Set the App Name for your app
+    [[Harpy sharedInstance] setAppName:@"WhereRU"];
+    
+    /* (Optional) Set the Alert Type for your app
+     By default, Harpy is configured to use HarpyAlertTypeOption */
+    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
+    
+    // Perform check for new version of your app
+    [[Harpy sharedInstance] checkVersion];
+
+    // HARPY END
+    
     //--- your custom code
     
     if (launchOptions != nil)
@@ -184,6 +208,8 @@ void ShowErrorAlert(NSString* text)
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     NSLog(@"applicationWillEnterForeground");
+    [[Harpy sharedInstance] checkVersion];
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

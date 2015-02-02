@@ -56,6 +56,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.mapView setDelegate:self];
+    self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
+    self.mapView.layer.borderWidth = 0.5;
     
     MKCoordinateRegion region;
     region.center.latitude = CA_LATITUDE;
@@ -357,6 +359,19 @@
     
     
     
+    //Scxtt may need to move this to mapView delegate
+    // Format the message date
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDoesRelativeDateFormatting:YES];
+    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+//SCXTT need to set the subtitle to the new date time
+
+//    annotation.subtitle = dateString;
+//    [pin se]
+    
+    
     pin.rightCalloutAccessoryView = disclosureButton;
     //pin.pinColor = MKPinAnnotationColorRed;
     pin.animatesDrop = YES;
@@ -467,7 +482,20 @@
         NSLog(@"Adding new who %@", who);
         VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
         annNew.title = who;
-        annNew.subtitle = @"Today, xx AM";
+        
+        
+        
+        //Scxtt may need to move this to mapView delegate
+        // Format the message date
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+        [formatter setDoesRelativeDateFormatting:YES];
+        NSString* dateString = [formatter stringFromDate:[NSDate date]];
+
+        
+        
+        annNew.subtitle = dateString;
         annNew.pinColor = MKPinAnnotationColorGreen;
         location.latitude = [strings[0] doubleValue];
         location.longitude = [strings[1] doubleValue];
