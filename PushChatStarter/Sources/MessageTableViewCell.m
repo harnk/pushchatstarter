@@ -51,8 +51,9 @@ static UIColor* color = nil;
 		_label.clearsContextBeforeDrawing = NO;
 		_label.contentMode = UIViewContentModeRedraw;
 		_label.autoresizingMask = 0;
-		_label.font = [UIFont systemFontOfSize:13];
-		_label.textColor = [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1.0];
+		_label.font = [UIFont systemFontOfSize:11];
+        // Use WhereRU orange
+		_label.textColor = [UIColor colorWithRed:242/255.0 green:149/255.0 blue:0/255.0 alpha:1.0];
 		[self.contentView addSubview:_label];
 	}
 	return self;
@@ -67,7 +68,8 @@ static UIColor* color = nil;
 
 - (void)setMessage:(Message*)message
 {
-	CGPoint point = CGPointZero;
+//    CGPoint point = CGPointZero;
+    CGPoint point = CGPointMake(0, 9);
 
 	// We display messages that are sent by the user on the right-hand side of
 	// the screen. Incoming messages are displayed on the left-hand side.
@@ -78,19 +80,19 @@ static UIColor* color = nil;
 		bubbleType = BubbleTypeRighthand;
 		senderName = NSLocalizedString(@"You", nil);
 		point.x = self.bounds.size.width - message.bubbleSize.width;
-		_label.textAlignment = NSTextAlignmentLeft;
+		_label.textAlignment = NSTextAlignmentRight;
 	}
 	else
 	{
 		bubbleType = BubbleTypeLefthand;
 		senderName = message.senderName;
-		_label.textAlignment = NSTextAlignmentRight;
+		_label.textAlignment = NSTextAlignmentLeft;
 	}
 
 	// Resize the bubble view and tell it to display the message text
 	CGRect rect;
 	rect.origin = point;
-	rect.size = message.bubbleSize;
+    rect.size = message.bubbleSize;
 	_bubbleView.frame = rect;
 	[_bubbleView setText:message.text bubbleType:bubbleType];
 
@@ -102,9 +104,10 @@ static UIColor* color = nil;
 	NSString* dateString = [formatter stringFromDate:message.date];
 
 	// Set the sender's name and date on the label
-	_label.text = [NSString stringWithFormat:@"%@ @ %@ %@", senderName, message.location, dateString];
+	_label.text = [NSString stringWithFormat:@"%@ @ %@ %@", senderName, dateString, message.location];
 	[_label sizeToFit];
-	_label.frame = CGRectMake(8, message.bubbleSize.height, self.contentView.bounds.size.width - 16, 16);
+//    _label.frame = CGRectMake(8, message.bubbleSize.height, self.contentView.bounds.size.width - 16, 16);
+    _label.frame = CGRectMake(8, 0, self.contentView.bounds.size.width - 16, 16);
 }
 
 @end

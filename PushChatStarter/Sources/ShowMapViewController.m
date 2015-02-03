@@ -143,8 +143,9 @@
     static NSString* CellIdentifier = @"MessageCellIdentifier";
     
     MessageTableViewCell* cell = (MessageTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    if (cell == nil) {
         cell = [[MessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
     
     Message* message = (self.dataModel.messages)[indexPath.row];
     [cell setMessage:message];
@@ -162,7 +163,8 @@
     // we draw the cell. We add 16px for the label that sits under the bubble.
     Message* message = (self.dataModel.messages)[indexPath.row];
     message.bubbleSize = [SpeechBubbleView sizeForText:message.text];
-    return message.bubbleSize.height + 16;
+    //Scxtt
+    return message.bubbleSize.height + 9;
 }
 
 #pragma mark -

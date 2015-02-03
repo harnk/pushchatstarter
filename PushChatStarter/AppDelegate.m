@@ -49,9 +49,11 @@ void ShowErrorAlert(NSString* text)
 //    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
     
     NSMutableArray *parts = [NSMutableArray arrayWithArray:[alertValue componentsSeparatedByString:@": "]];
+    
     message.senderName = [parts objectAtIndex:0];
     [parts removeObjectAtIndex:0];
     message.text = [parts componentsJoinedByString:@": "];
+//    message.text = alertValue;
     
     int index = [dataModel addMessage:message];
 
