@@ -37,6 +37,7 @@
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;
 @property (nonatomic, retain) CLLocation *mapViewNorthEast;
+@property CLLocationDistance distanceFromMeInMeters;
 
 - (NSString *)deviceLocation;
 

@@ -21,6 +21,9 @@
 // The location of the sender
 @property (nonatomic, copy) NSString* location;
 
+// The distance in meters of the sender from me
+@property CLLocationDistance distanceFromMeInMeters;
+
 // This doesn't really belong in the data model, but we use it to cache the
 // size of the speech bubble for this message.
 @property (nonatomic, assign) CGSize bubbleSize;

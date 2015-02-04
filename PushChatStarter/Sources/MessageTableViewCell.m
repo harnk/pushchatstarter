@@ -102,9 +102,24 @@ static UIColor* color = nil;
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
 	[formatter setDoesRelativeDateFormatting:YES];
 	NSString* dateString = [formatter stringFromDate:message.date];
-
+    
+    double distanceMeters = message.distanceFromMeInMeters;
+    double distanceInYards = distanceMeters * 1.09361;
+    double distanceInMiles = distanceInYards / 1760;
+    
+    
+    if (distanceInYards > 500) {
+        _label.text = [NSString stringWithFormat:@"%@ %@, %.1f miles", senderName, dateString, distanceInMiles];
+    } else if (([message isSentByUser]) || (distanceMeters < 0.00001)) {
+        _label.text = [NSString stringWithFormat:@"%@ %@", senderName, dateString];
+    } else {
+        _label.text = [NSString stringWithFormat:@"%@ %@, %.1f y", senderName, dateString, distanceInYards];
+    }
+    
 	// Set the sender's name and date on the label
-	_label.text = [NSString stringWithFormat:@"%@ @ %@ %@", senderName, dateString, message.location];
+//    _label.text = [NSString stringWithFormat:@"%@ @ %@ %@", senderName, dateString, message.location];
+//    _label.text = [NSString stringWithFormat:@"%@ %@ %.1f y", senderName, dateString, message.distanceFromMeInMeters];
+    
 	[_label sizeToFit];
 //    _label.frame = CGRectMake(8, message.bubbleSize.height, self.contentView.bounds.size.width - 16, 16);
     _label.frame = CGRectMake(8, 0, self.contentView.bounds.size.width - 16, 16);

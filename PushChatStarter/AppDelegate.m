@@ -45,6 +45,30 @@ void ShowErrorAlert(NSString* text)
     message.date = [NSDate date];
     message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
     
+    //Scxtt - need to calculate this = message.location to my deviceLocation
+    NSLog(@"SCXTT deviceLocation is:%@", [self deviceLocation]);
+    NSLog(@"SCXTT this notification location is:%@", message.location);
+    
+
+    // Handle my location
+    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
+    NSLog(@"SCXTT locA is:%@", locA);
+
+    // Handle the location of the remote device
+    NSArray *strings = [message.location componentsSeparatedByString:@","];
+    CLLocation *locB = [[CLLocation alloc] initWithLatitude:[strings[0] doubleValue] longitude:[strings[1] doubleValue]];
+
+    NSLog(@"SCXTT locB is:%@", locB);
+    
+    CLLocationDistance distance = [locA distanceFromLocation:locB];
+    NSLog(@"SCXTT the distance from me to it is:%f meters", distance);
+    
+    
+    
+    
+    
+    message.distanceFromMeInMeters = distance;
+    
     NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
 //    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
     

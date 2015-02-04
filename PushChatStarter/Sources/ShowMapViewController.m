@@ -435,6 +435,18 @@
     MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
     [_mapView setRegion:savedRegion animated:YES];
 }
+-(void)toastMsg:(NSString *)toastStr {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    // Configure for text only and offset down
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = toastStr;
+//    hud.margin = 10.f;
+//    hud.yOffset = 50.f;
+    hud.removeFromSuperViewOnHide = YES;
+    
+    [hud hide:YES afterDelay:1];
+}
 
 -(void) updatePointsOnMap:(NSNotification *)notification {
 //    [self didSaveMessage];
@@ -445,6 +457,8 @@
     NSLog(@"lat = %@", strings[0]);
     NSLog(@"lon = %@", strings[1]);
     NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+    NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
+    [self toastMsg:toast];
     NSLog(@"who=%@",who);
     
     CLLocationCoordinate2D location, southWest, northEast;
@@ -454,7 +468,6 @@
     southWest.latitude = [strings[0] doubleValue];
     southWest.longitude = [strings[1] doubleValue];
     northEast = southWest;
-    
     
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
