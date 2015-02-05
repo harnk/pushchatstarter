@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "ChatViewController.h"
 #import "ComposeViewController.h"
 #import "ShowMapViewController.h"
 #import "DataModel.h"
@@ -317,6 +316,7 @@ void ShowErrorAlert(NSString* text)
 //    DataModel *dataModel = chatViewController.dataModel;
     DataModel *dataModel = showMapViewController.dataModel;
     
+    //The update cmd will update the user's device token on the server because sometimes these change
     NSDictionary *params = @{@"cmd":@"update",
                              @"user_id":[dataModel userId],
                              @"token":[dataModel deviceToken]};
@@ -344,6 +344,9 @@ void ShowErrorAlert(NSString* text)
     newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     NSLog(@"My token is: %@", newToken);
+    
+    //Tell the app the good news
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];
     
     [dataModel setDeviceToken:newToken];
     

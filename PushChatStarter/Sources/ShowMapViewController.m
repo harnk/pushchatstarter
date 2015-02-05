@@ -81,6 +81,11 @@
                                                  name:@"receivedNewMessage"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(findAction)
+                                                 name:@"receivedDeviceToken"
+                                               object:nil];
+    
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
     UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     
@@ -125,8 +130,6 @@
     else
     {
         [self scrollToNewestMessage];
-        //Scxtt race condition needs to be fixed - dont do next line until AFTER you get a device token
-        [self findAction];
     }
 }
 
@@ -265,7 +268,7 @@
     [self presentViewController:composeController animated:YES completion:nil];
 }
 
-- (IBAction)findAction {
+- (void)findAction {
     [self postFindRequest];
 //    [self mapAction];
 }

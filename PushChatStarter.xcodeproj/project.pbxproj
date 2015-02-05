@@ -32,7 +32,6 @@
 		61489ED9170424080049C6F9 /* SpeechBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489ED8170424080049C6F9 /* SpeechBubbleView.m */; };
 		61489EDC170424CB0049C6F9 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EDB170424CB0049C6F9 /* MessageTableViewCell.m */; };
 		61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EDE170425EA0049C6F9 /* ComposeViewController.m */; };
-		61489EE2170427810049C6F9 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE1170427800049C6F9 /* ChatViewController.m */; };
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
 		9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */; };
@@ -87,8 +86,6 @@
 		61489EDB170424CB0049C6F9 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		61489EDD170425EA0049C6F9 /* ComposeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComposeViewController.h; sourceTree = "<group>"; };
 		61489EDE170425EA0049C6F9 /* ComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeViewController.m; sourceTree = "<group>"; };
-		61489EE0170427800049C6F9 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
-		61489EE1170427800049C6F9 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		61489EE3170427A70049C6F9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		61489EE4170427A80049C6F9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
@@ -229,8 +226,6 @@
 				9E9A82BE1A7D5FA800A0F782 /* Harpy.m */,
 				61489EE3170427A70049C6F9 /* LoginViewController.h */,
 				61489EE4170427A80049C6F9 /* LoginViewController.m */,
-				61489EE0170427800049C6F9 /* ChatViewController.h */,
-				61489EE1170427800049C6F9 /* ChatViewController.m */,
 				61489EDD170425EA0049C6F9 /* ComposeViewController.h */,
 				61489EDE170425EA0049C6F9 /* ComposeViewController.m */,
 				61489EDA170424CB0049C6F9 /* MessageTableViewCell.h */,
@@ -367,7 +362,6 @@
 				61489EDC170424CB0049C6F9 /* MessageTableViewCell.m in Sources */,
 				9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */,
 				61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */,
-				61489EE2170427810049C6F9 /* ChatViewController.m in Sources */,
 				61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

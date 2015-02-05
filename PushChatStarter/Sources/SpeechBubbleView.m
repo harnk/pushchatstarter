@@ -18,7 +18,7 @@ const CGFloat HorzPadding = 4;
 const CGFloat TextLeftMargin = 17;   // insets for the text
 const CGFloat TextRightMargin = 15;
 const CGFloat TextTopMargin = 10;
-const CGFloat TextBottomMargin = 11;
+const CGFloat TextBottomMargin = 10;
 
 const CGFloat MinBubbleWidth = 50;   // minimum width of the bubble
 const CGFloat MinBubbleHeight = 40;  // minimum height of the bubble
@@ -55,7 +55,9 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 
 	CGSize bubbleSize;
 	bubbleSize.width = textSize.width + TextLeftMargin + TextRightMargin;
-	bubbleSize.height = textSize.height + TextTopMargin + TextBottomMargin;
+    
+    // Need to add 4 to this otherwise the bottom line of text gets cut off on iPhone 6+
+    bubbleSize.height = textSize.height + TextTopMargin + TextBottomMargin + 4;
 
 	if (bubbleSize.width < MinBubbleWidth)
 		bubbleSize.width = MinBubbleWidth;
