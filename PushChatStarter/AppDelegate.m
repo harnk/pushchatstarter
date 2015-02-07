@@ -31,13 +31,9 @@ void ShowErrorAlert(NSString* text)
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-//    ChatViewController *chatViewController =
-//    (ChatViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-    ShowMapViewController *showMapViewController =
-    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-//    DataModel *dataModel = chatViewController.dataModel;
     DataModel *dataModel = showMapViewController.dataModel;
     
     Message *message = [[Message alloc] init];
@@ -184,7 +180,7 @@ void ShowErrorAlert(NSString* text)
         if (dictionary != nil)
         {
             NSLog(@"Launched from push notification: %@", dictionary);
-            [self addMessageFromRemoteNotification:dictionary updateUI:NO];
+//            [self addMessageFromRemoteNotification:dictionary updateUI:NO];
         }
     }
     

@@ -215,6 +215,11 @@
     [self presentViewController:loginController animated:YES completion:nil];
 }
 
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                 duration:(NSTimeInterval)duration {
+    NSLog(@"SCXTT ROTATING TO :%ld", toInterfaceOrientation);
+}
+
 - (void)userDidLeave
 {
     [self.dataModel setJoinedChat:NO];

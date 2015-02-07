@@ -78,9 +78,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
-                                <rect key="frame" x="0.0" y="64" width="600" height="279"/>
-                            </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
                                 <rect key="frame" x="0.0" y="344" width="600" height="256"/>
                                 <constraints>
@@ -99,17 +96,26 @@
                                     <outlet property="delegate" destination="jkb-oK-o03" id="zbD-GD-oE2"/>
                                 </connections>
                             </tableView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
+                                <rect key="frame" x="0.0" y="64" width="600" height="279"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr"/>
+                            <constraint firstAttribute="height" secondItem="Cxp-Po-E0T" secondAttribute="height" id="Ut6-AD-87X"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="1" id="XUz-9c-Fiw"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="Zq0-tL-qsX"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="iFf-ST-pV6"/>
                             <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="n3u-Ml-91B"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Ut6-AD-87X"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>

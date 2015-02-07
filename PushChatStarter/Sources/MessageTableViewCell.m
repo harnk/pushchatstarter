@@ -67,10 +67,27 @@ static UIColor* color = nil;
 	self.backgroundColor = color;
 }
 
+-(CGRect)currentScreenBoundsDependOnOrientation
+{
+    
+    CGRect screenBounds = [UIScreen mainScreen].bounds ;
+    CGFloat width = CGRectGetWidth(screenBounds)  ;
+    CGFloat height = CGRectGetHeight(screenBounds) ;
+    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    if(UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(width, height);
+    }else if(UIInterfaceOrientationIsLandscape(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(height, width);
+    }
+    return screenBounds ;
+}
+
 - (void)setMessage:(Message*)message
 {
 //    CGPoint point = CGPointZero;
     CGPoint point = CGPointMake(0, 9);
+    CGRect myrect;
 
 	// We display messages that are sent by the user on the right-hand side of
 	// the screen. Incoming messages are displayed on the left-hand side.
@@ -80,7 +97,13 @@ static UIColor* color = nil;
 	{
 		bubbleType = BubbleTypeRighthand;
 		senderName = NSLocalizedString(@"You", nil);
-		point.x = self.bounds.size.width - message.bubbleSize.width;
+        
+        myrect = [self currentScreenBoundsDependOnOrientation];
+        
+        point.x = myrect.size.width  - message.bubbleSize.width;
+//        point.x = self.bounds.size.width - message.bubbleSize.width;
+        NSLog(@"SCXTT myrect.size.width: %f",myrect.size.width);
+        
 		_label.textAlignment = NSTextAlignmentRight;
 	}
 	else
