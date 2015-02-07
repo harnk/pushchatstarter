@@ -14,9 +14,10 @@
 // The complete history of messages this user has sent and received, in
 // chronological order (oldest first).
 @property (nonatomic, strong) NSMutableArray* messages;
+@property (nonatomic, strong) NSString* myLoc;
 
 // Loads the list of messages from a file.
-- (void)loadMessages;
+- (void)loadMessages:(NSString*)myLoc;
 
 // Saves the list of messages to a file.
 - (void)saveMessages;

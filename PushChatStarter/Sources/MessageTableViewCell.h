@@ -13,5 +13,7 @@
 @interface MessageTableViewCell : UITableViewCell
 
 - (void)setMessage:(Message*)message;
+@property (nonatomic, retain) CLLocationManager *locationManager;
+
 
 @end

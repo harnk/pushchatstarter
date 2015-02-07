@@ -44,27 +44,18 @@ void ShowErrorAlert(NSString* text)
     message.date = [NSDate date];
     message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
     
-    //Scxtt - need to calculate this = message.location to my deviceLocation
-    NSLog(@"SCXTT deviceLocation is:%@", [self deviceLocation]);
-    NSLog(@"SCXTT this notification location is:%@", message.location);
-    
-
     // Handle my location
     CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
-    NSLog(@"SCXTT locA is:%@", locA);
+//    NSLog(@"locA is:%@", locA);
 
     // Handle the location of the remote device
     NSArray *strings = [message.location componentsSeparatedByString:@","];
     CLLocation *locB = [[CLLocation alloc] initWithLatitude:[strings[0] doubleValue] longitude:[strings[1] doubleValue]];
 
-    NSLog(@"SCXTT locB is:%@", locB);
+//    NSLog(@"locB is:%@", locB);
     
     CLLocationDistance distance = [locA distanceFromLocation:locB];
-    NSLog(@"SCXTT the distance from me to it is:%f meters", distance);
-    
-    
-    
-    
+//    NSLog(@"The distance from me to it is:%f meters", distance);
     
     message.distanceFromMeInMeters = distance;
     
@@ -76,7 +67,8 @@ void ShowErrorAlert(NSString* text)
     message.senderName = [parts objectAtIndex:0];
     [parts removeObjectAtIndex:0];
     message.text = [parts componentsJoinedByString:@": "];
-//    message.text = alertValue;
+
+    //    message.text = alertValue;
     
     int index = [dataModel addMessage:message];
 
@@ -131,6 +123,30 @@ void ShowErrorAlert(NSString* text)
     }
 }
 
+- (void)doHarpy:(UIWindow *)_window
+{
+    // HARPY BEGIN
+    // Check to see if a newer version of this app is available
+    // Present Window before calling Harpy
+    [self.window makeKeyAndVisible];
+    
+    // Set the App ID for your app
+    [[Harpy sharedInstance] setAppID:@"842897634"];
+    
+    // Set the UIViewController that will present an instance of UIAlertController
+    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
+    
+    // (Optional) Set the App Name for your app
+    [[Harpy sharedInstance] setAppName:@"WhereRU"];
+    
+    /* (Optional) Set the Alert Type for your app
+     By default, Harpy is configured to use HarpyAlertTypeOption */
+    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
+    
+    // Perform check for new version of your app
+    [[Harpy sharedInstance] checkVersion];
+}
+
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 //{
 //    NSLog(@"Received notification: %@", userInfo);
@@ -158,28 +174,7 @@ void ShowErrorAlert(NSString* text)
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     }
     
-    // HARPY BEGIN
-    // Check to see if a newer version of this app is available
-    // Present Window before calling Harpy
-    [self.window makeKeyAndVisible];
-    
-    // Set the App ID for your app
-    [[Harpy sharedInstance] setAppID:@"842897634"];
-    
-    // Set the UIViewController that will present an instance of UIAlertController
-    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
-    
-    // (Optional) Set the App Name for your app
-    [[Harpy sharedInstance] setAppName:@"WhereRU"];
-    
-    /* (Optional) Set the Alert Type for your app
-     By default, Harpy is configured to use HarpyAlertTypeOption */
-    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
-    
-    // Perform check for new version of your app
-    [[Harpy sharedInstance] checkVersion];
-
-    // HARPY END
+    [self doHarpy:_window];
     
     //--- your custom code
     
@@ -193,6 +188,7 @@ void ShowErrorAlert(NSString* text)
         }
     }
     
+    //SCXTT Need to review this and see if it is still necesary
     [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     // register for types of remote notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
@@ -200,6 +196,18 @@ void ShowErrorAlert(NSString* text)
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound |
       UIRemoteNotificationTypeAlert)];
+    
+    // Start updating my own location
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+#ifdef __IPHONE_8_0
+    if(IS_OS_8_OR_LATER) {
+        // Use one or the other, not both. Depending on what you put in info.plist
+        //        [self.locationManager requestWhenInUseAuthorization];
+        [self.locationManager requestAlwaysAuthorization];
+    }
+#endif
+    [self.locationManager startUpdatingLocation];
     
     return YES;
 }
@@ -252,36 +260,14 @@ void ShowErrorAlert(NSString* text)
 {
     
     NSLog(@"Respond to WhereRU with Im Here back to asker");
-
-    
-//    SCXTT clean this crap up
-    
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-#ifdef __IPHONE_8_0
-    if(IS_OS_8_OR_LATER) {
-        // Use one or the other, not both. Depending on what you put in info.plist
-        //        [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager requestAlwaysAuthorization];
-    }
-#endif
-    [self.locationManager startUpdatingLocation];
-
     NSLog(@"Im over here %@", [self deviceLocation]);
-        
-    
     
     ComposeViewController *getLocationData;
     getLocationData = [[ComposeViewController alloc] init];
-//    [getLocationData.locationManager startUpdatingLocation];
-//    NSLog(@"Im here: %@",[getLocationData deviceLocation]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
-    ShowMapViewController *showMapViewController =
-    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
-//    DataModel *dataModel = chatViewController.dataModel;
     DataModel *dataModel = showMapViewController.dataModel;
     
     NSString *text = @"Im Here";
@@ -329,10 +315,13 @@ void ShowErrorAlert(NSString* text)
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
+    
+    NSLog(@"My location is: %@", [self deviceLocation]);
+    [[SingletonClass singleObject] setMyLocation:[self deviceLocation]];
+    
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
 //    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
-    ShowMapViewController *showMapViewController =
-    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     
 //    DataModel *dataModel = chatViewController.dataModel;
     DataModel *dataModel = showMapViewController.dataModel;
@@ -342,8 +331,8 @@ void ShowErrorAlert(NSString* text)
     NSString *newToken = [deviceToken description];
     newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
     NSLog(@"My token is: %@", newToken);
+    
     
     //Tell the app the good news
     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];

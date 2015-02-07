@@ -9,6 +9,7 @@
 #import "MessageTableViewCell.h"
 #import "Message.h"
 #import "SpeechBubbleView.h"
+#import "SingletonClass.h"
 
 static UIColor* color = nil;
 
@@ -103,10 +104,24 @@ static UIColor* color = nil;
 	[formatter setDoesRelativeDateFormatting:YES];
 	NSString* dateString = [formatter stringFromDate:message.date];
     
+
+    //Format the location to read distance from me now
+    //get location from message.location
+    NSString *mLoc = [[SingletonClass singleObject] myLocation];
+    NSArray *strings1 = [mLoc componentsSeparatedByString:@","];
+    CLLocation *locA = [[CLLocation alloc] initWithLatitude:[strings1[0] doubleValue] longitude:[strings1[1] doubleValue]];
+
+    
+    // Handle the location of the remote devices from the saved messages
+    NSArray *strings = [message.location componentsSeparatedByString:@","];
+    CLLocation *locB = [[CLLocation alloc] initWithLatitude:[strings[0] doubleValue] longitude:[strings[1] doubleValue]];
+    CLLocationDistance distance = [locA distanceFromLocation:locB];
+    message.distanceFromMeInMeters = distance;
+    
+//  SCXTT This is in two places, fix that, put it in one place
     double distanceMeters = message.distanceFromMeInMeters;
     double distanceInYards = distanceMeters * 1.09361;
     double distanceInMiles = distanceInYards / 1760;
-    
     
     if (distanceInYards > 500) {
         _label.text = [NSString stringWithFormat:@"%@ %@, %.1f miles", senderName, dateString, distanceInMiles];

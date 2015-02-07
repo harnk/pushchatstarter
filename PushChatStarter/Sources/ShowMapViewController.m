@@ -39,8 +39,22 @@
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+#ifdef __IPHONE_8_0
+        if(IS_OS_8_OR_LATER) {
+            // Use one or the other, not both. Depending on what you put in info.plist
+            //        [self.locationManager requestWhenInUseAuthorization];
+            [self.locationManager requestAlwaysAuthorization];
+        }
+#endif
+        [self.locationManager startUpdatingLocation];
+        [[SingletonClass singleObject] setMyLocation:[self deviceLocation]];
+        
         _dataModel = [[DataModel alloc] init];
-        [_dataModel loadMessages];
+        [_dataModel loadMessages:[self deviceLocation]];
+        
         _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     }
     return self;
@@ -55,6 +69,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [self.mapView setDelegate:self];
     self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
     self.mapView.layer.borderWidth = 0.5;
@@ -151,6 +166,8 @@
     }
     
     Message* message = (self.dataModel.messages)[indexPath.row];
+//    NSLog(@"message.text:%@", message.text);
+//    NSLog(@"message.location:%@", message.location);
     [cell setMessage:message];
     return cell;
 }
@@ -166,7 +183,6 @@
     // we draw the cell. We add 16px for the label that sits under the bubble.
     Message* message = (self.dataModel.messages)[indexPath.row];
     message.bubbleSize = [SpeechBubbleView sizeForText:message.text];
-    //Scxtt
     return message.bubbleSize.height + 9;
 }
 
@@ -386,47 +402,6 @@
     
     
 }
-
-//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
-//{
-//    static NSString *identifier = @"MyLocation";
-//    NSString *img;
-//    
-//    if (annotation == mapView.userLocation)
-//        return nil;
-//
-////    if ([annotation isKindOfClass:[yourAnnotationLocation class]])
-////    {
-//    
-//        MKAnnotationView *view = (MKAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-//        if (view == nil)
-//        {
-//            view = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
-//            view.enabled = YES;
-//            view.canShowCallout = YES;
-// 
-//            if (annotation == mapView.userLocation) {
-//              img = @"bluepin22.png";
-//            } else {
-//              img = @"greenpin22.png";
-//            }
-//            
-//            view.image = [UIImage imageNamed:img];//here we use a nice image instead of the default pins
-//            view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-//        }
-//        else
-//        {
-//            view.annotation = annotation;
-//        }
-//        return view;
-////    }
-////    
-////    return nil;
-//}
-//
-
-
-
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
     

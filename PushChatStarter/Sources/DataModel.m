@@ -53,10 +53,15 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 	return [documentsDirectory stringByAppendingPathComponent:@"Messages.plist"];
 }
 
-- (void)loadMessages
+- (void)loadMessages:(NSString*)myLoc
 {
 	NSString* path = [self messagesPath];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+    NSLog(@"loadMessages - messagesPath: %@", path);
+    NSLog(@"myLoc: %@", myLoc);
+    
+    _myLoc = myLoc;
+	
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path])
 	{
 		// We store the messages in a plist file inside the app's Documents
 		// directory. The Message object conforms to the NSCoding protocol,
@@ -68,6 +73,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 		NSData* data = [[NSData alloc] initWithContentsOfFile:path];
 		NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 		self.messages = [unarchiver decodeObjectForKey:@"Messages"];
+//        NSLog(@"self.messages: %@", self.messages);
 		[unarchiver finishDecoding];
 	}
 	else
