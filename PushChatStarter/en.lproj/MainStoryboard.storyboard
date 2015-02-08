@@ -78,14 +78,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
+                                <rect key="frame" x="0.0" y="64" width="600" height="296"/>
+                            </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
-                                <rect key="frame" x="0.0" y="344" width="600" height="256"/>
+                                <rect key="frame" x="0.0" y="360" width="600" height="240"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="4Md-OW-Fim"/>
-                                    <constraint firstAttribute="height" constant="256" id="RjX-Pk-Kld">
+                                    <constraint firstAttribute="width" constant="320" id="4Md-OW-Fim">
+                                        <variation key="heightClass=compact" constant="240"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="240" id="RjX-Pk-Kld">
                                         <variation key="heightClass=compact" constant="336"/>
                                         <variation key="heightClass=regular-widthClass=regular" constant="736"/>
                                     </constraint>
+                                    <constraint firstAttribute="width" constant="240" id="zjg-Ti-ed0"/>
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="JVW-H3-eGG">
@@ -98,6 +104,7 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="4Md-OW-Fim"/>
+                                        <exclude reference="zjg-Ti-ed0"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
@@ -106,42 +113,48 @@
                                         <exclude reference="RjX-Pk-Kld"/>
                                     </mask>
                                 </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="zjg-Ti-ed0"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="dataSource" destination="jkb-oK-o03" id="7CE-b4-LgC"/>
                                     <outlet property="delegate" destination="jkb-oK-o03" id="zbD-GD-oE2"/>
                                 </connections>
                             </tableView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cxp-Po-E0T">
-                                <rect key="frame" x="0.0" y="64" width="600" height="279"/>
-                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="0xZ-Nc-lQE"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" constant="240" id="59S-DX-R8Q"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr">
-                                <variation key="heightClass=regular-widthClass=regular" constant="320"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="240"/>
                             </constraint>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="L9K-jj-oMr"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="LYw-rd-pob"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="S80-aW-BTx"/>
                             <constraint firstAttribute="height" secondItem="Cxp-Po-E0T" secondAttribute="height" id="Ut6-AD-87X"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="1" id="XUz-9c-Fiw">
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="XUz-9c-Fiw">
                                 <variation key="heightClass=regular-widthClass=regular" constant="-736"/>
                             </constraint>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="Zq0-tL-qsX"/>
+                            <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="ZxK-NM-aRV"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="bcn-2e-XFE"/>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dbT-U3-nN0"/>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="dic-XN-DA9"/>
+                            <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="ewG-qS-xwe"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv">
-                                <variation key="heightClass=regular-widthClass=regular" constant="-480"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="-560"/>
                             </constraint>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="iFf-ST-pV6">
                                 <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="krW-ho-vFO"/>
                             <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="n3u-Ml-91B">
                                 <variation key="heightClass=compact" constant="324"/>
-                                <variation key="heightClass=regular-widthClass=regular" constant="480"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="560"/>
                             </constraint>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Tog-1q-ick" secondAttribute="bottom" id="nxf-cD-W9C"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="s1A-af-RNr"/>
@@ -151,13 +164,17 @@
                             <mask key="constraints">
                                 <exclude reference="S80-aW-BTx"/>
                                 <exclude reference="bcn-2e-XFE"/>
+                                <exclude reference="krW-ho-vFO"/>
                                 <exclude reference="0xZ-Nc-lQE"/>
+                                <exclude reference="59S-DX-R8Q"/>
                                 <exclude reference="L9K-jj-oMr"/>
                                 <exclude reference="LYw-rd-pob"/>
                                 <exclude reference="Ut6-AD-87X"/>
                                 <exclude reference="dbT-U3-nN0"/>
+                                <exclude reference="ewG-qS-xwe"/>
                                 <exclude reference="s1A-af-RNr"/>
                                 <exclude reference="ygM-JQ-rxk"/>
+                                <exclude reference="ZxK-NM-aRV"/>
                                 <exclude reference="dic-XN-DA9"/>
                                 <exclude reference="nxf-cD-W9C"/>
                             </mask>
@@ -183,6 +200,17 @@
                                 <include reference="nxf-cD-W9C"/>
                             </mask>
                         </variation>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <exclude reference="XUz-9c-Fiw"/>
+                                <exclude reference="gLH-4Z-9Pv"/>
+                                <include reference="krW-ho-vFO"/>
+                                <exclude reference="n3u-Ml-91B"/>
+                                <include reference="59S-DX-R8Q"/>
+                                <include reference="ewG-qS-xwe"/>
+                                <include reference="ZxK-NM-aRV"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
@@ -192,7 +220,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Tw-hF-AKJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-94.5" y="-84"/>
+            <point key="canvasLocation" x="-95.25" y="-84"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Ixo-Ar-85R">
