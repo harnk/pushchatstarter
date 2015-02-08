@@ -84,6 +84,7 @@
                                     <constraint firstAttribute="width" constant="320" id="4Md-OW-Fim"/>
                                     <constraint firstAttribute="height" constant="256" id="RjX-Pk-Kld">
                                         <variation key="heightClass=compact" constant="336"/>
+                                        <variation key="heightClass=regular-widthClass=regular" constant="736"/>
                                     </constraint>
                                 </constraints>
                                 <prototypes>
@@ -118,22 +119,29 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="0xZ-Nc-lQE"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
-                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr"/>
+                            <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr">
+                                <variation key="heightClass=regular-widthClass=regular" constant="320"/>
+                            </constraint>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="L9K-jj-oMr"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="LYw-rd-pob"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="S80-aW-BTx"/>
                             <constraint firstAttribute="height" secondItem="Cxp-Po-E0T" secondAttribute="height" id="Ut6-AD-87X"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="1" id="XUz-9c-Fiw"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="1" id="XUz-9c-Fiw">
+                                <variation key="heightClass=regular-widthClass=regular" constant="-736"/>
+                            </constraint>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="bottom" secondItem="TLh-R1-mLh" secondAttribute="top" id="Zq0-tL-qsX"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="bcn-2e-XFE"/>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dbT-U3-nN0"/>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="dic-XN-DA9"/>
-                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv">
+                                <variation key="heightClass=regular-widthClass=regular" constant="-480"/>
+                            </constraint>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="iFf-ST-pV6">
                                 <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="n3u-Ml-91B">
                                 <variation key="heightClass=compact" constant="324"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="480"/>
                             </constraint>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Tog-1q-ick" secondAttribute="bottom" id="nxf-cD-W9C"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="s1A-af-RNr"/>
@@ -184,7 +192,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Tw-hF-AKJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-94" y="-84"/>
+            <point key="canvasLocation" x="-94.5" y="-84"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Ixo-Ar-85R">
