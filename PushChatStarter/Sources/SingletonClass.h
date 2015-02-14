@@ -12,5 +12,6 @@
 +(SingletonClass *)singleObject;
 
 @property(nonatomic, strong)NSString *myLocation;
+@property (nonatomic) BOOL notificationsAreDisabled;
 
 @end

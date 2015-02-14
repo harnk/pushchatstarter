@@ -67,6 +67,15 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -88,6 +97,12 @@
     [NSTimer scheduledTimerWithTimeInterval: 0.001
                                      target: self
                                    selector: @selector(changeRegion)
+                                   userInfo: nil
+                                    repeats: NO];
+    
+    [NSTimer scheduledTimerWithTimeInterval: 7
+                                     target: self
+                                   selector: @selector(areNotificationsEnabled)
                                    userInfo: nil
                                     repeats: NO];
     
@@ -113,6 +128,44 @@
     
 }
 
+-(void) areNotificationsEnabled {
+    BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
+    NSLog(@" SCXTT [[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
+    NSLog(@"Move the ALERT HERE for Notifs being off");
+    
+    NSLog(@"SCXTT setting notificationsAreDisabled to YES by default");
+    [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
+    // Check if notifications are enabled because this app won't work if they aren't
+    //    _notificationsAreDisabled = false;
+    BOOL isdisabled = true;
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+    {
+        NSLog(@"__IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 is YES");
+        isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
+        NSLog(@"isdisabled value: %d",isdisabled);
+    }
+#else
+    NSLog(@"__IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 is NO");
+    UIRemoteNotificationType types = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+    if (types & UIRemoteNotificationTypeAlert)
+    {
+        isdisabled = false;
+        NSLog(@"isdisabled value: %d",isdisabled);
+    }
+#endif
+    
+    [[SingletonClass singleObject] setNotificationsAreDisabled:isdisabled];
+    //    _notificationsAreDisabled = isdisabled;
+    
+    //Pop an aler to let the user go to settings and change notifications setting for this app
+    if (isdisabled) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+        [alert show];
+    }
+    
+}
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -168,12 +221,23 @@
     Message* message = (self.dataModel.messages)[indexPath.row];
 //    NSLog(@"message.text:%@", message.text);
 //    NSLog(@"message.location:%@", message.location);
+
+    NSLog(@"SCXTT What is the CELL WIDTH here???");
+    NSLog(@"%f", cell.contentView.frame.size.width);
+    
     [cell setMessage:message];
     return cell;
 }
 
 #pragma mark -
 #pragma mark UITableView Delegate
+
+//- (CGFloat)tableView:(UITableView*)tableView widthForRowAtIndexPath:(NSIndexPath*)indexPath
+//{
+//    // This function is called before cellForRowAtIndexPath, once for each cell.
+//
+//}
+
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
 {
@@ -218,6 +282,7 @@
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                  duration:(NSTimeInterval)duration {
     NSLog(@"SCXTT ROTATING TO :%ld", toInterfaceOrientation);
+    
 }
 
 - (void)userDidLeave
@@ -300,37 +365,42 @@
 
 - (void)postFindRequest
 {
-    //    [_messageTextView resignFirstResponder];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = NSLocalizedString(@"whereru", nil);
-    
-    //    NSString *text = self.messageTextView.text;
-    NSString *text = @"Hey WhereRU?";
-    
-    NSDictionary *params = @{@"cmd":@"find",
-                             @"user_id":[_dataModel userId],
-                             @"location":[self deviceLocation],
-                             @"text":text};
-    
-    [_client
-     postPath:@"/whereru/api/api.php"
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
-         if (operation.response.statusCode != 200) {
-             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-         } else {
-             NSLog(@"Find request sent to all devices");
-             //             [self dismissViewControllerAnimated:YES completion:nil];
-         }
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         if ([self isViewLoaded]) {
+    if (!_isUpdating)
+    {
+        _isUpdating = YES;
+        
+        //    [_messageTextView resignFirstResponder];
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"whereru", nil);
+        
+        //    NSString *text = self.messageTextView.text;
+        NSString *text = @"Hey WhereRU?";
+        
+        NSDictionary *params = @{@"cmd":@"find",
+                                 @"user_id":[_dataModel userId],
+                                 @"location":[self deviceLocation],
+                                 @"text":text};
+        
+        [_client
+         postPath:@"/whereru/api/api.php"
+         parameters:params
+         success:^(AFHTTPRequestOperation *operation, id responseObject) {
              [MBProgressHUD hideHUDForView:self.view animated:YES];
-             ShowErrorAlert([error localizedDescription]);
-         }
-     }];
-    
+             if (operation.response.statusCode != 200) {
+                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+             } else {
+                 NSLog(@"SMVC Find request sent to all devices");
+                 //             [self dismissViewControllerAnimated:YES completion:nil];
+             }
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             if ([self isViewLoaded]) {
+                 _isUpdating = NO;
+                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                 ShowErrorAlert([error localizedDescription]);
+             }
+         }];
+    }
 }
 
 #pragma mark -

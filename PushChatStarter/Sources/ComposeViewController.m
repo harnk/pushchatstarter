@@ -96,7 +96,7 @@
          if (operation.response.statusCode != 200) {
              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
          } else {
-             NSLog(@"Find request sent to all devices");
+             NSLog(@"CVC Find request sent to all devices");
 //             [self dismissViewControllerAnimated:YES completion:nil];
          }
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

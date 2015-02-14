@@ -86,6 +86,7 @@ void ShowErrorAlert(NSString* text)
         [self postImhere:asker];
     } else {
         if ([alert rangeOfString:@"Im Here"].location == NSNotFound) {
+//        if (![alert length] == 0) {
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
@@ -158,6 +159,7 @@ void ShowErrorAlert(NSString* text)
     //-- Set Notification
     if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
     {
+        NSLog(@"SCXTT responds to isRegistered...");
         // iOS 8 Notifications
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
         
@@ -165,6 +167,7 @@ void ShowErrorAlert(NSString* text)
     }
     else
     {
+        NSLog(@"SCXTT DOES NOT respond to to isRegistered...");
         // iOS < 8 Notifications
         [application registerForRemoteNotificationTypes:
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
@@ -329,6 +332,8 @@ void ShowErrorAlert(NSString* text)
     newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSLog(@"My token is: %@", newToken);
     
+    NSLog(@"SCXTT got a token so notificationsAreDisabled to NO");
+    [[SingletonClass singleObject] setNotificationsAreDisabled:NO];
     
     //Tell the app the good news
     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];

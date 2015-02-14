@@ -12,7 +12,7 @@
 #define ApplicationDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
-    CLLocationManager*      locationManager;
+//    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
 

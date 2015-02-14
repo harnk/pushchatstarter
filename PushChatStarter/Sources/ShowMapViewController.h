@@ -31,6 +31,7 @@
 @property (nonatomic, strong, readonly) DataModel* dataModel;
 //@property (nonatomic, strong) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
+@property (nonatomic) BOOL isUpdating;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
 @property(nonatomic, copy) UIBarButtonItem *btnMapType;
 
