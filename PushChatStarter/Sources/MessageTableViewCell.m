@@ -64,6 +64,7 @@ static UIColor* color = nil;
 {
 	// This is a little trick to set the background color of a table view cell.
 	[super layoutSubviews];
+    NSLog(@"SCXTT layoutSubviews");
 	self.backgroundColor = color;
 }
 

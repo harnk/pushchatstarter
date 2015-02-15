@@ -21,14 +21,23 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Auj-Bl-rAu">
                                 <rect key="frame" x="0.0" y="66" width="600" height="161"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="161" id="w0w-y6-w1w"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=compact-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="27" width="800" height="0.0"/>
+                                </variation>
                                 <connections>
                                     <outlet property="delegate" destination="PVS-JL-Wjs" id="blB-u0-kPU"/>
                                 </connections>
                             </textView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gxE-Rq-EUV">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="HaY-5k-cFC"/>
+                                </constraints>
                                 <items>
                                     <navigationItem title="Title" id="r20-I7-EQY">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="wHY-4G-Xpj">
@@ -43,6 +52,9 @@
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
+                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="20" width="800" height="5"/>
+                                </variation>
                             </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -52,9 +64,14 @@
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="top" secondItem="gxE-Rq-EUV" secondAttribute="bottom" constant="2" id="K9z-vQ-PaF"/>
                             <constraint firstAttribute="trailing" secondItem="gxE-Rq-EUV" secondAttribute="trailing" id="V98-tn-lGV"/>
                             <constraint firstItem="Auj-Bl-rAu" firstAttribute="leading" secondItem="oZS-E7-u9U" secondAttribute="leading" id="aQZ-ik-FUt"/>
-                            <constraint firstItem="zBZ-aa-rQl" firstAttribute="top" secondItem="Auj-Bl-rAu" secondAttribute="bottom" constant="373" id="b8Y-E7-L8V"/>
                             <constraint firstItem="gxE-Rq-EUV" firstAttribute="trailing" secondItem="Auj-Bl-rAu" secondAttribute="trailing" id="hRd-qO-xPe"/>
+                            <constraint firstItem="Auj-Bl-rAu" firstAttribute="top" secondItem="I1X-iR-uIF" secondAttribute="bottom" constant="46" id="lFn-Dy-7s4"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="K9z-vQ-PaF"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="messageTextView" destination="Auj-Bl-rAu" id="nu8-ja-9N8"/>
@@ -84,7 +101,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-1q-ick">
                                 <rect key="frame" x="0.0" y="360" width="600" height="240"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="4Md-OW-Fim">
+                                    <constraint firstAttribute="width" constant="240" id="4Md-OW-Fim">
                                         <variation key="heightClass=compact" constant="240"/>
                                     </constraint>
                                     <constraint firstAttribute="height" constant="240" id="RjX-Pk-Kld">
@@ -94,7 +111,7 @@
                                     <constraint firstAttribute="width" constant="240" id="zjg-Ti-ed0"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="JVW-H3-eGG">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="JVW-H3-eGG">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JVW-H3-eGG" id="RsT-MY-Lvq">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -153,7 +170,7 @@
                             </constraint>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="krW-ho-vFO"/>
                             <constraint firstAttribute="trailing" secondItem="Tog-1q-ick" secondAttribute="trailing" id="n3u-Ml-91B">
-                                <variation key="heightClass=compact" constant="324"/>
+                                <variation key="heightClass=compact" constant="240"/>
                                 <variation key="heightClass=regular-widthClass=regular" constant="560"/>
                             </constraint>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Tog-1q-ick" secondAttribute="bottom" id="nxf-cD-W9C"/>

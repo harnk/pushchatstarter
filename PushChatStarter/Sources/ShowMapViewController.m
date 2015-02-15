@@ -125,7 +125,6 @@
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
-    
 }
 
 -(void) areNotificationsEnabled {
@@ -173,12 +172,13 @@
     {
         [self showLoginViewController];
     }
+    [self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    NSLog(@"SCXTT viewWillAppear");
     self.title = [_dataModel secretCode];
     
     // Show a label in the table's footer if there are no messages
@@ -204,6 +204,10 @@
 #pragma mark -
 #pragma mark - UITableViewDataSource
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"SCXTT willDisplayCell CELL WIDTH %f", cell.contentView.frame.size.width);
+}
+
 - (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataModel.messages.count;
@@ -225,7 +229,18 @@
     NSLog(@"SCXTT What is the CELL WIDTH here???");
     NSLog(@"%f", cell.contentView.frame.size.width);
     
+    
     [cell setMessage:message];
+    
+    //Do orientation specific stuff here
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        //Make labels smaller
+    }
+    else {
+        //Make them bigger
+    }
+    
+    
     return cell;
 }
 
@@ -249,6 +264,7 @@
     message.bubbleSize = [SpeechBubbleView sizeForText:message.text];
     return message.bubbleSize.height + 9;
 }
+
 
 #pragma mark -
 #pragma mark ComposeDelegate
@@ -282,7 +298,9 @@
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                  duration:(NSTimeInterval)duration {
     NSLog(@"SCXTT ROTATING TO :%ld", toInterfaceOrientation);
-    
+
+    [self.tableView reloadData];
+    [self scrollToNewestMessage];
 }
 
 - (void)userDidLeave
