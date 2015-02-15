@@ -106,6 +106,7 @@
                                     </constraint>
                                     <constraint firstAttribute="height" constant="240" id="RjX-Pk-Kld">
                                         <variation key="heightClass=compact" constant="336"/>
+                                        <variation key="widthClass=compact" constant="240"/>
                                         <variation key="heightClass=regular-widthClass=regular" constant="736"/>
                                     </constraint>
                                     <constraint firstAttribute="width" constant="240" id="zjg-Ti-ed0"/>

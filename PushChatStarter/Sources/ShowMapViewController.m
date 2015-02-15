@@ -300,7 +300,7 @@
     NSLog(@"SCXTT ROTATING TO :%ld", toInterfaceOrientation);
 
     [self.tableView reloadData];
-    [self scrollToNewestMessage];
+//    [self scrollToNewestMessage];
 }
 
 - (void)userDidLeave
@@ -373,6 +373,8 @@
 }
 
 - (void)findAction {
+    NSLog(@"SCXTT findAction");
+    _isUpdating = NO;
     [self postFindRequest];
 //    [self mapAction];
 }
