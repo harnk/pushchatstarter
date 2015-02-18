@@ -13,5 +13,6 @@
 
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
+@property (nonatomic) BOOL isUpdating;
 
 @end

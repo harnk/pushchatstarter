@@ -49,9 +49,20 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 
 + (CGSize)sizeForText:(NSString*)text
 {
-	CGSize textSize = [text sizeWithFont:font
-		constrainedToSize:CGSizeMake(WrapWidth, 9999)
-		lineBreakMode:NSLineBreakByWordWrapping];
+//    CGSize textSize = [string sizeWithFont:font
+//                         constrainedToSize:constrainSize
+//                             lineBreakMode:NSLineBreakByWordWrapping];
+//    
+//    CGRect textRect = [text boundingRectWithSize:textSize
+//                                         options:NSStringDrawingUsesLineFragmentOrigin
+//                                      attributes:@{NSFontAttributeName:FONT}
+//                                         context:nil];
+//    WARNING FIX HERE http://stackoverflow.com/questions/18903304/replacement-for-deprecated-sizewithfontconstrainedtosizelinebreakmode-in-ios
+    
+    
+    CGSize textSize = [text sizeWithFont:font
+                       constrainedToSize:CGSizeMake(WrapWidth, 9999)
+                           lineBreakMode:NSLineBreakByWordWrapping];
 
 	CGSize bubbleSize;
 	bubbleSize.width = textSize.width + TextLeftMargin + TextRightMargin;

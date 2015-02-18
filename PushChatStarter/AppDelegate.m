@@ -120,30 +120,6 @@ void ShowErrorAlert(NSString* text)
     }
 }
 
-- (void)doHarpy:(UIWindow *)_window
-{
-    // HARPY BEGIN
-    // Check to see if a newer version of this app is available
-    // Present Window before calling Harpy
-    [self.window makeKeyAndVisible];
-    
-    // Set the App ID for your app
-    [[Harpy sharedInstance] setAppID:@"842897634"];
-    
-    // Set the UIViewController that will present an instance of UIAlertController
-    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
-    
-    // (Optional) Set the App Name for your app
-    [[Harpy sharedInstance] setAppName:@"WhereRU"];
-    
-    /* (Optional) Set the Alert Type for your app
-     By default, Harpy is configured to use HarpyAlertTypeOption */
-    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
-    
-    // Perform check for new version of your app
-    [[Harpy sharedInstance] checkVersion];
-}
-
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 //{
 //    NSLog(@"Received notification: %@", userInfo);
@@ -173,7 +149,27 @@ void ShowErrorAlert(NSString* text)
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     }
     
-    [self doHarpy:_window];
+    // HARPY BEGIN
+    // Check to see if a newer version of this app is available
+    // Present Window before calling Harpy
+    [self.window makeKeyAndVisible];
+    
+    // Set the App ID for your app
+    [[Harpy sharedInstance] setAppID:@"842897634"];
+    
+    // Set the UIViewController that will present an instance of UIAlertController
+    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
+    
+    // (Optional) Set the App Name for your app
+    [[Harpy sharedInstance] setAppName:@"WhereRU"];
+    
+    /* (Optional) Set the Alert Type for your app
+     By default, Harpy is configured to use HarpyAlertTypeOption */
+    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
+    
+    // Perform check for new version of your app
+    [[Harpy sharedInstance] checkVersion];
+
     
     //--- your custom code
     
@@ -319,6 +315,7 @@ void ShowErrorAlert(NSString* text)
     [[SingletonClass singleObject] setMyLocation:[self deviceLocation]];
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
+    
 //    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
     ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     

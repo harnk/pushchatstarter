@@ -72,41 +72,7 @@
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
-// This is a one to many
-- (void)postFindRequest
-{
-//    [_messageTextView resignFirstResponder];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = NSLocalizedString(@"whereru", nil);
-    
-//    NSString *text = self.messageTextView.text;
-    NSString *text = @"Hey WhereRU?";
-    
-    NSDictionary *params = @{@"cmd":@"find",
-                             @"user_id":[_dataModel userId],
-                             @"location":[self deviceLocation],
-                             @"text":text};
-    
-    [_client
-     postPath:@"/whereru/api/api.php"
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
-         if (operation.response.statusCode != 200) {
-             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-         } else {
-             NSLog(@"CVC Find request sent to all devices");
-//             [self dismissViewControllerAnimated:YES completion:nil];
-         }
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         if ([self isViewLoaded]) {
-             [MBProgressHUD hideHUDForView:self.view animated:YES];
-             ShowErrorAlert([error localizedDescription]);
-         }
-     }];
-    
-}
+
 // This is a one to many
 - (void)postMessageRequest
 {
@@ -146,11 +112,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)findAction {
-    [self postFindRequest];
-    [self mapAction];
-}
-
 - (IBAction)saveAction
 {
 //	[self userDidCompose:self.messageTextView.text];
@@ -186,16 +147,6 @@
 	NSString* newText = [theTextView.text stringByReplacingCharactersInRange:range withString:text];
 	[self updateBytesRemaining:newText];
 	return YES;
-}
-
-- (IBAction)mapAction
-{
-    // Show the Map screen
-    ShowMapViewController* mapController = (ShowMapViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ShowMapViewController"];
-//    mapController.dataModel = _dataModel;
-    mapController.delegate = self;
-    mapController.client = _client;
-    [self presentViewController:mapController animated:YES completion:nil];
 }
 
 @end

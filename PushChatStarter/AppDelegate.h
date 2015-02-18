@@ -20,5 +20,6 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, readonly) UIStoryboard *storyBoard;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic) BOOL isUpdating;
 
 @end

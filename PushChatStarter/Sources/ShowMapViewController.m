@@ -94,11 +94,11 @@
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
     
-    [NSTimer scheduledTimerWithTimeInterval: 0.001
-                                     target: self
-                                   selector: @selector(changeRegion)
-                                   userInfo: nil
-                                    repeats: NO];
+//    [NSTimer scheduledTimerWithTimeInterval: 0.001
+//                                     target: self
+//                                   selector: @selector(changeRegion)
+//                                   userInfo: nil
+//                                    repeats: NO];
     
     [NSTimer scheduledTimerWithTimeInterval: 7
                                      target: self
@@ -178,7 +178,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"SCXTT viewWillAppear");
     self.title = [_dataModel secretCode];
     
     // Show a label in the table's footer if there are no messages
@@ -374,9 +373,7 @@
 
 - (void)findAction {
     NSLog(@"SCXTT findAction");
-    _isUpdating = NO;
     [self postFindRequest];
-//    [self mapAction];
 }
 
 - (NSString *)deviceLocation {
@@ -402,11 +399,36 @@
                                  @"location":[self deviceLocation],
                                  @"text":text};
         
+        
+        
+        // These next few lines have no use other than as an example of seeing this as JSON
+        // since this is not using JSON but instead a form post
+        NSLog(@"URL: http://www.altcoinfolio.com/whereru/api/api.php");
+        
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params
+                                                           options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                             error:&error];
+        
+        if (! jsonData) {
+            NSLog(@"Got an error: %@", error);
+        } else {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSLog(@"JSON - Sent: %@",jsonString);
+        }
+        
+        
+        
+        
+        
+        
+        
         [_client
          postPath:@"/whereru/api/api.php"
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
              [MBProgressHUD hideHUDForView:self.view animated:YES];
+             _isUpdating = NO;
              if (operation.response.statusCode != 200) {
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
              } else {
@@ -420,6 +442,9 @@
                  ShowErrorAlert([error localizedDescription]);
              }
          }];
+    } else {
+        NSLog(@"Aint nobody got time for that");
+        _isUpdating = NO;
     }
 }
 
@@ -483,8 +508,19 @@
     [formatter setDoesRelativeDateFormatting:YES];
     NSString* dateString = [formatter stringFromDate:[NSDate date]];
 //SCXTT need to set the subtitle to the new date time
-
-//    annotation.subtitle = dateString;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //    [pin se]
     
     
@@ -542,6 +578,15 @@
     southWest.longitude = [strings[1] doubleValue];
     northEast = southWest;
     
+    //Scxtt may need to move this to mapView delegate
+    // Format the message date
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDoesRelativeDateFormatting:YES];
+    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+    
+
     for (id<MKAnnotation> ann in _mapView.annotations)
     {
         NSLog(@"moving points checking ann.title is %@",ann.title);
@@ -562,6 +607,25 @@
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
             ann.coordinate = location;
+            
+//            NSString* mc = NSStringFromClass(ann);
+//            NSLog(@"ann Class: %@", mc);
+            
+            
+            if ([ann isKindOfClass:[MKPointAnnotation class]])
+            {
+                MKPointAnnotation *pa = (MKPointAnnotation *)ann;
+                pa.subtitle = dateString;
+                NSLog(@"it is MKPointAnnotation");
+            } else {
+                NSLog(@"it isnt MKPointAnnotation");
+            }
+            
+            
+            
+            
+            
+//            ann.subtitle = dateString;
             break;
         }
     }
@@ -570,18 +634,6 @@
         NSLog(@"Adding new who %@", who);
         VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
         annNew.title = who;
-        
-        
-        
-        //Scxtt may need to move this to mapView delegate
-        // Format the message date
-        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateStyle:NSDateFormatterShortStyle];
-        [formatter setTimeStyle:NSDateFormatterShortStyle];
-        [formatter setDoesRelativeDateFormatting:YES];
-        NSString* dateString = [formatter stringFromDate:[NSDate date]];
-
-        
         
         annNew.subtitle = dateString;
         annNew.pinColor = MKPinAnnotationColorGreen;
@@ -601,25 +653,25 @@
     
 }
 
--(void) changeRegion {
-    NSLog(@"changeRegion is called");
-    
-    
-    for (id<MKAnnotation> ann in _mapView.annotations)
-    {
-        if ([ann.title isEqualToString:@"User1"])
-        {
-            NSLog(@"found user1");
-            CLLocationCoordinate2D location;
-            float rndV1 = (((float)arc4random()/0x100000000)*0.101);
-            float rndV2 = (((float)arc4random()/0x100000000)*0.101);
-            location.latitude = BE2_LATITUDE + rndV1;
-            location.longitude = BE2_LONGITUDE + rndV2;
-            ann.coordinate = location;
-            break;
-        }
-    }
-}
+//-(void) changeRegion {
+//    NSLog(@"changeRegion is called");
+//    
+//    
+//    for (id<MKAnnotation> ann in _mapView.annotations)
+//    {
+//        if ([ann.title isEqualToString:@"User1"])
+//        {
+//            NSLog(@"found user1");
+//            CLLocationCoordinate2D location;
+//            float rndV1 = (((float)arc4random()/0x100000000)*0.101);
+//            float rndV2 = (((float)arc4random()/0x100000000)*0.101);
+//            location.latitude = BE2_LATITUDE + rndV1;
+//            location.longitude = BE2_LONGITUDE + rndV2;
+//            ann.coordinate = location;
+//            break;
+//        }
+//    }
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

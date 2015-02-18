@@ -28,6 +28,7 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic) BOOL isUpdating;
 
 
 - (NSString *)deviceLocation;
