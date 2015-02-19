@@ -20,7 +20,6 @@
 @end
 
 @interface ComposeViewController : UIViewController <UITextViewDelegate, CLLocationManagerDelegate, MKMapViewDelegate>{
-    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
 

@@ -19,10 +19,8 @@
 //@class Message;
 
 @interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate>{
-    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
 }
-
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 

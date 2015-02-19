@@ -296,7 +296,7 @@
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                  duration:(NSTimeInterval)duration {
-    NSLog(@"SCXTT ROTATING TO :%ld", toInterfaceOrientation);
+    NSLog(@"SCXTT ROTATING");
 
     [self.tableView reloadData];
 //    [self scrollToNewestMessage];
@@ -506,7 +506,8 @@
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     [formatter setDoesRelativeDateFormatting:YES];
-    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+//    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+    
 //SCXTT need to set the subtitle to the new date time
     
     
@@ -561,7 +562,7 @@
 //    [self didSaveMessage];
     BOOL whoFound = NO;
     NSDictionary *dict = [notification userInfo];
-    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"]);
+    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
     NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
     NSLog(@"lat = %@", strings[0]);
     NSLog(@"lon = %@", strings[1]);
@@ -647,7 +648,7 @@
     _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
     
     // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-    CLLocationDistance meters = [_mapViewSouthWest getDistanceFrom:_mapViewNorthEast];
+    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
 
     [self reCenterMap:region meters:meters];
     
