@@ -8,7 +8,7 @@
 
 @class DataModel;
 
-// The Login screen lets the user register a nickname and chat room
+// The Login screen lets the user register a nickname and chat map group
 @interface LoginViewController : UIViewController
 
 @property (nonatomic, assign) DataModel* dataModel;

@@ -307,7 +307,7 @@
     [self.dataModel setJoinedChat:NO];
     
     // Show the Login screen. This requires the user to join a new
-    // chat room before he can return to the chat screen.
+    // chat map group before he can return to the chat screen.
     [self showLoginViewController];
 }
 

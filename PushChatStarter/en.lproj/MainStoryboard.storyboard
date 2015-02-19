@@ -260,7 +260,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="102" id="NKf-dH-ALX"/>
                                 </constraints>
-                                <string key="text">WhereRU lets you chat with and see the current locations on a map of anyone else currently in the same room. Choose or create a room name and share it with your friends. If they join the same room, you can see each other's location and messages. You can exit a room at any time and your location will no longer be visible by others.</string>
+                                <string key="text">WhereRU lets you chat with and see the current locations on a map of anyone else currently in the same map group. Choose or create a map group name and share it with your friends. If they join the same map group, you can see each other's location and messages. You can exit a map group at any time and your location will no longer be visible by others.</string>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -270,7 +270,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Room Name To Join or Create" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="APA-ft-Z6S">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Map group Name To Join or Create" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="APA-ft-Z6S">
                                 <rect key="frame" x="20" y="182" width="560" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
