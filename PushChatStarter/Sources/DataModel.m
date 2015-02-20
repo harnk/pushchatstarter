@@ -96,7 +96,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 	[self.messages addObject:message];
 	[self saveMessages];
 
-	return self.messages.count - 1;
+	return (int)self.messages.count - 1;
 }
 
 - (NSString*)nickname

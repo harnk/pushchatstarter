@@ -209,7 +209,7 @@
 
 - (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataModel.messages.count;
+    return (int)self.dataModel.messages.count;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -637,7 +637,8 @@
         annNew.title = who;
         
         annNew.subtitle = dateString;
-        annNew.pinColor = MKPinAnnotationColorGreen;
+        annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
+        
         location.latitude = [strings[0] doubleValue];
         location.longitude = [strings[1] doubleValue];
         [annNew setCoordinate:location];

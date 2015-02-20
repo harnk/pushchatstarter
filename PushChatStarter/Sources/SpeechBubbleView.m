@@ -58,12 +58,14 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 //                                      attributes:@{NSFontAttributeName:FONT}
 //                                         context:nil];
 //    WARNING FIX HERE http://stackoverflow.com/questions/18903304/replacement-for-deprecated-sizewithfontconstrainedtosizelinebreakmode-in-ios
+//    CGSize textSize = [text sizeWithFont:font
+//                       constrainedToSize:CGSizeMake(WrapWidth, 9999)
+//                           lineBreakMode:NSLineBreakByWordWrapping];
     
-    
-    CGSize textSize = [text sizeWithFont:font
-                       constrainedToSize:CGSizeMake(WrapWidth, 9999)
-                           lineBreakMode:NSLineBreakByWordWrapping];
-
+    CGSize textSize = [text boundingRectWithSize:CGSizeMake(WrapWidth, 9999)
+                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                      attributes:@{NSFontAttributeName: font}
+                                         context:nil].size;
 	CGSize bubbleSize;
 	bubbleSize.width = textSize.width + TextLeftMargin + TextRightMargin;
     
@@ -108,7 +110,21 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 //    [[UIColor blackColor] set];
     [[UIColor whiteColor] set];
 
-	[_text drawInRect:textRect withFont:font lineBreakMode:NSLineBreakByWordWrapping];
+//	deprecated
+//    [_text drawInRect:textRect withFont:font lineBreakMode:NSLineBreakByWordWrapping];
+    
+    /// Make a copy of the default paragraph style
+    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    /// Set line break mode
+    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    /// Set text alignment
+    paragraphStyle.alignment = NSTextAlignmentRight;
+    
+    NSDictionary *attributes = @{ NSFontAttributeName: font,
+                                  NSParagraphStyleAttributeName: paragraphStyle };
+    
+    [_text drawInRect:rect withAttributes:attributes];
+    
 }
 
 - (void)setText:(NSString*)newText bubbleType:(BubbleType)newBubbleType

@@ -130,7 +130,7 @@
 	size_t numberOfBytes = strlen(s);
 
 	// Calculate how many bytes are left
-	int remaining = MaxMessageLength - numberOfBytes;
+	int remaining = (int)(MaxMessageLength - numberOfBytes);
 
 	// Show the number of remaining bytes in the navigation bar's title
 	if (remaining >= 0)
