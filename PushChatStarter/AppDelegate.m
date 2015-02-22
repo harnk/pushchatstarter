@@ -195,13 +195,13 @@ void ShowErrorAlert(NSString* text)
     // Start updating my own location
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-#ifdef __IPHONE_8_0
+
     if(IS_OS_8_OR_LATER) {
         // Use one or the other, not both. Depending on what you put in info.plist
         //        [self.locationManager requestWhenInUseAuthorization];
         [self.locationManager requestAlwaysAuthorization];
     }
-#endif
+
     [self.locationManager startUpdatingLocation];
     
     return YES;
@@ -249,6 +249,28 @@ void ShowErrorAlert(NSString* text)
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:   (UIUserNotificationSettings *)notificationSettings
+{
+    if (notificationSettings.types) {
+        NSLog(@"user allowed notifications");
+//        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }else{
+        NSLog(@"user did not allow notifications");
+        // show alert here
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        [[UIApplication sharedApplication] openURL:url];
+    }
 }
 
 -(void)postImhere:(NSString *)asker

@@ -34,6 +34,18 @@
 }
 @end
 
+//RotationIn_IOS6 is a Category for overriding the default orientation
+// http://stackoverflow.com/questions/12577879/shouldautorotatetointerfaceorientation-is-not-working-in-ios-6
+
+@implementation UINavigationController (RotationIn_IOS6)
+
+-(BOOL)shouldAutorotate
+{
+    return [[self.viewControllers lastObject] shouldAutorotate];
+}
+@end
+
+
 @implementation ShowMapViewController
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
@@ -138,30 +150,41 @@
     //    _notificationsAreDisabled = false;
     BOOL isdisabled = true;
     
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-    {
-        NSLog(@"__IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 is YES");
-        isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
-        NSLog(@"isdisabled value: %d",isdisabled);
+    if (IS_OS_8_OR_LATER) {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+        {
+            NSLog(@"IS_OS_8_OR_LATER is YES");
+            isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
+            NSLog(@"isdisabled value: %d",isdisabled);
+        }
+        
+    } else {
+        NSLog(@"IS_OS_8_OR_LATER is NO");
+
+        
+        UIRemoteNotificationType notifTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+//        if (notifTypes & UIRemoteNotificationTypeAlert)
+        if (notifTypes != 12)
+        {
+            isdisabled = false;
+            NSLog(@"isdisabled value: %d",isdisabled);
+//            NSLog(@"UIRemoteNotificationType notifTypes: %lu", notifTypes);
+        }
     }
-#else
-    NSLog(@"__IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 is NO");
-    UIRemoteNotificationType types = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-    if (types & UIRemoteNotificationTypeAlert)
-    {
-        isdisabled = false;
-        NSLog(@"isdisabled value: %d",isdisabled);
-    }
-#endif
+    
     
     [[SingletonClass singleObject] setNotificationsAreDisabled:isdisabled];
     //    _notificationsAreDisabled = isdisabled;
     
     //Pop an aler to let the user go to settings and change notifications setting for this app
     if (isdisabled) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-        [alert show];
+        if (IS_OS_8_OR_LATER){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+            [alert show];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications in Settings - Notification Center." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil, nil];
+            [alert show];
+        }
     }
     
 }
@@ -607,6 +630,7 @@
             whoFound = YES;
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
+            NSLog(@"loc = %f",location.longitude);
             ann.coordinate = location;
             
 //            NSString* mc = NSStringFromClass(ann);
@@ -684,6 +708,23 @@
 {
     //	[self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Managing Orientation
+
+- (BOOL)shouldAutorotate
+{
+    //returns true to allow orientation change in IOS 8 devices
+    if (IS_OS_8_OR_LATER) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)  interfaceOrientation duration:(NSTimeInterval)duration
+{
+    NSLog(@"SCxTT rotating now");
 }
 
 /*

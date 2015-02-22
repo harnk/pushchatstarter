@@ -179,7 +179,6 @@
 				61489EB317041C660049C6F9 /* ViewController.m */,
 				9E702E961A6CB1C700D0E91E /* Images.xcassets */,
 				9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */,
-				61489EAF17041C660049C6F9 /* MainStoryboard.storyboard */,
 				61489EBA17041CB20049C6F9 /* Resources */,
 				61489E9E17041C660049C6F9 /* Supporting Files */,
 			);
@@ -225,6 +224,7 @@
 		61489ECF1704226E0049C6F9 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				61489EAF17041C660049C6F9 /* MainStoryboard.storyboard */,
 				9E9A82BD1A7D5FA800A0F782 /* Harpy.h */,
 				9E9A82BE1A7D5FA800A0F782 /* Harpy.m */,
 				61489EE3170427A70049C6F9 /* LoginViewController.h */,
@@ -389,6 +389,7 @@
 				61489EB017041C660049C6F9 /* en */,
 			);
 			name = MainStoryboard.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
