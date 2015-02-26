@@ -11,6 +11,7 @@
 #import <MapKit/MapKit.h>
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "ServiceConnector.h"
 
 #define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
@@ -18,12 +19,19 @@
 @class DataModel;
 //@class Message;
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate>{
     CLLocation*             locationObject;
 }
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 
+//Stuff for ServiceConnector //////////////////////////////////
+@property (weak, nonatomic) IBOutlet UITextView *output;
+@property (weak, nonatomic) IBOutlet UITextField *value1TextField;
+@property (weak, nonatomic) IBOutlet UITextField *value2TextField;
+- (IBAction)getDown:(id)sender;
+- (IBAction)postDown:(id)sender;
+//End Stuff for ServiceConnector //////////////////////////////
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;

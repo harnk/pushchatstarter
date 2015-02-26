@@ -13,7 +13,8 @@
 #import "Message.h"
 #import "MessageTableViewCell.h"
 #import "SpeechBubbleView.h"
-
+#import "ServiceConnector.h"
+#import "JSONDictionaryExtensions.h"
 
 // Carpinteria
 #define CA_LATITUDE 37
@@ -128,6 +129,8 @@
                                                  name:@"receivedDeviceToken"
                                                object:nil];
     
+    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
+    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
     UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     
@@ -135,7 +138,7 @@
     _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
 //    [self.navigationItem setLeftBarButtonItem:leftBarButton];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnGet, btnPost, btnCompose, btnRefresh, nil] animated:YES];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
 }
 
@@ -303,6 +306,32 @@
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         [self scrollToNewestMessage];
     }
+}
+
+#pragma mark - 
+#pragma mark ServiceConnector stuff
+- (IBAction)getDown:(id)sender { //perform get request
+    ServiceConnector *serviceConnector = [[ServiceConnector alloc] init];
+    serviceConnector.delegate = self;
+    [serviceConnector getTest];
+}
+- (IBAction)postDown:(id)sender { //perform post request
+    ServiceConnector *serviceConnector = [[ServiceConnector alloc] init];
+    serviceConnector.delegate = self;
+    [serviceConnector postTest];
+}
+#pragma mark - ServiceConnectorDelegate -
+-(void)requestReturnedData:(NSData *)data{ //activated when data is returned
+    
+    NSDictionary *dictionary = [NSDictionary dictionaryWithJSONData:data];
+    _output.text = dictionary.JSONString; // set the textview to the raw string value of the data recieved
+    
+    _value1TextField.text = [NSString stringWithFormat:@"%d",[[dictionary objectForKey:@"value1"] intValue]];
+    _value2TextField.text = [dictionary objectForKey:@"value2"];
+    NSLog(@"requestReturnedData: %@",dictionary);
+    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
+    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
+    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
 }
 
 #pragma mark -
@@ -725,6 +754,16 @@
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)  interfaceOrientation duration:(NSTimeInterval)duration
 {
     NSLog(@"SCxTT rotating now");
+//    update the table view now
+//    [self scrollToNewestMessage];
+
+    
+}
+
+-(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    NSLog(@"SCxTT did rotate");
+    [self.tableView reloadData];
+    [self scrollToNewestMessage];
 }
 
 /*
