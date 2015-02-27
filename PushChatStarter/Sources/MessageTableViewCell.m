@@ -102,7 +102,7 @@ static UIColor* color = nil;
         
 //        point.x = myrect.size.width  - message.bubbleSize.width;
         point.x = self.bounds.size.width - message.bubbleSize.width;
-        NSLog(@"SCXTT myrect.size.width: %f",myrect.size.width);
+//        NSLog(@"SCXTT myrect.size.width: %f",myrect.size.width);
         
         _label.textAlignment = NSTextAlignmentRight;
 //        _label.textAlignment = NSTextAlignmentLeft;

@@ -230,7 +230,7 @@
 #pragma mark - UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"SCXTT willDisplayCell CELL WIDTH %f", cell.contentView.frame.size.width);
+//    NSLog(@"SCXTT willDisplayCell CELL WIDTH %f", cell.contentView.frame.size.width);
 }
 
 - (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
@@ -251,8 +251,8 @@
 //    NSLog(@"message.text:%@", message.text);
 //    NSLog(@"message.location:%@", message.location);
 
-    NSLog(@"SCXTT What is the CELL WIDTH here???");
-    NSLog(@"%f", cell.contentView.frame.size.width);
+//    NSLog(@"SCXTT What is the CELL WIDTH here???");
+//    NSLog(@"%f", cell.contentView.frame.size.width);
     
     
     [cell setMessage:message];
@@ -466,7 +466,7 @@
             NSLog(@"Got an error: %@", error);
         } else {
             NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSLog(@"JSON - Sent: %@",jsonString);
+            NSLog(@"JSON - Sent(Actually aa form was sent - chg later): %@",jsonString);
         }
         
         
