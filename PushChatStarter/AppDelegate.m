@@ -85,10 +85,10 @@ void ShowErrorAlert(NSString* text)
         NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
         [self postImhere:asker];
     } else {
-        if ([alert rangeOfString:@"Im Here"].location == NSNotFound) {
+//        if ([alert rangeOfString:@"Im Here"].location == NSNotFound) {
 //        if (![alert length] == 0) {
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
-        }
+//        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
     }
     
@@ -295,7 +295,7 @@ void ShowErrorAlert(NSString* text)
                              @"location":[self deviceLocation],
                              @"text":text};
     
-    NSLog(@"Doing API Call with %@", params);
+//    NSLog(@"Doing API Call with %@", params);
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client

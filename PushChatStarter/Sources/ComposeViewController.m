@@ -13,6 +13,7 @@
 
 @interface ComposeViewController ()
 @property (nonatomic, retain) IBOutlet UITextView* messageTextView;
+@property(nonatomic) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* saveItem;
 @property (nonatomic, retain) IBOutlet UINavigationBar* navigationBar;
 - (void)updateBytesRemaining:(NSString*)text;
@@ -35,13 +36,13 @@
 #endif
     [self.locationManager startUpdatingLocation];
     NSLog(@"%@", [self deviceLocation]);
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
 	[_messageTextView becomeFirstResponder];
+    
 }
 
 - (NSString *)deviceLocation {
