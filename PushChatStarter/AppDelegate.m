@@ -38,7 +38,8 @@ void ShowErrorAlert(NSString* text)
     
     Message *message = [[Message alloc] init];
     message.date = [NSDate date];
-    message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
+//    message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
+    message.location = [userInfo valueForKey:@"loc"];
     
     // Handle my location
     CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
@@ -78,17 +79,20 @@ void ShowErrorAlert(NSString* text)
     
     NSLog(@"Received notification: %@", userInfo);
     
-    NSString *extra = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
-    NSString *alert = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+//    NSString *extra = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+    NSString *extra = [userInfo valueForKey:@"extra"];
 
     if([extra isEqualToString:@"whereru"]) {
-        NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
+        NSLog(@"whereru - in ^completionHandlerSilent push received");
+//        NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
+        NSString *asker = [userInfo valueForKey:@"asker"];
         [self postImhere:asker];
     } else {
-//        if ([alert rangeOfString:@"Im Here"].location == NSNotFound) {
-//        if (![alert length] == 0) {
+        if ([extra isEqualToString:@"imhere"]) {
+            NSLog(@"Found someone - dont put into the message bubble");
+        } else {
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
-//        }
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
     }
     

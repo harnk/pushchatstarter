@@ -614,11 +614,14 @@
 //    [self didSaveMessage];
     BOOL whoFound = NO;
     NSDictionary *dict = [notification userInfo];
-    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
-    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
+//    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
+    NSLog([dict valueForKey:@"loc"],nil);
+//    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
+    NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
     NSLog(@"lat = %@", strings[0]);
     NSLog(@"lon = %@", strings[1]);
-    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+//    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+    NSString *who = [dict valueForKey:@"who"];
     NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
     [self toastMsg:toast];
     NSLog(@"who=%@",who);
