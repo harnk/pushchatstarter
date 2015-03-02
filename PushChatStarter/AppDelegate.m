@@ -42,8 +42,9 @@ void ShowErrorAlert(NSString* text)
     message.location = [userInfo valueForKey:@"loc"];
     
     // Handle my location
-    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
-//    NSLog(@"locA is:%@", locA);
+//    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
+    CLLocation *locA = [[SingletonClass singleObject] myNewLocation];
+    NSLog(@"SCXTT locA is:%@", locA);
 
     // Handle the location of the remote device
     NSArray *strings = [message.location componentsSeparatedByString:@","];
@@ -52,7 +53,7 @@ void ShowErrorAlert(NSString* text)
 //    NSLog(@"locB is:%@", locB);
     
     CLLocationDistance distance = [locA distanceFromLocation:locB];
-//    NSLog(@"The distance from me to it is:%f meters", distance);
+    NSLog(@"SCXTT The distance from me to it is:%f meters", distance);
     
     message.distanceFromMeInMeters = distance;
     
@@ -205,7 +206,8 @@ void ShowErrorAlert(NSString* text)
         //        [self.locationManager requestWhenInUseAuthorization];
         [self.locationManager requestAlwaysAuthorization];
     }
-
+    self.locationManager.pausesLocationUpdatesAutomatically = YES;
+    self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
     
     return YES;
@@ -279,16 +281,16 @@ void ShowErrorAlert(NSString* text)
 
 -(void)postImhere:(NSString *)asker
 {
-    
     NSLog(@"Respond to WhereRU with Im Here back to asker");
-    NSLog(@"Im over here %@", [self deviceLocation]);
+    NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
     
-    ComposeViewController *getLocationData;
-    getLocationData = [[ComposeViewController alloc] init];
+//    ComposeViewController *getLocationData;
+//    getLocationData = [[ComposeViewController alloc] init];
+//    
     
+    //SCXTT need to fix how we are getting dataModel here because this is a kludge
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
     ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    
     DataModel *dataModel = showMapViewController.dataModel;
     
     NSString *text = @"Im Here";
@@ -296,7 +298,7 @@ void ShowErrorAlert(NSString* text)
     NSDictionary *params = @{@"cmd":@"imhere",
                              @"user_id":[dataModel userId],
                              @"asker":asker,
-                             @"location":[self deviceLocation],
+                             @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
     
 //    NSLog(@"Doing API Call with %@", params);
@@ -309,12 +311,43 @@ void ShowErrorAlert(NSString* text)
     
 }
 
-- (NSString *)deviceLocation {
-    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
+//scxtt
+
+
+//Ref: http://stackoverflow.com/questions/12602463/didupdatelocations-instead-of-didupdatetolocation
+//
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations {
+    
+    [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
+    
+    CLLocation *newLoc = [locations lastObject];
+    
+// If the stored loc string is the same as this new one do not print to the console
+    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
+        //do nothing
+//        NSLog(@"same");
+    } else {
+        //log it, save it
+        [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
+//        NSLog(@"didUpdateLocations Move to: %@", [locations lastObject]);
+        NSLog(@"didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+    }
+    
+    
+}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"pausing location updates");
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"resuming location updates");
 }
 
 - (void)postUpdateRequest
 {
+    //SCXTT what is all this junk below here, gotta fix the kludge
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
 //    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
     ShowMapViewController *showMapViewController =
@@ -337,8 +370,7 @@ void ShowErrorAlert(NSString* text)
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     
-    NSLog(@"My location is: %@", [self deviceLocation]);
-    [[SingletonClass singleObject] setMyLocation:[self deviceLocation]];
+    NSLog(@"My location is: %@", [[SingletonClass singleObject] myLocStr]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
     

@@ -53,20 +53,8 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         
-        self.locationManager = [[CLLocationManager alloc] init];
-        self.locationManager.delegate = self;
-#ifdef __IPHONE_8_0
-        if(IS_OS_8_OR_LATER) {
-            // Use one or the other, not both. Depending on what you put in info.plist
-            //        [self.locationManager requestWhenInUseAuthorization];
-            [self.locationManager requestAlwaysAuthorization];
-        }
-#endif
-        [self.locationManager startUpdatingLocation];
-        [[SingletonClass singleObject] setMyLocation:[self deviceLocation]];
-        
         _dataModel = [[DataModel alloc] init];
-        [_dataModel loadMessages:[self deviceLocation]];
+        [_dataModel loadMessages:[[SingletonClass singleObject] myLocStr]];
         
         _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     }
@@ -138,7 +126,10 @@
     _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
 //    [self.navigationItem setLeftBarButtonItem:leftBarButton];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnGet, btnPost, btnCompose, btnRefresh, nil] animated:YES];
+    
+//    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnGet, btnPost, btnCompose, btnRefresh, nil] animated:YES];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
+    
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
 }
 
@@ -348,7 +339,8 @@
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                  duration:(NSTimeInterval)duration {
-    NSLog(@"SCXTT ROTATING");
+    
+    NSLog(@"SCXTT ROTATING - current location is: %@", [[SingletonClass singleObject] myLocStr]);
 
     [self.tableView reloadData];
 //    [self scrollToNewestMessage];
@@ -428,10 +420,6 @@
     [self postFindRequest];
 }
 
-- (NSString *)deviceLocation {
-    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
-}
-
 - (void)postFindRequest
 {
     if (!_isUpdating)
@@ -448,7 +436,7 @@
         
         NSDictionary *params = @{@"cmd":@"find",
                                  @"user_id":[_dataModel userId],
-                                 @"location":[self deviceLocation],
+                                 @"location":[[SingletonClass singleObject] myLocStr],
                                  @"text":text};
         
         
@@ -662,7 +650,7 @@
             whoFound = YES;
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
-            NSLog(@"loc = %f",location.longitude);
+            NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
             ann.coordinate = location;
             
 //            NSString* mc = NSStringFromClass(ann);

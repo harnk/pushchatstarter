@@ -11,7 +11,9 @@
 @interface SingletonClass : NSObject
 +(SingletonClass *)singleObject;
 
-@property(nonatomic, strong)NSString *myLocation;
+//SCXTT and replace it with this
+@property(nonatomic, strong)NSString *myLocStr;
+@property(nonatomic, strong)CLLocation *myNewLocation;
 @property (nonatomic) BOOL notificationsAreDisabled;
 
 @end

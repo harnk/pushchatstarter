@@ -25,17 +25,6 @@
 {
 	[super viewDidLoad];
 	[self updateBytesRemaining:@""];
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-#ifdef __IPHONE_8_0
-    if(IS_OS_8_OR_LATER) {
-        // Use one or the other, not both. Depending on what you put in info.plist
-//        [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager requestAlwaysAuthorization];
-    }
-#endif
-    [self.locationManager startUpdatingLocation];
-    NSLog(@"%@", [self deviceLocation]);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -43,10 +32,6 @@
 	[super viewWillAppear:animated];
 	[_messageTextView becomeFirstResponder];
     
-}
-
-- (NSString *)deviceLocation {
-    return [NSString stringWithFormat:@"%f, %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
 }
 
 #pragma mark -
@@ -59,7 +44,7 @@
 	message.senderName = nil;
 	message.date = [NSDate date];
 	message.text = text;
-    message.location = [self deviceLocation];
+    message.location = [[SingletonClass singleObject] myLocStr];
 
 	// Add the Message to the data model's list of messages
 	int index = [_dataModel addMessage:message];
@@ -86,7 +71,7 @@
     
     NSDictionary *params = @{@"cmd":@"message",
                              @"user_id":[_dataModel userId],
-                             @"location":[self deviceLocation],
+                             @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
     
     [_client

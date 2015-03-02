@@ -131,7 +131,7 @@ static UIColor* color = nil;
 
     //Format the location to read distance from me now
     //get location from message.location
-    NSString *mLoc = [[SingletonClass singleObject] myLocation];
+    NSString *mLoc = [[SingletonClass singleObject] myLocStr];
     NSArray *strings1 = [mLoc componentsSeparatedByString:@","];
     CLLocation *locA = [[CLLocation alloc] initWithLatitude:[strings1[0] doubleValue] longitude:[strings1[1] doubleValue]];
 
