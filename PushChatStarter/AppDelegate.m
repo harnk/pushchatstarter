@@ -359,6 +359,7 @@ void ShowErrorAlert(NSString* text)
     //The update cmd will update the user's device token on the server because sometimes these change
     NSDictionary *params = @{@"cmd":@"update",
                              @"user_id":[dataModel userId],
+                             @"location":[[SingletonClass singleObject] myLocStr],
                              @"token":[dataModel deviceToken]};
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client

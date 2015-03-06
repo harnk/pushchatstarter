@@ -54,6 +54,7 @@
                              @"user_id":[_dataModel userId],
                              @"token":[_dataModel deviceToken],
                              @"name":[_dataModel nickname],
+                             @"location":[[SingletonClass singleObject] myLocStr],
                              @"code":[_dataModel secretCode]};
     
     [_client postPath:@"/whereru/api/api.php"
