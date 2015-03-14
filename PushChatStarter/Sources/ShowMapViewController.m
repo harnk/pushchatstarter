@@ -15,13 +15,14 @@
 #import "SpeechBubbleView.h"
 #import "ServiceConnector.h"
 #import "JSONDictionaryExtensions.h"
+#import "Room.h"
 
 // Carpinteria
 #define CA_LATITUDE 37
 #define CA_LONGITUDE -95
 // Beach
-#define BE_LATITUDE 0
-#define BE_LONGITUDE 0
+#define BE_LATITUDE -45
+#define BE_LONGITUDE 45
 // Reston hotel
 //#define BE_LATITUDE 38.960663
 //#define BE_LONGITUDE -77.423423
@@ -107,8 +108,16 @@
                                    userInfo: nil
                                     repeats: NO];
     
+    [NSTimer scheduledTimerWithTimeInterval: 10
+                                     target: self
+                                   selector: @selector(postGetRoom)
+                                   userInfo: nil
+                                    repeats: YES];
+    
+    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePointsOnMap:)
+                                             selector:@selector(updatePointsOnMapWithNotification:)
                                                  name:@"receivedNewMessage"
                                                object:nil];
     
@@ -116,6 +125,12 @@
                                              selector:@selector(findAction)
                                                  name:@"receivedDeviceToken"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMapWithAPIData)
+                                                 name:@"receivedNewAPIData"
+                                               object:nil];
+
     
     UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
     UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
@@ -420,6 +435,84 @@
     [self postFindRequest];
 }
 
+- (void)getRoomAction {
+    [self postGetRoom];
+}
+
+
+- (void)postGetRoom
+{
+    if (!_isUpdating)
+    {
+        _isUpdating = YES;
+        
+        //    [_messageTextView resignFirstResponder];
+        
+        //    NSString *text = self.messageTextView.text;
+        NSString *text = @"Hey WhereRU?";
+        
+        NSDictionary *params = @{@"cmd":@"getroom",
+                                 @"user_id":[_dataModel userId],
+                                 @"location":[[SingletonClass singleObject] myLocStr],
+                                 @"text":text};
+        
+        [_client
+         postPath:@"/whereru/api/api.php"
+         parameters:params
+         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             _isUpdating = NO;
+             if (operation.response.statusCode != 200) {
+                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+             } else {
+                 NSLog(@"SMVC Get last room location for all devices");
+                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+                 NSLog(@"responseString: %@", responseString);
+//                 NSLog(@"operation: %@", operation);
+                 
+                 NSError *e = nil;
+                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+                 
+                 if (!jsonArray) {
+                     NSLog(@"Error parsing JSON: %@", e);
+                 } else {
+                     
+//                   Blank out and reload _roomArray
+                     if (!_roomArray) {
+                         _roomArray = [[NSMutableArray alloc] init];
+                     } else {
+                         [_roomArray removeAllObjects];
+                     }
+                     
+                     for(NSDictionary *item in jsonArray) {
+                        
+                         NSString *mNickName = [item objectForKey:@"nickname"];
+                         NSString *mLocation = [item objectForKey:@"location"];
+                         
+                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation];
+                             [_roomArray addObject:roomObj];
+                         }
+                         
+                     }
+                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+                 }
+                 
+             }
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             if ([self isViewLoaded]) {
+                 _isUpdating = NO;
+//                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
+//                 ShowErrorAlert([error localizedDescription]);
+             }
+         }];
+    } else {
+        NSLog(@"Aint nobody got time for that");
+        _isUpdating = NO;
+    }
+}
+
+
 - (void)postFindRequest
 {
     if (!_isUpdating)
@@ -473,7 +566,35 @@
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
              } else {
                  NSLog(@"SMVC Find request sent to all devices");
-                 //             [self dismissViewControllerAnimated:YES completion:nil];
+                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+                 NSLog(@"responseObject: %@", responseObject);
+                 NSLog(@"responseString: %@", responseString);
+                 NSLog(@"operation: %@", operation);
+                 
+                 
+                 
+                 NSError *e = nil;
+                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+                 
+                 if (!jsonArray) {
+                     NSLog(@"Error parsing JSON: %@", e);
+                 } else {
+                     for(NSDictionary *item in jsonArray) {
+                         NSString *mNickName = [item objectForKey:@"nickname"];
+                         NSString *mLocation = [item objectForKey:@"location"];
+                         
+                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation];
+                             if (!_roomArray) _roomArray = [[NSMutableArray alloc] init];
+                             [_roomArray addObject:roomObj];
+                             
+                         }
+                         
+                     }
+                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+                 }
+
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              if ([self isViewLoaded]) {
@@ -490,7 +611,7 @@
 
 #pragma mark -
 #pragma mark Map
-//
+
 //- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 //{
 //    MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
@@ -505,121 +626,126 @@
 //    return view;
 //}
 //
+////
+
 //
+//- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(id <MKAnnotation>)annotation
+//{
+//    NSLog(@"mapView is called scxtt");
+//    
+//    if (annotation == _mapView.userLocation)
+//        return nil;
+//    
+//    MKPinAnnotationView *pin = (MKPinAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier: @"wrupin"];
+//    
+//    if (pin == nil)
+//        pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: @"wrupin"];
+//    else
+//        pin.annotation = annotation;
+//    
+//    NSLog(@"mapView annotation.title:%@",annotation.title);
+//    UIImageView *pinView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png"]];
+//    UIImageView *steveView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png.png"]];
+//    UIImageView *jackView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png.png"]];
+//
+//    
+//    if ([annotation.title isEqualToString:@"Dad4s"]) {
+////        pin.pinColor = MKPinAnnotationColorPurple;
+//        [pin addSubview:pinView];
+//
+//        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
+//    }else if ([annotation.title isEqualToString:@"Jack-iPad3"]) {
+//        pin.pinColor = MKPinAnnotationColorRed;
+//        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
+//    }else if ([annotation.title isEqualToString:@"ED"]) {
+//        [pin addSubview:pinView];
+//        
+//    }else if ([annotation.title isEqualToString:@"Steve iPad"]) {
+//        [pin addSubview:steveView];
+//        
+//    }else if ([annotation.title isEqualToString:@"jackie"]) {
+//        [pin addSubview:jackView];
+//        
+//    } else {
+//        [pin addSubview:pinView];
+////        pin.pinColor= MKPinAnnotationColorGreen;
+//    }
+//
+//    
+//    pin.userInteractionEnabled = YES;
+//    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    //  //pin.image=[UIImage imageNamed:@"arrest.png"] ;
+//    
+//    
+//    
+//    //Scxtt may need to move this to mapView delegate
+//    // Format the message date
+//    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+//    [formatter setDateStyle:NSDateFormatterShortStyle];
+//    [formatter setTimeStyle:NSDateFormatterShortStyle];
+//    [formatter setDoesRelativeDateFormatting:YES];
+////    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+//    
+////SCXTT need to set the subtitle to the new date time
+//    
+////    [pin se]
+//    
+//    
+//    pin.rightCalloutAccessoryView = disclosureButton;
+////    pin.pinColor = MKPinAnnotationColorRed;
+//    pin.animatesDrop = YES;
+//    [pin setEnabled:YES];
+//    [pin setCanShowCallout:YES];
+//    return pin;
+//}
 
-
-
-- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(id <MKAnnotation>)annotation
+-(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(id <MKAnnotation>)annotation
 {
+    MKAnnotationView *pinView = nil;
+    NSLog(@"annotation.title: %@",annotation.title);
     
-    
-    if (annotation == _mapView.userLocation)
-        return nil;
-    
-    MKPinAnnotationView *pin = (MKPinAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier: @"wrupin"];
-    
-    if (pin == nil)
-        pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: @"wrupin"];
-    else
-        pin.annotation = annotation;
-    
-    //  NSLog(@"%@",annotation.title);
-    
-    NSString *titlename=@"xyz";
-    if ([annotation.title isEqualToString:titlename]) {
-        pin.pinColor = MKPinAnnotationColorPurple;
-        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
+    if(annotation != _mapView.userLocation)
+    {
+        static NSString *defaultPinID = @"com.harnk.pin";
+        pinView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
+        if ( pinView == nil )
+            pinView = [[MKAnnotationView alloc]
+                       initWithAnnotation:annotation reuseIdentifier:defaultPinID];
+        
+        //pinView.pinColor = MKPinAnnotationColorGreen;
+        pinView.canShowCallout = YES;
+        //pinView.animatesDrop = YES;
+        pinView.image = [UIImage imageNamed:@"cyan.png"];    //as suggested by Squatch
+//        pinView.image = annotation.image;
+        
     }
-    else{
-        pin.pinColor= MKPinAnnotationColorGreen;
+    else {
+        [_mapView.userLocation setTitle:@"I am here"];
     }
-    
-    pin.userInteractionEnabled = YES;
-    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //  //pin.image=[UIImage imageNamed:@"arrest.png"] ;
-    
-    
-    
-    //Scxtt may need to move this to mapView delegate
-    // Format the message date
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterShortStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDoesRelativeDateFormatting:YES];
-//    NSString* dateString = [formatter stringFromDate:[NSDate date]];
-    
-//SCXTT need to set the subtitle to the new date time
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    [pin se]
-    
-    
-    pin.rightCalloutAccessoryView = disclosureButton;
-    //pin.pinColor = MKPinAnnotationColorRed;
-    pin.animatesDrop = YES;
-    [pin setEnabled:YES];
-    [pin setCanShowCallout:YES];
-    return pin;
-    
-    
+    return pinView;
 }
 
-- (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
-    
-    region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
-    region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
-    region.span.latitudeDelta = meters / 111319.5;
-    region.span.longitudeDelta = 0.0;
-    
-    MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
-    [_mapView setRegion:savedRegion animated:YES];
-}
--(void)toastMsg:(NSString *)toastStr {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    
-    // Configure for text only and offset down
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = toastStr;
-//    hud.margin = 10.f;
-//    hud.yOffset = 50.f;
-    hud.removeFromSuperViewOnHide = YES;
-    
-    [hud hide:YES afterDelay:1];
-}
 
--(void) updatePointsOnMap:(NSNotification *)notification {
-//    [self didSaveMessage];
-    BOOL whoFound = NO;
-    NSDictionary *dict = [notification userInfo];
-//    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
-    NSLog([dict valueForKey:@"loc"],nil);
-//    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
-    NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
-    NSLog(@"lat = %@", strings[0]);
-    NSLog(@"lon = %@", strings[1]);
-//    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
-    NSString *who = [dict valueForKey:@"who"];
-    NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
-    [self toastMsg:toast];
-    NSLog(@"who=%@",who);
+// This goes through all of the objects currently in the _roomArray
+// Seeds the region with this devices current location and sets the span
+// to include all the pins. This will not plot pins that are located at 0.00,0.00
+// this currently gets the first item (room object) then cycles through all map
+// annotations until the ann.title = who. MAY WANT TO change it to use key value pairs
+// instead to immediately grab the annotation that needs updating
+//
+-(void) updatePointsOnMapWithAPIData {
+    
+//    NSString *toast = [NSString stringWithFormat:@" Getting locations of all in the room"];
+//    [self longToastMsg:toast];
     
     CLLocationCoordinate2D location, southWest, northEast;
     MKCoordinateRegion region;
     
-    // seed the region values to set the span later to include all the pins
-    southWest.latitude = [strings[0] doubleValue];
-    southWest.longitude = [strings[1] doubleValue];
+    // seed the region values with my current location and to set the span later to include all the pins
+    NSString *mLoc = [[SingletonClass singleObject] myLocStr];
+    NSArray *strs = [mLoc componentsSeparatedByString:@","];
+    southWest.latitude = [strs[0] doubleValue];
+    southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
     
     //Scxtt may need to move this to mapView delegate
@@ -630,74 +756,249 @@
     [formatter setDoesRelativeDateFormatting:YES];
     NSString* dateString = [formatter stringFromDate:[NSDate date]];
     
-
-    for (id<MKAnnotation> ann in _mapView.annotations)
-    {
-        NSLog(@"moving points checking ann.title is %@",ann.title);
+    
+    //    [self didSaveMessage];
+    BOOL whoFound = NO;
+    NSLog(@"updatePointsOnMapWithAPIData _roomAray: %@", [_roomArray objectAtIndex:1]);
+    // Loop thru all _roomArray[Room objects]
+    // Pull from _roomArray where who matches memberNickName
+    // each item is a Room object with memberNickName memberLocation & roomName
+    for (Room *item in _roomArray) {
         
-        // reset the span to include each and every pin as you go thru the list
-        //ignore the 0,0 uninitialize annotations
-        if (ann.coordinate.latitude != 0) {
-            southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
-            southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
-            northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
-            northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
-        }
-        // Move the updated pin to its new locations
-        if ([ann.title isEqualToString:who])
-        {
-            NSLog(@"found %@ moving %@", who, who);
-            whoFound = YES;
-            location.latitude = [strings[0] doubleValue];
-            location.longitude = [strings[1] doubleValue];
-            NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
-            ann.coordinate = location;
+//        NSLog(@"updatePointsOnMapWithAPIData %@", item.memberNickName);
+//        NSLog(@"---------------------------- %@", item.memberLocation);
+//        NSLog(@"---------------------------- %@", item.roomName);
+        if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
-//            NSString* mc = NSStringFromClass(ann);
-//            NSLog(@"ann Class: %@", mc);
+            NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
+            NSString *who = item.memberNickName;
             
-            
-            if ([ann isKindOfClass:[MKPointAnnotation class]])
+            for (id<MKAnnotation> ann in _mapView.annotations)
             {
-                MKPointAnnotation *pa = (MKPointAnnotation *)ann;
-                pa.subtitle = dateString;
-                NSLog(@"it is MKPointAnnotation");
-            } else {
-                NSLog(@"it isnt MKPointAnnotation");
+//                NSLog(@"API grooving points checking ann.title is %@",ann.title);
+                
+                // reset the span to include each and every pin as you go thru the list
+                //ignore the 0,0 uninitialize annotations
+                
+                southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
+                southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
+                northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
+                northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
+                
+                // Move the updated pin to its new locations
+                if ([ann.title isEqualToString:who])
+                {
+                    NSLog(@"found %@ grooving %@ at loc %@", who, who, item.memberLocation);
+                    whoFound = YES;
+                    location.latitude = [strings[0] doubleValue];
+                    location.longitude = [strings[1] doubleValue];
+                    if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
+                        
+                        //Scxtt need to find a cool way to animate sliding points
+                        ann.coordinate = location;
+                    }
+//                    if ([ann isKindOfClass:[MKPointAnnotation class]])
+//                    {
+//                        MKPointAnnotation *pa = (MKPointAnnotation *)ann;
+//                        pa.subtitle = dateString;
+//                        NSLog(@"it is MKPointAnnotation");
+//                    } else {
+//                        NSLog(@"it isnt MKPointAnnotation");
+//                    }
+                    
+                    //            ann.subtitle = dateString;
+                    break;
+                    
+                }
+            }
+            // new who so add addAnnotation and set coordinate
+            if (!whoFound) {
+                NSLog(@"Adding new who %@", who);
+                if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
+//                    NSLog(@"SCXTT not at zero zero so do it");
+                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
+                    annNew.title = who;
+                    
+                    annNew.subtitle = dateString;
+                    annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
+                    
+                    location.latitude = [strings[0] doubleValue];
+                    location.longitude = [strings[1] doubleValue];
+                    [annNew setCoordinate:location];
+                    // Scxtt also add the new pin to the singleton and give it a unique pin color
+//                    [annNew setImage:[UIImage imageNamed:@"blue.png"]];
+//                    scxtt why og why no worky
+                    
+//                    annNew.image = [UIImage imageNamed:@"blue.png"];
+                    
+                    [self.mapView addAnnotation:annNew];
+                    
+                }
             }
             
+            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+            
+            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+            CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+            
+            [self reCenterMap:region meters:meters];
             
             
             
-            
-//            ann.subtitle = dateString;
-            break;
         }
-    }
-    // new who so add addAnnotation and set coordinate
-    if (!whoFound) {
-        NSLog(@"Adding new who %@", who);
-        VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
-        annNew.title = who;
         
-        annNew.subtitle = dateString;
-        annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
         
-        location.latitude = [strings[0] doubleValue];
-        location.longitude = [strings[1] doubleValue];
-        [annNew setCoordinate:location];
-        [self.mapView addAnnotation:annNew];
     }
+}
 
-    _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-    _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+
+-(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
+    //    [self didSaveMessage];
+    BOOL whoFound = NO;
+    NSDictionary *dict = [notification userInfo];
+    //    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
+    NSLog([dict valueForKey:@"loc scxtt about to shape the world"],nil);
+    //    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
     
-    // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-
-    [self reCenterMap:region meters:meters];
+    if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]) {
+        NSLog(@"shaping it");
+        NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
+        NSLog(@"lat = %@", strings[0]);
+        NSLog(@"lon = %@", strings[1]);
+        //    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+        NSString *who = [dict valueForKey:@"who"];
+        NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
+        [self toastMsg:toast];
+        NSLog(@"who=%@",who);
+        
+        CLLocationCoordinate2D location, southWest, northEast;
+        MKCoordinateRegion region;
+        
+        // seed the region values to set the span later to include all the pins
+        southWest.latitude = [strings[0] doubleValue];
+        southWest.longitude = [strings[1] doubleValue];
+        northEast = southWest;
+        
+        //Scxtt may need to move this to mapView delegate
+        // Format the message date
+        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+        [formatter setDoesRelativeDateFormatting:YES];
+        NSString* dateString = [formatter stringFromDate:[NSDate date]];
+        
+        
+        for (id<MKAnnotation> ann in _mapView.annotations)
+        {
+            NSLog(@"moving points checking ann.title is %@",ann.title);
+            
+            // reset the span to include each and every pin as you go thru the list
+            //ignore the 0,0 uninitialize annotations
+            if (ann.coordinate.latitude != 0) {
+                southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
+                southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
+                northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
+                northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
+            }
+            // Move the updated pin to its new locations
+            if ([ann.title isEqualToString:who])
+            {
+                NSLog(@"found %@ moving %@", who, who);
+                whoFound = YES;
+                location.latitude = [strings[0] doubleValue];
+                location.longitude = [strings[1] doubleValue];
+                NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
+                ann.coordinate = location;
+                
+                //            NSString* mc = NSStringFromClass(ann);
+                //            NSLog(@"ann Class: %@", mc);
+                
+                
+                if ([ann isKindOfClass:[MKPointAnnotation class]])
+                {
+                    MKPointAnnotation *pa = (MKPointAnnotation *)ann;
+                    pa.subtitle = dateString;
+                    NSLog(@"it is MKPointAnnotation");
+                } else {
+                    NSLog(@"it isnt MKPointAnnotation");
+                }
+                
+                
+                
+                
+                
+                //            ann.subtitle = dateString;
+                break;
+            }
+        }
+        // new who so add addAnnotation and set coordinate
+        if (!whoFound) {
+            NSLog(@"Adding new who %@", who);
+            VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
+            annNew.title = who;
+            
+            annNew.subtitle = dateString;
+            annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
+            
+            location.latitude = [strings[0] doubleValue];
+            location.longitude = [strings[1] doubleValue];
+            if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]){
+                [annNew setCoordinate:location];
+                [self.mapView addAnnotation:annNew];
+            }
+            
+        }
+        
+        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+        
+        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+        CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+        
+        [self reCenterMap:region meters:meters];
+    
+    }
     
 }
+
+
+- (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
+    region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
+    region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
+    region.span.latitudeDelta = meters / 111319.5;
+    region.span.longitudeDelta = 0.0;
+    
+    MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
+    [_mapView setRegion:savedRegion animated:YES];
+}
+
+-(void)toastMsg:(NSString *)toastStr {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    // Configure for text only and offset down
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = toastStr;
+    //    hud.margin = 10.f;
+    //    hud.yOffset = 50.f;
+    hud.removeFromSuperViewOnHide = YES;
+    
+    [hud hide:YES afterDelay:1];
+}
+
+-(void)longToastMsg:(NSString *)toastStr {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    // Configure for text only and offset down
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = toastStr;
+    //    hud.margin = 10.f;
+    //    hud.yOffset = 50.f;
+    hud.removeFromSuperViewOnHide = YES;
+    
+    [hud hide:YES afterDelay:3];
+}
+
 
 //-(void) changeRegion {
 //    NSLog(@"changeRegion is called");

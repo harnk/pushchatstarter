@@ -460,17 +460,17 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
                 case AFFormURLParameterEncoding:;
                     [request setValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
                     [request setHTTPBody:[AFQueryStringFromParametersWithEncoding(parameters, self.stringEncoding) dataUsingEncoding:self.stringEncoding]];
-                    NSLog(@"AFFormURLParameterEncoding:%@", [AFQueryStringFromParametersWithEncoding(parameters, self.stringEncoding) dataUsingEncoding:self.stringEncoding]);
+//                    NSLog(@"AFFormURLParameterEncoding:%@", [AFQueryStringFromParametersWithEncoding(parameters, self.stringEncoding) dataUsingEncoding:self.stringEncoding]);
                     break;
                 case AFJSONParameterEncoding:;
                     [request setValue:[NSString stringWithFormat:@"application/json; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
                     [request setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:&error]];
-                    NSLog(@"AFJSONParameterEncoding:%@", [NSJSONSerialization dataWithJSONObject:parameters options:0 error:&error]);
+//                    NSLog(@"AFJSONParameterEncoding:%@", [NSJSONSerialization dataWithJSONObject:parameters options:0 error:&error]);
                     break;
                 case AFPropertyListParameterEncoding:;
                     [request setValue:[NSString stringWithFormat:@"application/x-plist; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
                     [request setHTTPBody:[NSPropertyListSerialization dataWithPropertyList:parameters format:NSPropertyListXMLFormat_v1_0 options:0 error:&error]];
-                    NSLog(@"AFPropertyListParameterEncoding:%@", [NSPropertyListSerialization dataWithPropertyList:parameters format:NSPropertyListXMLFormat_v1_0 options:0 error:&error]);
+//                    NSLog(@"AFPropertyListParameterEncoding:%@", [NSPropertyListSerialization dataWithPropertyList:parameters format:NSPropertyListXMLFormat_v1_0 options:0 error:&error]);
                     break;
             }
 

@@ -88,6 +88,16 @@ void ShowErrorAlert(NSString* text)
 //        NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
         NSString *asker = [userInfo valueForKey:@"asker"];
         [self postImhere:asker];
+        
+        // This should shut off after like 5 minutes scxtt
+        //still need to code that
+//        [NSTimer scheduledTimerWithTimeInterval: 2
+//                                         target: self
+//                                       selector: @selector(timerUpdateLoc)
+//                                       userInfo: nil
+//                                        repeats: YES];
+        
+        
     } else {
         if ([extra isEqualToString:@"imhere"]) {
             NSLog(@"Found someone - dont put into the message bubble");
@@ -123,6 +133,11 @@ void ShowErrorAlert(NSString* text)
         completionHandler(UIBackgroundFetchResultNewData);
         
     }
+}
+
+-(void)timerUpdateLoc {
+    NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
+    [self postLiveUpdate];
 }
 
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
@@ -284,11 +299,20 @@ void ShowErrorAlert(NSString* text)
     NSLog(@"Respond to WhereRU with Im Here back to asker");
     NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
     
-//    ComposeViewController *getLocationData;
-//    getLocationData = [[ComposeViewController alloc] init];
-//    
+    //    ComposeViewController *getLocationData;
+    //    getLocationData = [[ComposeViewController alloc] init];
+    //
     
     //SCXTT need to fix how we are getting dataModel here because this is a kludge
+    // actually causing a crash in the background
+//    Mar 14 19:03:41 Jackie-Yellofone WhereRU[1503] <Warning>: Im over here (null)
+//    Mar 14 19:03:41 Jackie-Yellofone WhereRU[1503] <Error>: *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]:
+//    attempt to insert nil object from objects[3]'
+//    *** First throw call stack:
+//    (0x2b9cb49f 0x391c1c8b 0x2b8eb873 0x2b8eb657 0x103899 0x102647 0x2f0f64af 0x2f0ed7af 0x2f0ef98b 0x2f0fa209 0x2f0ee217 0x3215c0d1 0x2b991d7d 0x2b991041 0x2b98f7c3 0x2b8dd3c1 0x2b8dd1d3 0x2eef21bf 0x2eeecfa1 0x101bf9 0x39741aaf)
+//
+//    scxtt
+    
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
     ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
     DataModel *dataModel = showMapViewController.dataModel;
@@ -301,7 +325,35 @@ void ShowErrorAlert(NSString* text)
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
     
-//    NSLog(@"Doing API Call with %@", params);
+    //    NSLog(@"Doing API Call with %@", params);
+    
+    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    [client
+     postPath:@"/whereru/api/api.php"
+     parameters:params
+     success:nil failure:nil];
+    
+}
+
+-(void)postLiveUpdate
+{
+    NSLog(@"After responding to WhereRU with Im Here back to asker update my loc on server for 5 minutes");
+    NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
+    
+    //    ComposeViewController *getLocationData;
+    //    getLocationData = [[ComposeViewController alloc] init];
+    //
+    
+    //SCXTT need to fix how we are getting dataModel here because this is a kludge
+    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
+    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    DataModel *dataModel = showMapViewController.dataModel;
+    
+    NSDictionary *params = @{@"cmd":@"liveupdate",
+                             @"user_id":[dataModel userId],
+                             @"location":[[SingletonClass singleObject] myLocStr]};
+    
+    //    NSLog(@"Doing API Call with %@", params);
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
@@ -332,6 +384,7 @@ void ShowErrorAlert(NSString* text)
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
 //        NSLog(@"didUpdateLocations Move to: %@", [locations lastObject]);
         NSLog(@"didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+        // If moved farther than 20 yards do an API call scxtt
     }
     
     
@@ -349,11 +402,8 @@ void ShowErrorAlert(NSString* text)
 {
     //SCXTT what is all this junk below here, gotta fix the kludge
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
     ShowMapViewController *showMapViewController =
     (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    
-//    DataModel *dataModel = chatViewController.dataModel;
     DataModel *dataModel = showMapViewController.dataModel;
     
     //The update cmd will update the user's device token on the server because sometimes these change

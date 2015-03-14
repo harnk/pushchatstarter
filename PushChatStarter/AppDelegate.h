@@ -11,6 +11,8 @@
 
 #define ApplicationDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
+@class DataModel;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
@@ -20,6 +22,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, readonly) UIStoryboard *storyBoard;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
 
 @end

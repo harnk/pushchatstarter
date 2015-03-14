@@ -43,7 +43,8 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
            //ADD THESE LINE
            DeviceTokenKey: @"0",
            UserId:@""}];
-    }}
+    }
+}
 
 // Returns the path to the Messages.plist file in the app's Documents directory
 - (NSString*)messagesPath

@@ -16,6 +16,7 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, assign) MKPinAnnotationColor *pinColor;
+@property (nonatomic, assign) UIImage *image;
 
 - initWithPosition:(CLLocationCoordinate2D)coords;
 

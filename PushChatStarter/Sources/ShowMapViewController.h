@@ -46,4 +46,6 @@
 @property (nonatomic, retain) CLLocation *mapViewNorthEast;
 //@property CLLocationDistance distanceFromMeInMeters;
 
+@property (nonatomic, strong) NSMutableArray * roomArray;
+
 @end
