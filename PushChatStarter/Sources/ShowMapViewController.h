@@ -35,7 +35,7 @@
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;
-//@property (nonatomic, strong) DataModel* dataModel;
+@property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic) BOOL isUpdating;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;

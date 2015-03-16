@@ -91,11 +91,11 @@ void ShowErrorAlert(NSString* text)
         
         // This should shut off after like 5 minutes scxtt
         //still need to code that
-//        [NSTimer scheduledTimerWithTimeInterval: 2
-//                                         target: self
-//                                       selector: @selector(timerUpdateLoc)
-//                                       userInfo: nil
-//                                        repeats: YES];
+        [NSTimer scheduledTimerWithTimeInterval: 5
+                                         target: self
+                                       selector: @selector(timerUpdateLoc)
+                                       userInfo: nil
+                                        repeats: YES];
         
         
     } else {
@@ -133,6 +133,11 @@ void ShowErrorAlert(NSString* text)
         completionHandler(UIBackgroundFetchResultNewData);
         
     }
+}
+
+-(void) postMyLoc {
+    NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+    [self postLiveUpdate];
 }
 
 -(void)timerUpdateLoc {
@@ -175,13 +180,13 @@ void ShowErrorAlert(NSString* text)
     [self.window makeKeyAndVisible];
     
     // Set the App ID for your app
-    [[Harpy sharedInstance] setAppID:@"842897634"];
+    [[Harpy sharedInstance] setAppID:@"976774720"];
     
     // Set the UIViewController that will present an instance of UIAlertController
     [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
     
     // (Optional) Set the App Name for your app
-    [[Harpy sharedInstance] setAppName:@"WhereRU"];
+    [[Harpy sharedInstance] setAppName:@"WhereRU - Locator and Chat"];
     
     /* (Optional) Set the Alert Type for your app
      By default, Harpy is configured to use HarpyAlertTypeOption */
@@ -251,6 +256,11 @@ void ShowErrorAlert(NSString* text)
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
+    [NSTimer scheduledTimerWithTimeInterval: 10
+                                               target: self
+                                             selector: @selector(postMyLoc)
+                                             userInfo: nil
+                                              repeats: YES];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -298,29 +308,10 @@ void ShowErrorAlert(NSString* text)
 {
     NSLog(@"Respond to WhereRU with Im Here back to asker");
     NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
-    
-    //    ComposeViewController *getLocationData;
-    //    getLocationData = [[ComposeViewController alloc] init];
-    //
-    
-    //SCXTT need to fix how we are getting dataModel here because this is a kludge
-    // actually causing a crash in the background
-//    Mar 14 19:03:41 Jackie-Yellofone WhereRU[1503] <Warning>: Im over here (null)
-//    Mar 14 19:03:41 Jackie-Yellofone WhereRU[1503] <Error>: *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '*** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]:
-//    attempt to insert nil object from objects[3]'
-//    *** First throw call stack:
-//    (0x2b9cb49f 0x391c1c8b 0x2b8eb873 0x2b8eb657 0x103899 0x102647 0x2f0f64af 0x2f0ed7af 0x2f0ef98b 0x2f0fa209 0x2f0ee217 0x3215c0d1 0x2b991d7d 0x2b991041 0x2b98f7c3 0x2b8dd3c1 0x2b8dd1d3 0x2eef21bf 0x2eeecfa1 0x101bf9 0x39741aaf)
-//
-//    scxtt
-    
-    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    DataModel *dataModel = showMapViewController.dataModel;
-    
     NSString *text = @"Im Here";
     
     NSDictionary *params = @{@"cmd":@"imhere",
-                             @"user_id":[dataModel userId],
+                             @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"asker":asker,
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
@@ -339,18 +330,9 @@ void ShowErrorAlert(NSString* text)
 {
     NSLog(@"After responding to WhereRU with Im Here back to asker update my loc on server for 5 minutes");
     NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
-    
-    //    ComposeViewController *getLocationData;
-    //    getLocationData = [[ComposeViewController alloc] init];
-    //
-    
-    //SCXTT need to fix how we are getting dataModel here because this is a kludge
-    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    DataModel *dataModel = showMapViewController.dataModel;
-    
+
     NSDictionary *params = @{@"cmd":@"liveupdate",
-                             @"user_id":[dataModel userId],
+                             @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr]};
     
     //    NSLog(@"Doing API Call with %@", params);
@@ -400,17 +382,12 @@ void ShowErrorAlert(NSString* text)
 
 - (void)postUpdateRequest
 {
-    //SCXTT what is all this junk below here, gotta fix the kludge
-    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    ShowMapViewController *showMapViewController =
-    (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    DataModel *dataModel = showMapViewController.dataModel;
     
     //The update cmd will update the user's device token on the server because sometimes these change
     NSDictionary *params = @{@"cmd":@"update",
-                             @"user_id":[dataModel userId],
+                             @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr],
-                             @"token":[dataModel deviceToken]};
+                             @"token":[[NSUserDefaults standardUserDefaults] stringForKey:@"DeviceToken"]};
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
      postPath:@"/whereru/api/api.php"

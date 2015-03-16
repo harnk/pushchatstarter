@@ -96,23 +96,18 @@
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
     
-//    [NSTimer scheduledTimerWithTimeInterval: 0.001
-//                                     target: self
-//                                   selector: @selector(changeRegion)
-//                                   userInfo: nil
-//                                    repeats: NO];
-    
+
     [NSTimer scheduledTimerWithTimeInterval: 7
                                      target: self
                                    selector: @selector(areNotificationsEnabled)
                                    userInfo: nil
                                     repeats: NO];
     
-    [NSTimer scheduledTimerWithTimeInterval: 10
+    _timer  = [NSTimer scheduledTimerWithTimeInterval: 60
                                      target: self
                                    selector: @selector(postGetRoom)
                                    userInfo: nil
-                                    repeats: YES];
+                                    repeats: NO];
     
     
 
@@ -229,6 +224,18 @@
     else
     {
         [self scrollToNewestMessage];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
+    //Always nil your timer after invalidating so that
+    //it does not cause crash due to duplicate invalidate
+    NSLog(@"scXtt viewWillDisappear");
+    if(_timer)
+    {
+        [_timer invalidate];
+        _timer = nil;
     }
 }
 
@@ -487,9 +494,10 @@
                         
                          NSString *mNickName = [item objectForKey:@"nickname"];
                          NSString *mLocation = [item objectForKey:@"location"];
+                         NSString *mLocTime = [item objectForKey:@"loc_time"];
                          
                          if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation];
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
                              [_roomArray addObject:roomObj];
                          }
                          
@@ -579,12 +587,21 @@
                  if (!jsonArray) {
                      NSLog(@"Error parsing JSON: %@", e);
                  } else {
+                     
+//                     Blank out and reload _roomArray
+                     if (!_roomArray) {
+                         _roomArray = [[NSMutableArray alloc] init];
+                     } else {
+                         [_roomArray removeAllObjects];
+                     }
+
                      for(NSDictionary *item in jsonArray) {
                          NSString *mNickName = [item objectForKey:@"nickname"];
                          NSString *mLocation = [item objectForKey:@"location"];
+                         NSString *mLocTime = [item objectForKey:@"loc_time"];
                          
                          if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation];
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
                              if (!_roomArray) _roomArray = [[NSMutableArray alloc] init];
                              [_roomArray addObject:roomObj];
                              
@@ -748,7 +765,7 @@
     southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
     
-    //Scxtt may need to move this to mapView delegate
+    //Scxtt may need to move this down to get each time from the db
     // Format the message date
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
@@ -767,6 +784,7 @@
         
 //        NSLog(@"updatePointsOnMapWithAPIData %@", item.memberNickName);
 //        NSLog(@"---------------------------- %@", item.memberLocation);
+//        NSLog(@"---------------------------- %@", item.memberUpdateTime);
 //        NSLog(@"---------------------------- %@", item.roomName);
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
@@ -788,7 +806,7 @@
                 // Move the updated pin to its new locations
                 if ([ann.title isEqualToString:who])
                 {
-                    NSLog(@"found %@ grooving %@ at loc %@", who, who, item.memberLocation);
+                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];

@@ -13,12 +13,13 @@
 @property (strong, nonatomic) NSString *roomName; // db active_users secret_code
 @property (strong, nonatomic) NSString *memberNickName;
 @property (strong, nonatomic) NSString *memberLocation;
+@property (strong, nonatomic) NSString *memberUpdateTime;
 //@property (strong, nonatomic) NSDate *memberUpdateTime;
 
 #pragma mark - 
 #pragma mark Class Methods
 
 //-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberUpdateTime:(NSDate *)mUpdateTime;
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation;
+-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime;
 
 @end
