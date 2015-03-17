@@ -765,13 +765,13 @@
     southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
     
-    //Scxtt may need to move this down to get each time from the db
-    // Format the message date
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterShortStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDoesRelativeDateFormatting:YES];
-    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+//    //Scxtt may need to move this down to get each time from the db
+//    // Format the message date
+//    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+//    [formatter setDateStyle:NSDateFormatterShortStyle];
+//    [formatter setTimeStyle:NSDateFormatterShortStyle];
+//    [formatter setDoesRelativeDateFormatting:YES];
+//    NSString* dateString = [formatter stringFromDate:[NSDate date]];
     
     
     //    [self didSaveMessage];
@@ -837,7 +837,24 @@
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
                     annNew.title = who;
                     
+                    
+                    
+                    //Scxtt may need to move this down to get each time from the db
+                    // Format the message date
+                    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+                    [formatter setDateStyle:NSDateFormatterShortStyle];
+                    [formatter setTimeStyle:NSDateFormatterShortStyle];
+                    [formatter setDoesRelativeDateFormatting:YES];
+                    NSString* dateString = [formatter stringFromDate:[NSDate date]];
+
+                    
+                    
+                    
+                    
                     annNew.subtitle = dateString;
+                    annNew.subtitle = @"updatePointsOnMapWithAPIData is updating annNew.subtitle";
+//                    annNew.subtitle = item.memberUpdateTime;
+                    
                     annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
                     
                     location.latitude = [strings[0] doubleValue];
@@ -937,6 +954,8 @@
                 {
                     MKPointAnnotation *pa = (MKPointAnnotation *)ann;
                     pa.subtitle = dateString;
+                    pa.subtitle = @"updatePointsOnMapWithNotification is updating pa.subtitle";
+
                     NSLog(@"it is MKPointAnnotation");
                 } else {
                     NSLog(@"it isnt MKPointAnnotation");
@@ -957,6 +976,8 @@
             annNew.title = who;
             
             annNew.subtitle = dateString;
+            annNew.subtitle = @"updatePointsOnMapWithAPIData is updating NEWLY FOUND annNew.subtitle";
+
             annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
             
             location.latitude = [strings[0] doubleValue];
