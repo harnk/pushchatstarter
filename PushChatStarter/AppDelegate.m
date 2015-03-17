@@ -91,7 +91,7 @@ void ShowErrorAlert(NSString* text)
         
         // This should shut off after like 5 minutes scxtt
         //still need to code that
-        [NSTimer scheduledTimerWithTimeInterval: 5
+        [NSTimer scheduledTimerWithTimeInterval: 10
                                          target: self
                                        selector: @selector(timerUpdateLoc)
                                        userInfo: nil
@@ -136,13 +136,20 @@ void ShowErrorAlert(NSString* text)
 }
 
 -(void) postMyLoc {
-    NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
-    [self postLiveUpdate];
+    
+    if (_deviceHasMoved) {
+        NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+        [self postLiveUpdate];
+        _deviceHasMoved = NO;
+    }
 }
 
 -(void)timerUpdateLoc {
-    NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
-    [self postLiveUpdate];
+    if (_deviceHasMoved) {
+        NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
+        [self postLiveUpdate];
+        _deviceHasMoved = NO;
+    }
 }
 
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
@@ -204,7 +211,7 @@ void ShowErrorAlert(NSString* text)
         if (dictionary != nil)
         {
             NSLog(@"Launched from push notification: %@", dictionary);
-//            [self addMessageFromRemoteNotification:dictionary updateUI:NO];
+            [self addMessageFromRemoteNotification:dictionary updateUI:NO];
         }
     }
     
@@ -220,6 +227,7 @@ void ShowErrorAlert(NSString* text)
     // Start updating my own location
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    _deviceHasMoved = YES;
 
     if(IS_OS_8_OR_LATER) {
         // Use one or the other, not both. Depending on what you put in info.plist
@@ -307,7 +315,7 @@ void ShowErrorAlert(NSString* text)
 -(void)postImhere:(NSString *)asker
 {
     NSLog(@"Respond to WhereRU with Im Here back to asker");
-    NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"postImhere %@", [[SingletonClass singleObject] myLocStr]);
     NSString *text = @"Im Here";
     
     NSDictionary *params = @{@"cmd":@"imhere",
@@ -329,7 +337,7 @@ void ShowErrorAlert(NSString* text)
 -(void)postLiveUpdate
 {
     NSLog(@"After responding to WhereRU with Im Here back to asker update my loc on server for 5 minutes");
-    NSLog(@"Im over here %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
@@ -367,9 +375,8 @@ void ShowErrorAlert(NSString* text)
 //        NSLog(@"didUpdateLocations Move to: %@", [locations lastObject]);
         NSLog(@"didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
         // If moved farther than 20 yards do an API call scxtt
+        _deviceHasMoved = YES;
     }
-    
-    
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
@@ -382,7 +389,6 @@ void ShowErrorAlert(NSString* text)
 
 - (void)postUpdateRequest
 {
-    
     //The update cmd will update the user's device token on the server because sometimes these change
     NSDictionary *params = @{@"cmd":@"update",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],

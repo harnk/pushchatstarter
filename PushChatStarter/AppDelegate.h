@@ -24,5 +24,6 @@
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
+@property (nonatomic) BOOL deviceHasMoved;
 
 @end
