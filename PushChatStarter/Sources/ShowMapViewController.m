@@ -764,19 +764,9 @@
     southWest.latitude = [strs[0] doubleValue];
     southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
-    
-//    //Scxtt may need to move this down to get each time from the db
-//    // Format the message date
-//    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-//    [formatter setDateStyle:NSDateFormatterShortStyle];
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//    [formatter setDoesRelativeDateFormatting:YES];
-//    NSString* dateString = [formatter stringFromDate:[NSDate date]];
-    
-    
-    //    [self didSaveMessage];
+
     BOOL whoFound = NO;
-    NSLog(@"updatePointsOnMapWithAPIData _roomAray: %@", [_roomArray objectAtIndex:1]);
+    NSLog(@"updatePointsOnMapWithAPIData _roomArray: %@", [_roomArray objectAtIndex:1]);
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
@@ -786,6 +776,7 @@
 //        NSLog(@"---------------------------- %@", item.memberLocation);
 //        NSLog(@"---------------------------- %@", item.memberUpdateTime);
 //        NSLog(@"---------------------------- %@", item.roomName);
+        
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
@@ -794,7 +785,6 @@
             for (id<MKAnnotation> ann in _mapView.annotations)
             {
 //                NSLog(@"API grooving points checking ann.title is %@",ann.title);
-                
                 // reset the span to include each and every pin as you go thru the list
                 //ignore the 0,0 uninitialize annotations
                 
@@ -811,50 +801,30 @@
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                        
                         //Scxtt need to find a cool way to animate sliding points
                         ann.coordinate = location;
                     }
-//                    if ([ann isKindOfClass:[MKPointAnnotation class]])
-//                    {
-//                        MKPointAnnotation *pa = (MKPointAnnotation *)ann;
-//                        pa.subtitle = dateString;
-//                        NSLog(@"it is MKPointAnnotation");
-//                    } else {
-//                        NSLog(@"it isnt MKPointAnnotation");
-//                    }
-                    
-                    //            ann.subtitle = dateString;
                     break;
-                    
                 }
             }
-            // new who so add addAnnotation and set coordinate
+            // new who so add addAnnotation and set coordinate and location time
             if (!whoFound) {
                 NSLog(@"Adding new who %@", who);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-//                    NSLog(@"SCXTT not at zero zero so do it");
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
                     annNew.title = who;
-                    
-                    
-                    
-                    //Scxtt may need to move this down to get each time from the db
-                    // Format the message date
-                    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+
+                    // Convert string to date object
+                    NSString *dateStr = item.memberUpdateTime;
+                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+                    NSDate *date = [formatter dateFromString:dateStr];
                     [formatter setDateStyle:NSDateFormatterShortStyle];
                     [formatter setTimeStyle:NSDateFormatterShortStyle];
                     [formatter setDoesRelativeDateFormatting:YES];
-                    NSString* dateString = [formatter stringFromDate:[NSDate date]];
-
-                    
-                    
-                    
+                    NSString* dateString = [formatter stringFromDate:date];
                     
                     annNew.subtitle = dateString;
-                    annNew.subtitle = @"updatePointsOnMapWithAPIData is updating annNew.subtitle";
-//                    annNew.subtitle = item.memberUpdateTime;
-                    
                     annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
                     
                     location.latitude = [strings[0] doubleValue];
@@ -878,30 +848,19 @@
             CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
             
             [self reCenterMap:region meters:meters];
-            
-            
-            
+
         }
-        
-        
     }
 }
 
 
 -(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
-    //    [self didSaveMessage];
+
     BOOL whoFound = NO;
     NSDictionary *dict = [notification userInfo];
-    //    NSLog([[dict valueForKey:@"aps"] valueForKey:@"loc"],nil);
-    NSLog([dict valueForKey:@"loc scxtt about to shape the world"],nil);
-    //    NSArray *strings = [[[dict valueForKey:@"aps"] valueForKey:@"loc"] componentsSeparatedByString:@","];
     
     if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]) {
-        NSLog(@"shaping it");
-        NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
-        NSLog(@"lat = %@", strings[0]);
-        NSLog(@"lon = %@", strings[1]);
-        //    NSString *who = [[dict valueForKey:@"aps"] valueForKey:@"who"];
+
         NSString *who = [dict valueForKey:@"who"];
         NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
         [self toastMsg:toast];
@@ -911,6 +870,7 @@
         MKCoordinateRegion region;
         
         // seed the region values to set the span later to include all the pins
+        NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
         southWest.latitude = [strings[0] doubleValue];
         southWest.longitude = [strings[1] doubleValue];
         northEast = southWest;
@@ -960,10 +920,6 @@
                 } else {
                     NSLog(@"it isnt MKPointAnnotation");
                 }
-                
-                
-                
-                
                 
                 //            ann.subtitle = dateString;
                 break;
