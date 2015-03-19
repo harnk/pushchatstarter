@@ -107,7 +107,7 @@
                                      target: self
                                    selector: @selector(postGetRoom)
                                    userInfo: nil
-                                    repeats: NO];
+                                    repeats: YES];
     
     
 
