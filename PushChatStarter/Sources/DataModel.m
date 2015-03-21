@@ -74,8 +74,15 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 		NSData* data = [[NSData alloc] initWithContentsOfFile:path];
 		NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 		self.messages = [unarchiver decodeObjectForKey:@"Messages"];
-//        NSLog(@"self.messages: %@", self.messages);
-		[unarchiver finishDecoding];
+        
+        
+
+//      scxtt lets look at what messages are stored on the device
+        for (Message *msg in self.messages) {
+            NSLog(@"msg.senderName:%@ text:%@ date:%@ location:%@ ", msg.senderName, msg.text, msg.date, msg.location);
+        }
+        
+        [unarchiver finishDecoding];
 	}
 	else
 	{
