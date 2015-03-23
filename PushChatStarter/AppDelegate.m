@@ -38,19 +38,19 @@ void ShowErrorAlert(NSString* text)
     
     Message *message = [[Message alloc] init];
     message.date = [NSDate date];
-//    message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
+    //    message.location = [[userInfo valueForKey:@"aps"] valueForKey:@"loc"];
     message.location = [userInfo valueForKey:@"loc"];
     
     // Handle my location
-//    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
+    //    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
     CLLocation *locA = [[SingletonClass singleObject] myNewLocation];
     NSLog(@"SCXTT locA is:%@", locA);
-
+    
     // Handle the location of the remote device
     NSArray *strings = [message.location componentsSeparatedByString:@","];
     CLLocation *locB = [[CLLocation alloc] initWithLatitude:[strings[0] doubleValue] longitude:[strings[1] doubleValue]];
-
-//    NSLog(@"locB is:%@", locB);
+    
+    //    NSLog(@"locB is:%@", locB);
     
     CLLocationDistance distance = [locA distanceFromLocation:locB];
     NSLog(@"SCXTT The distance from me to it is:%f meters", distance);
@@ -58,20 +58,20 @@ void ShowErrorAlert(NSString* text)
     message.distanceFromMeInMeters = distance;
     
     NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-//    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+    //    NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
     
     NSMutableArray *parts = [NSMutableArray arrayWithArray:[alertValue componentsSeparatedByString:@": "]];
     
     message.senderName = [parts objectAtIndex:0];
     [parts removeObjectAtIndex:0];
     message.text = [parts componentsJoinedByString:@": "];
-
+    
     //    message.text = alertValue;
     
     int index = [dataModel addMessage:message];
-
+    
     if (updateUI) {
-//        [chatViewController didSaveMessage:message atIndex:index];
+        //        [chatViewController didSaveMessage:message atIndex:index];
         [showMapViewController didSaveMessage:message atIndex:index];
     }
 }

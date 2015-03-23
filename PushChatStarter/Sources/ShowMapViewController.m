@@ -78,6 +78,56 @@
     }
 }
 
+- (void)setUpTimersAndObservers {
+    [NSTimer scheduledTimerWithTimeInterval: 7
+                                     target: self
+                                   selector: @selector(areNotificationsEnabled)
+                                   userInfo: nil
+                                    repeats: NO];
+    
+    _timer  = [NSTimer scheduledTimerWithTimeInterval: 60
+                                               target: self
+                                             selector: @selector(postGetRoom)
+                                             userInfo: nil
+                                              repeats: YES];
+    
+    [NSTimer scheduledTimerWithTimeInterval: 20
+                                     target: self
+                                   selector: @selector(postGetRoomMessages)
+                                   userInfo: nil
+                                    repeats: YES];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMapWithNotification:)
+                                                 name:@"receivedNewMessage"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(findAction)
+                                                 name:@"receivedDeviceToken"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMapWithAPIData)
+                                                 name:@"receivedNewAPIData"
+                                               object:nil];
+}
+
+- (void)setUpButtonBarItems {
+    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
+    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
+    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
+    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
+    //    [self.navigationItem setLeftBarButtonItem:leftBarButton];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
+    //    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnGet, btnPost, btnCompose, btnRefresh, nil] animated:YES];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -97,99 +147,11 @@
     location.longitude = BE_LONGITUDE;
     
 
-    [NSTimer scheduledTimerWithTimeInterval: 7
-                                     target: self
-                                   selector: @selector(areNotificationsEnabled)
-                                   userInfo: nil
-                                    repeats: NO];
-    
-    _timer  = [NSTimer scheduledTimerWithTimeInterval: 60
-                                     target: self
-                                   selector: @selector(postGetRoom)
-                                   userInfo: nil
-                                    repeats: YES];
-    
-    
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePointsOnMapWithNotification:)
-                                                 name:@"receivedNewMessage"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(findAction)
-                                                 name:@"receivedDeviceToken"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePointsOnMapWithAPIData)
-                                                 name:@"receivedNewAPIData"
-                                               object:nil];
+    [self setUpTimersAndObservers];
 
     
-    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
-    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
-    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
-    
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
-    _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
-//    [self.navigationItem setLeftBarButtonItem:leftBarButton];
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, _btnMapType, nil] animated:YES];
-    
-//    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnGet, btnPost, btnCompose, btnRefresh, nil] animated:YES];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnCompose, btnRefresh, nil] animated:YES];
-    
+    [self setUpButtonBarItems];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
-}
-
--(void) areNotificationsEnabled {
-    BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
-    NSLog(@" SCXTT [[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
-    NSLog(@"Move the ALERT HERE for Notifs being off");
-    
-    NSLog(@"SCXTT setting notificationsAreDisabled to YES by default");
-    [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
-    // Check if notifications are enabled because this app won't work if they aren't
-    //    _notificationsAreDisabled = false;
-    BOOL isdisabled = true;
-    
-    if (IS_OS_8_OR_LATER) {
-        if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-        {
-            NSLog(@"IS_OS_8_OR_LATER is YES");
-            isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
-            NSLog(@"isdisabled value: %d",isdisabled);
-        }
-        
-    } else {
-        NSLog(@"IS_OS_8_OR_LATER is NO");
-
-        
-        UIRemoteNotificationType notifTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-//        if (notifTypes & UIRemoteNotificationTypeAlert)
-        if (notifTypes != 12)
-        {
-            isdisabled = false;
-            NSLog(@"isdisabled value: %d",isdisabled);
-//            NSLog(@"UIRemoteNotificationType notifTypes: %lu", notifTypes);
-        }
-    }
-    
-    
-    [[SingletonClass singleObject] setNotificationsAreDisabled:isdisabled];
-    //    _notificationsAreDisabled = isdisabled;
-    
-    //Pop an aler to let the user go to settings and change notifications setting for this app
-    if (isdisabled) {
-        if (IS_OS_8_OR_LATER){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-            [alert show];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications in Settings - Notification Center." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil, nil];
-            [alert show];
-        }
-    }
     
 }
 
@@ -238,6 +200,58 @@
         _timer = nil;
     }
 }
+
+-(void) areNotificationsEnabled {
+    BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
+    NSLog(@" SCXTT [[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
+    NSLog(@"Move the ALERT HERE for Notifs being off");
+    
+    NSLog(@"SCXTT setting notificationsAreDisabled to YES by default");
+    [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
+    // Check if notifications are enabled because this app won't work if they aren't
+    //    _notificationsAreDisabled = false;
+    BOOL isdisabled = true;
+    
+    if (IS_OS_8_OR_LATER) {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+        {
+            NSLog(@"IS_OS_8_OR_LATER is YES");
+            isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
+            NSLog(@"isdisabled value: %d",isdisabled);
+        }
+        
+    } else {
+        NSLog(@"IS_OS_8_OR_LATER is NO");
+        
+        
+        UIRemoteNotificationType notifTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+        //        if (notifTypes & UIRemoteNotificationTypeAlert)
+        if (notifTypes != 12)
+        {
+            isdisabled = false;
+            NSLog(@"isdisabled value: %d",isdisabled);
+            //            NSLog(@"UIRemoteNotificationType notifTypes: %lu", notifTypes);
+        }
+    }
+    
+    
+    [[SingletonClass singleObject] setNotificationsAreDisabled:isdisabled];
+    //    _notificationsAreDisabled = isdisabled;
+    
+    //Pop an aler to let the user go to settings and change notifications setting for this app
+    if (isdisabled) {
+        if (IS_OS_8_OR_LATER){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+            [alert show];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications in Settings - Notification Center." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil, nil];
+            [alert show];
+        }
+    }
+    
+}
+
+
 
 #pragma mark -
 #pragma mark - UITableViewDataSource
@@ -474,7 +488,7 @@
                  NSLog(@"SMVC Get last room location for all devices");
                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
                  NSLog(@"responseString: %@", responseString);
-//                 NSLog(@"operation: %@", operation);
+                 //                 NSLog(@"operation: %@", operation);
                  
                  NSError *e = nil;
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -483,21 +497,28 @@
                      NSLog(@"Error parsing JSON: %@", e);
                  } else {
                      
-//                   Blank out and reload _roomArray
+                     //                   Blank out and reload _roomArray
                      if (!_roomArray) {
+                         NSLog(@"init _roomArray");
                          _roomArray = [[NSMutableArray alloc] init];
                      } else {
+                         NSLog(@"_roomArray removeAllObjects");
                          [_roomArray removeAllObjects];
                      }
                      
+//                     scxtt
+                     
+                     
                      for(NSDictionary *item in jsonArray) {
-                        
+                         
                          NSString *mNickName = [item objectForKey:@"nickname"];
                          NSString *mLocation = [item objectForKey:@"location"];
                          NSString *mLocTime = [item objectForKey:@"loc_time"];
                          
                          if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+                             NSLog(@"Room initWithRoomName");
                              Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
+                             NSLog(@"_roomArray addObject:roomObj");
                              [_roomArray addObject:roomObj];
                          }
                          
@@ -510,8 +531,78 @@
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              if ([self isViewLoaded]) {
                  _isUpdating = NO;
-//                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
-//                 ShowErrorAlert([error localizedDescription]);
+                 //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
+                 //                 ShowErrorAlert([error localizedDescription]);
+             }
+         }];
+    } else {
+        NSLog(@"Aint nobody got time for that");
+        _isUpdating = NO;
+    }
+}
+
+
+- (void)postGetRoomMessages
+{
+    if (!_isUpdating)
+    {
+        _isUpdating = YES;
+
+        NSString *secret_code = [_dataModel secretCode];
+        NSDictionary *params = @{@"cmd":@"getroommessages",
+                                 @"user_id":[_dataModel userId],
+                                 @"location":[[SingletonClass singleObject] myLocStr],
+                                 @"secret_code":secret_code};
+        
+        [_client
+         postPath:@"/whereru/api/api.php"
+         parameters:params
+         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             _isUpdating = NO;
+             if (operation.response.statusCode != 200) {
+                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+             } else {
+                 NSLog(@"SMVC Get all messages for this room");
+                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+                 NSLog(@"getroommessages responseString: %@", responseString);
+                 
+                 NSError *e = nil;
+                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+                 
+                 if (!jsonArray) {
+                     NSLog(@"Error parsing JSON: %@", e);
+                 } else {
+                     
+                     //                   Blank out and reload _roomArray
+                     if (!_roomMessagesArray) {
+                         _roomMessagesArray = [[NSMutableArray alloc] init];
+                     } else {
+//                         [_roomMessagesArray removeAllObjects];
+                     }
+                     
+                     for(NSDictionary *item in jsonArray) {
+                         
+                         NSLog(@"postGetRoomMessages message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
+//                         NSString *mNickName = [item objectForKey:@"nickname"];
+//                         NSString *mLocation = [item objectForKey:@"location"];
+//                         NSString *mLocTime = [item objectForKey:@"loc_time"];
+//                         
+//                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+//                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
+//                             [_roomArray addObject:roomObj];
+//                         }
+                         
+                     }
+//                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+                 }
+                 
+             }
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             if ([self isViewLoaded]) {
+                 _isUpdating = NO;
+                 //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
+                 //                 ShowErrorAlert([error localizedDescription]);
              }
          }];
     } else {
@@ -766,7 +857,7 @@
     northEast = southWest;
 
     BOOL whoFound = NO;
-    NSLog(@"updatePointsOnMapWithAPIData _roomArray: %@", [_roomArray objectAtIndex:1]);
+    NSLog(@"updatePointsOnMapWithAPIData");
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
