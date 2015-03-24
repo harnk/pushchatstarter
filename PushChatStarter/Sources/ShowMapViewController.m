@@ -86,13 +86,13 @@
                                    userInfo: nil
                                     repeats: NO];
     
-    _timer  = [NSTimer scheduledTimerWithTimeInterval: 60
+    _timer  = [NSTimer scheduledTimerWithTimeInterval: 10
                                                target: self
                                              selector: @selector(postGetRoom)
                                              userInfo: nil
                                               repeats: YES];
     
-    [NSTimer scheduledTimerWithTimeInterval: 20
+    [NSTimer scheduledTimerWithTimeInterval: 30
                                      target: self
                                    selector: @selector(postGetRoomMessages)
                                    userInfo: nil
@@ -721,118 +721,49 @@
 #pragma mark -
 #pragma mark Map
 
-//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+//-(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(id <MKAnnotation>)annotation
 //{
-//    MKPinAnnotationView *view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pin"];
-//    view.pinColor = MKPinAnnotationColorPurple;
-//    view.enabled = YES;
-//    view.animatesDrop = YES;
-//    view.canShowCallout = YES;
+//    MKAnnotationView *pinView = nil;
+//    NSLog(@"annotation.title: %@",annotation.title);
+//    NSLog(@"annotation.subtitle: %@", annotation.subtitle);
 //    
-//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"palmTree.png"]];
-//    view.leftCalloutAccessoryView = imageView;
-//    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-//    return view;
-//}
+//    if(annotation != _mapView.userLocation)
+//    {
+//        static NSString *defaultPinID = @"com.harnk.pin";
+//        pinView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
+//        if ( pinView == nil ) {
+//            pinView = [[MKAnnotationView alloc]
+//                       initWithAnnotation:annotation reuseIdentifier:defaultPinID];
+//        }
+//        pinView.canShowCallout = YES;
 //
-////
-
-//
-//- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(id <MKAnnotation>)annotation
-//{
-//    NSLog(@"mapView is called scxtt");
-//    
-//    if (annotation == _mapView.userLocation)
-//        return nil;
-//    
-//    MKPinAnnotationView *pin = (MKPinAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier: @"wrupin"];
-//    
-//    if (pin == nil)
-//        pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: @"wrupin"];
-//    else
-//        pin.annotation = annotation;
-//    
-//    NSLog(@"mapView annotation.title:%@",annotation.title);
-//    UIImageView *pinView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png"]];
-//    UIImageView *steveView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png.png"]];
-//    UIImageView *jackView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pinshadow.png.png"]];
-//
-//    
-//    if ([annotation.title isEqualToString:@"Dad4s"]) {
-////        pin.pinColor = MKPinAnnotationColorPurple;
-//        [pin addSubview:pinView];
-//
-//        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
-//    }else if ([annotation.title isEqualToString:@"Jack-iPad3"]) {
-//        pin.pinColor = MKPinAnnotationColorRed;
-//        // pin.image=[UIImage imageNamed:@"arrest.png"] ;
-//    }else if ([annotation.title isEqualToString:@"ED"]) {
-//        [pin addSubview:pinView];
+////        scxtt WIP - https://bakyelli.wordpress.com/2013/10/13/creating-custom-map-annotations-using-mkannotation-protocol/
 //        
-//    }else if ([annotation.title isEqualToString:@"Steve iPad"]) {
-//        [pin addSubview:steveView];
+//        pinView.image = [UIImage imageNamed:@"cyan.png"];    //as suggested by Squatch
+//        // NEED to scxtt adjust the centerOffset
 //        
-//    }else if ([annotation.title isEqualToString:@"jackie"]) {
-//        [pin addSubview:jackView];
-//        
-//    } else {
-//        [pin addSubview:pinView];
-////        pin.pinColor= MKPinAnnotationColorGreen;
 //    }
-//
-//    
-//    pin.userInteractionEnabled = YES;
-//    UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    //  //pin.image=[UIImage imageNamed:@"arrest.png"] ;
-//    
-//    
-//    
-//    //Scxtt may need to move this to mapView delegate
-//    // Format the message date
-//    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-//    [formatter setDateStyle:NSDateFormatterShortStyle];
-//    [formatter setTimeStyle:NSDateFormatterShortStyle];
-//    [formatter setDoesRelativeDateFormatting:YES];
-////    NSString* dateString = [formatter stringFromDate:[NSDate date]];
-//    
-////SCXTT need to set the subtitle to the new date time
-//    
-////    [pin se]
-//    
-//    
-//    pin.rightCalloutAccessoryView = disclosureButton;
-////    pin.pinColor = MKPinAnnotationColorRed;
-//    pin.animatesDrop = YES;
-//    [pin setEnabled:YES];
-//    [pin setCanShowCallout:YES];
-//    return pin;
+//    else {
+//        [_mapView.userLocation setTitle:@"I am here"];
+//    }
+//    return pinView;
 //}
 
--(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(id <MKAnnotation>)annotation
-{
-    MKAnnotationView *pinView = nil;
-    NSLog(@"annotation.title: %@",annotation.title);
-    NSLog(@"annotation.subtitle: %@", annotation.subtitle);
-    
-    if(annotation != _mapView.userLocation)
-    {
-        static NSString *defaultPinID = @"com.harnk.pin";
-        pinView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
-        if ( pinView == nil ) {
-            pinView = [[MKAnnotationView alloc]
-                       initWithAnnotation:annotation reuseIdentifier:defaultPinID];
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    if([annotation isKindOfClass:[VBAnnotation class]]) {
+        VBAnnotation *myLocation = (VBAnnotation *)annotation;
+        MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
+        
+        if (annotationView == nil) {
+            annotationView = myLocation.annotationView;
+        } else {
+            annotationView.annotation = annotation;
         }
-        pinView.canShowCallout = NO;
-        scxtt WIP - https://bakyelli.wordpress.com/2013/10/13/creating-custom-map-annotations-using-mkannotation-protocol/
-        
-        pinView.image = [UIImage imageNamed:@"cyan.png"];    //as suggested by Squatch
-        // NEED to scxtt adjust the centerOffset
-        
+        return annotationView;
+    } else {
+        return nil;
     }
-    else {
-        [_mapView.userLocation setTitle:@"I am here"];
-    }
-    return pinView;
+    
 }
 
 // This goes through all of the objects currently in the _roomArray
@@ -873,14 +804,19 @@
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
             NSString *who = item.memberNickName;
-            NSString *when = item.memberUpdateTime;
             
-            for (id<MKAnnotation> ann in _mapView.annotations)
+            NSString *dateStr = item.memberUpdateTime;
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+            NSDate *date = [formatter dateFromString:dateStr];
+            [formatter setDateStyle:NSDateFormatterShortStyle];
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+            [formatter setDoesRelativeDateFormatting:YES];
+            NSString* dateString = [formatter stringFromDate:date];
+            
+//            for (id<MKAnnotation> ann in _mapView.annotations)
+            for (VBAnnotation *ann in _mapView.annotations)
             {
-//                NSLog(@"API grooving points checking ann.title is %@",ann.title);
-                // reset the span to include each and every pin as you go thru the list
-                //ignore the 0,0 uninitialize annotations
-                
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
                 northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
@@ -896,8 +832,7 @@
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                         //Scxtt need to find a cool way to animate sliding points
                         ann.coordinate = location;
-//                        ann.subtitle = @"wowser";
-                        
+                        ann.subtitle = dateString;
                     }
                     break;
                 }
@@ -906,31 +841,11 @@
             if (!whoFound) {
                 NSLog(@"Adding new who %@", who);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    // Convert string to date object
-                    NSString *dateStr = item.memberUpdateTime;
-                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-                    NSDate *date = [formatter dateFromString:dateStr];
-                    [formatter setDateStyle:NSDateFormatterShortStyle];
-                    [formatter setTimeStyle:NSDateFormatterShortStyle];
-                    [formatter setDoesRelativeDateFormatting:YES];
-                    NSString* dateString = [formatter stringFromDate:date];
-                    
-//                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location];
-//                    annNew.title = who;
-//                    annNew.subtitle = dateString;
-                    annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
-                    
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
                     [annNew setCoordinate:location];
-                    // Scxtt also add the new pin to the singleton and give it a unique pin color
-//                    [annNew setImage:[UIImage imageNamed:@"blue.png"]];
-//                    scxtt why og why no worky
-                    
-//                    annNew.image = [UIImage imageNamed:@"blue.png"];
-                    
+
                     [self.mapView addAnnotation:annNew];
                     
                 }
@@ -978,8 +893,8 @@
         [formatter setDoesRelativeDateFormatting:YES];
         NSString* dateString = [formatter stringFromDate:[NSDate date]];
         
-        
-        for (id<MKAnnotation> ann in _mapView.annotations)
+//        for (id<MKAnnotation> ann in _mapView.annotations)
+        for (VBAnnotation *ann in _mapView.annotations)
         {
             NSLog(@"moving points checking ann.title is %@",ann.title);
             
@@ -1000,36 +915,14 @@
                 location.longitude = [strings[1] doubleValue];
                 NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
                 ann.coordinate = location;
-                
-                //            NSString* mc = NSStringFromClass(ann);
-                //            NSLog(@"ann Class: %@", mc);
-                
-                
-                if ([ann isKindOfClass:[MKPointAnnotation class]])
-                {
-                    MKPointAnnotation *pa = (MKPointAnnotation *)ann;
-                    pa.subtitle = dateString;
-                    pa.subtitle = @"updatePointsOnMapWithNotification is updating pa.subtitle";
-
-                    NSLog(@"it is MKPointAnnotation");
-                } else {
-                    NSLog(@"it isnt MKPointAnnotation");
-                }
-                
-                //            ann.subtitle = dateString;
+                ann.subtitle = dateString;
                 break;
             }
         }
         // new who so add addAnnotation and set coordinate
         if (!whoFound) {
             NSLog(@"Adding new who %@", who);
-            VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
-            annNew.title = who;
-            
-            annNew.subtitle = dateString;
-            annNew.subtitle = @"updatePointsOnMapWithAPIData is updating NEWLY FOUND annNew.subtitle";
-
-            annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
+            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location];
             
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];

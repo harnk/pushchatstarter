@@ -18,6 +18,7 @@
 @property (nonatomic, assign) UIImage *image;
 
 - initWithPosition:(CLLocationCoordinate2D)coords;
+
 -(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location;
 -(MKAnnotationView *)annotationView;
 
