@@ -19,9 +19,10 @@
 @class DataModel;
 //@class Message;
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate>{
     CLLocation*             locationObject;
 }
+@property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 

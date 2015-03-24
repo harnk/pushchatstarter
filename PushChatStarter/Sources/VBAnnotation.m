@@ -17,5 +17,25 @@
     return self;
 }
 
+-(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location; {
+    self = [super init];
+    if(self) {
+        _title = newTitle;
+        _coordinate = location;
+        _subtitle = newSubTitle;
+    }
+    return self;
+}
+
+- (MKAnnotationView *)annotationView {
+    MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"MyCustomAnnotation"];
+    annotationView.enabled = YES;
+    annotationView.canShowCallout = YES;
+    annotationView.image = [UIImage imageNamed:@"cyangray.png"];
+    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    
+    return annotationView;
+}
+
 
 @end

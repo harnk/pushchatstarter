@@ -147,10 +147,10 @@
     location.latitude = BE_LATITUDE;
     location.longitude = BE_LONGITUDE;
     
+    _textView.delegate = self;
+
 
     [self setUpTimersAndObservers];
-
-    
     [self setUpButtonBarItems];
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
     
@@ -818,15 +818,15 @@
     {
         static NSString *defaultPinID = @"com.harnk.pin";
         pinView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
-        if ( pinView == nil )
+        if ( pinView == nil ) {
             pinView = [[MKAnnotationView alloc]
                        initWithAnnotation:annotation reuseIdentifier:defaultPinID];
+        }
+        pinView.canShowCallout = NO;
+        scxtt WIP - https://bakyelli.wordpress.com/2013/10/13/creating-custom-map-annotations-using-mkannotation-protocol/
         
-        //pinView.pinColor = MKPinAnnotationColorGreen;
-        pinView.canShowCallout = YES;
-        //pinView.animatesDrop = YES;
         pinView.image = [UIImage imageNamed:@"cyan.png"];    //as suggested by Squatch
-//        pinView.image = annotation.image;
+        // NEED to scxtt adjust the centerOffset
         
     }
     else {
@@ -834,7 +834,6 @@
     }
     return pinView;
 }
-
 
 // This goes through all of the objects currently in the _roomArray
 // Seeds the region with this devices current location and sets the span
@@ -897,7 +896,7 @@
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                         //Scxtt need to find a cool way to animate sliding points
                         ann.coordinate = location;
-                        ann.subtitle = @"wowser";
+//                        ann.subtitle = @"wowser";
                         
                     }
                     break;
@@ -907,9 +906,6 @@
             if (!whoFound) {
                 NSLog(@"Adding new who %@", who);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
-                    annNew.title = who;
-
                     // Convert string to date object
                     NSString *dateStr = item.memberUpdateTime;
                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -920,7 +916,10 @@
                     [formatter setDoesRelativeDateFormatting:YES];
                     NSString* dateString = [formatter stringFromDate:date];
                     
-                    annNew.subtitle = dateString;
+//                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithPosition:location];
+                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location];
+//                    annNew.title = who;
+//                    annNew.subtitle = dateString;
                     annNew.pinColor = (MKPinAnnotationColor *) MKPinAnnotationColorGreen;
                     
                     location.latitude = [strings[0] doubleValue];
