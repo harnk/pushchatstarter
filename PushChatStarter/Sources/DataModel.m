@@ -56,6 +56,9 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 
 - (void)loadMessages:(NSString*)myLoc
 {
+    
+//    scxtt this NEEDS to change from getting from defaults to instead use getRoomMessages
+    
 	NSString* path = [self messagesPath];
     NSLog(@"loadMessages - messagesPath: %@", path);
     NSLog(@"myLoc: %@", myLoc);

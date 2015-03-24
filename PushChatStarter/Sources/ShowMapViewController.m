@@ -55,6 +55,7 @@
     if (self) {
         
         _dataModel = [[DataModel alloc] init];
+        // Load all the messages for this room
         [_dataModel loadMessages:[[SingletonClass singleObject] myLocStr]];
         
         _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
@@ -811,6 +812,7 @@
 {
     MKAnnotationView *pinView = nil;
     NSLog(@"annotation.title: %@",annotation.title);
+    NSLog(@"annotation.subtitle: %@", annotation.subtitle);
     
     if(annotation != _mapView.userLocation)
     {
@@ -872,6 +874,7 @@
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
             NSString *who = item.memberNickName;
+            NSString *when = item.memberUpdateTime;
             
             for (id<MKAnnotation> ann in _mapView.annotations)
             {
@@ -894,6 +897,8 @@
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                         //Scxtt need to find a cool way to animate sliding points
                         ann.coordinate = location;
+                        ann.subtitle = @"wowser";
+                        
                     }
                     break;
                 }
