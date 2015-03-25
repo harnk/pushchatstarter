@@ -805,18 +805,20 @@
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
             NSString *who = item.memberNickName;
             
-            NSString *dateStr = item.memberUpdateTime; //UTC needs to be converted to currentLocale
+            NSString *gmtDateStr = item.memberUpdateTime; //UTC needs to be converted to currentLocale
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-            NSDate *date = [formatter dateFromString:dateStr];
+            //Create the date assuming the given string is in GMT
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+            NSDate *date = [formatter dateFromString:gmtDateStr];
             
+            //Create a date string in the local timezone
+            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[NSTimeZone localTimeZone].secondsFromGMT];
             [formatter setDateStyle:NSDateFormatterShortStyle];
             [formatter setTimeStyle:NSDateFormatterShortStyle];
             [formatter setDoesRelativeDateFormatting:YES];
-            [formatter setLocale:[NSLocale currentLocale]];
-            
             NSString* dateString = [formatter stringFromDate:date];
-\
+            
 //            for (id<MKAnnotation> ann in _mapView.annotations)
             for (VBAnnotation *ann in _mapView.annotations)
             {
