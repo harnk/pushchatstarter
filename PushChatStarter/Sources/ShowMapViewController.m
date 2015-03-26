@@ -758,6 +758,8 @@
             annotationView = myLocation.annotationView;
         } else {
             annotationView.annotation = annotation;
+//            annotationView.centerOffset = CGPointMake(170,-150);
+//            annotationView.calloutOffset = CGPointMake(0,0);
         }
         return annotationView;
     } else {
@@ -838,6 +840,7 @@
                         //Scxtt need to find a cool way to animate sliding points
                         ann.coordinate = location;
                         ann.subtitle = dateString;
+                        ann.loctime = date;
                     }
                     break;
                 }

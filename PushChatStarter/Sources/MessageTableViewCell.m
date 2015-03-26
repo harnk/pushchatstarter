@@ -15,7 +15,7 @@ static UIColor* color = nil;
 
 @interface MessageTableViewCell() {
     SpeechBubbleView *_bubbleView;
-	UILabel *_label;
+    UILabel *_label;
 }
 @end
 
@@ -46,7 +46,7 @@ static UIColor* color = nil;
 		[self.contentView addSubview:_bubbleView];
 
 		// Create the label
-		_label = [[UILabel alloc] initWithFrame:CGRectZero];
+        _label = [[UILabel alloc] initWithFrame:CGRectZero];
 		_label.backgroundColor = color;
 		_label.opaque = YES;
 		_label.clearsContextBeforeDrawing = NO;
