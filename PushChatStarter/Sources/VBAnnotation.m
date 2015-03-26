@@ -17,12 +17,13 @@
     return self;
 }
 
--(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location; {
+-(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:(NSDate *)loctime; {
     self = [super init];
     if(self) {
         _title = newTitle;
         _coordinate = location;
         _subtitle = newSubTitle;
+        _loctime = loctime;
     }
     return self;
 }

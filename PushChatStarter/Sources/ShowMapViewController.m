@@ -849,7 +849,7 @@
             if (!whoFound) {
                 NSLog(@"Adding new who %@", who);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location];
+                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date];
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
                     [annNew setCoordinate:location];
@@ -930,7 +930,7 @@
         // new who so add addAnnotation and set coordinate
         if (!whoFound) {
             NSLog(@"Adding new who %@", who);
-            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location];
+            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date]];
             
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
