@@ -8,9 +8,11 @@
 
 #import "Room.h"
 
+
+
 @implementation Room
 
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime; {
+-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(UIImage *)mPinImage; {
 
     self = [super init];
     if (self) {
@@ -18,9 +20,11 @@
         self.memberNickName = mNickName;
         self.memberLocation = mLocation;
         self.memberUpdateTime = mLocTime;
+//        mPinImage = [UIImage imageNamed:@"cyan.png"];
+        self.memberPinImage = mPinImage;
 //        _memberUpdateTime = mUpdateTime;
     }
-    NSLog(@"adding to Room self %@ at loc %@ last updated %@", self.memberNickName, self.memberLocation, self.memberUpdateTime);
+//    NSLog(@"adding to Room self %@ at loc %@ last updated %@ color %@", self.memberNickName, self.memberLocation, self.memberUpdateTime, self.memberPinImage);
     return self;
 }
 

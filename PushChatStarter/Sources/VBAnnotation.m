@@ -17,13 +17,15 @@
     return self;
 }
 
--(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:(NSDate *)loctime; {
+-(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:(NSDate *)loctime PinImage:(UIImage *)pinImage; {
     self = [super init];
     if(self) {
         _title = newTitle;
         _coordinate = location;
         _subtitle = newSubTitle;
         _loctime = loctime;
+        _pinImage = pinImage;
+        
     }
     return self;
 }
@@ -32,8 +34,8 @@
     MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"MyCustomAnnotation"];
     annotationView.enabled = YES;
     annotationView.canShowCallout = YES;
-
-    annotationView.image = [UIImage imageNamed:@"cyan.png"];
+//    NSLog(@"scxtt %@", annotationView.annotation.title);
+    annotationView.image = _pinImage;
     
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
 

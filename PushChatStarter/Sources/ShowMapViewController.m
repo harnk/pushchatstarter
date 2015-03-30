@@ -33,6 +33,7 @@
 
 @interface ShowMapViewController () {
     AFHTTPClient *_client;
+    NSArray *pinImages;
 }
 @end
 
@@ -59,6 +60,9 @@
         [_dataModel loadMessages:[[SingletonClass singleObject] myLocStr]];
         
         _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+
+//        NSLog(@"myPinImages[1]:%@", myPinImages[0]);
+        
     }
     return self;
 }
@@ -92,9 +96,10 @@
                                              userInfo: nil
                                               repeats: YES];
     
+    //Set up a timer to check for new messages if the user has notifications disabled
     [NSTimer scheduledTimerWithTimeInterval: 30
                                      target: self
-                                   selector: @selector(postGetRoomMessages)
+                                   selector: @selector(checkForNewMessage:)
                                    userInfo: nil
                                     repeats: YES];
     
@@ -162,6 +167,12 @@
     {
         [self showLoginViewController];
     }
+    
+    //Reset pins on map
+    [self.mapView removeAnnotations:_mapView.annotations];
+//    [self postFindRequest];
+    [self postGetRoom];
+    
     [self.tableView reloadData];
 }
 
@@ -454,11 +465,113 @@
 
 - (void)findAction {
     NSLog(@"SCXTT findAction");
+//    [self postGetRoom];
     [self postFindRequest];
 }
 
 - (void)getRoomAction {
+//    [self postFindRequest];
     [self postGetRoom];
+}
+
+- (void)getAPI:(NSDictionary *)params
+{
+    [_client
+     postPath:@"/whereru/api/api.php"
+     parameters:params
+     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
+         _isUpdating = NO;
+         if (operation.response.statusCode != 200) {
+             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+         } else {
+             NSLog(@"getAPI cmd request sent");
+             NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+             NSLog(@"responseString: %@", responseString);
+             NSLog(@"operation: %@", operation);
+             
+             NSError *e = nil;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+             
+             if (!jsonArray) {
+                 NSLog(@"Error parsing JSON: %@", e);
+             } else {
+                 
+                 //                     Blank out and reload _roomArray
+                 if (!_roomArray) {
+                     _roomArray = [[NSMutableArray alloc] init];
+                 } else {
+                     [_roomArray removeAllObjects];
+                     [self.mapView removeAnnotations:_mapView.annotations];
+                 }
+                 NSString *myPinImages[11] = {@"blue.png",
+                     @"cyan.png",
+                     @"darkgreen.png",
+                     @"gold.png",
+                     @"green.png",
+                     @"orange.png",
+                     @"pink.png",
+                     @"purple.png",
+                     @"red.png",
+                     @"yellow.png",
+                     @"cyangray.png"};
+                 
+                 int i = 0;
+                 
+                 for(NSDictionary *item in jsonArray) {
+                     NSString *mNickName = [item objectForKey:@"nickname"];
+                     NSString *mLocation = [item objectForKey:@"location"];
+                     NSString *gmtDateStr = [item objectForKey:@"loc_time"];
+                     
+                     
+                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                     [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+                     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+                     //Create the date assuming the given string is in GMT
+                     NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
+                     NSDate *now = [NSDate date];
+                     
+                     NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
+                     double secondsInAnMinute = 60;
+                     NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
+                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d", (long)minutesBetweenDates, mNickName, i);
+                     
+                     //                        SCXTT need to test if date is old and use a gray pin if so
+                     
+                     
+                     //                         UIImage *mPinImage = [UIImage imageNamed:@"green.png"];
+                     UIImage *mPinImage;
+                     if (minutesBetweenDates > 500) {
+                         mPinImage = [UIImage imageNamed:@"cyangray.png"];
+                     } else {
+                         mPinImage = [UIImage imageNamed:myPinImages[i]];
+                     }
+                     
+                     if (i > 9) {
+                         i = 0;
+                     } else {
+                         i++;
+                     }
+                     
+                     if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:mPinImage];
+                         if (!_roomArray) {
+                             _roomArray = [[NSMutableArray alloc] init];
+                         }
+                         [_roomArray addObject:roomObj];
+                     }
+                 }
+                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+             }
+         }
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         if ([self isViewLoaded]) {
+             _isUpdating = NO;
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             ShowErrorAlert([error localizedDescription]);
+         }
+     }];
 }
 
 
@@ -478,66 +591,10 @@
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"text":text};
         
-        [_client
-         postPath:@"/whereru/api/api.php"
-         parameters:params
-         success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             _isUpdating = NO;
-             if (operation.response.statusCode != 200) {
-                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-             } else {
-                 NSLog(@"SMVC Get last room location for all devices");
-                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                 NSLog(@"responseString: %@", responseString);
-                 //                 NSLog(@"operation: %@", operation);
-                 
-                 NSError *e = nil;
-                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-                 
-                 if (!jsonArray) {
-                     NSLog(@"Error parsing JSON: %@", e);
-                 } else {
-                     
-                     //                   Blank out and reload _roomArray
-                     if (!_roomArray) {
-                         NSLog(@"init _roomArray");
-                         _roomArray = [[NSMutableArray alloc] init];
-                     } else {
-                         NSLog(@"_roomArray removeAllObjects");
-                         [_roomArray removeAllObjects];
-                     }
-                     
-//                     scxtt
-                     
-                     
-                     for(NSDictionary *item in jsonArray) {
-                         
-                         NSString *mNickName = [item objectForKey:@"nickname"];
-                         NSString *mLocation = [item objectForKey:@"location"];
-                         NSString *mLocTime = [item objectForKey:@"loc_time"];
-                         
-                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             NSLog(@"Room initWithRoomName");
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
-                             NSLog(@"_roomArray addObject:roomObj");
-                             [_roomArray addObject:roomObj];
-                         }
-                         
-                     }
-                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
-                 }
-                 
-             }
-         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             if ([self isViewLoaded]) {
-                 _isUpdating = NO;
-                 //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
-                 //                 ShowErrorAlert([error localizedDescription]);
-             }
-         }];
+        [self getAPI:params];
+        
     } else {
-        NSLog(@"Aint nobody got time for that");
+        NSLog(@"Worse yet Aint nobody got time for that");
         _isUpdating = NO;
     }
 }
@@ -612,6 +669,199 @@
     }
 }
 
+- (void)checkForNewMessage:(NSNotification *)notification
+{
+    //NSLog(@"loadConversation userInfo: %@ ", notification.userInfo);
+    //NSDictionary *notificationPayload = notification.userInfo[@"aps"];
+    
+//    _isFromNotification = YES;
+    
+    //    NSString *conversationGuid = notification.userInfo[@"conversationGuid"];
+    
+    NSLog(@"newMessage polling check for new messages");
+    
+//    [self loadConversation:_conversationGuid];
+    
+//  don't think i need this next line unless to updateScrollBar
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
+}
+
+
+
+
+
+
+
+
+
+- (void)loadConversation:(NSString *)conversationGuid
+{
+    NSLog(@"Start loadConversation");
+    //    NSLogDetailed(@"incoming conversationGuid is %@ and current active _conversationGuid is %@", conversationGuid, _conversationGuid);
+//    
+//    if (![[MyTimeSDK csmtSessionInstance] isValidSession]) {
+//        [[MyTimeSDK csmtSessionInstance] endSession:nil withCompletion:nil];
+//        return;
+//    }
+//    
+//    if (!_isUpdating)
+//    {
+//        //        if (![conversationGuid isEqualToString:_conversationGuid])
+//        if (!([conversationGuid caseInsensitiveCompare:_conversationGuid] == NSOrderedSame))
+//        {
+//            
+//            // conversationGuids don't match -- do not reload
+//            NSLog(@"%s The conversationGuids DID NOT MATCH: %@ / %@", __FUNCTION__, conversationGuid, _conversationGuid);
+//            
+//            if (!_conversationGuid)
+//            {
+//                NSLog(@"but the conversationGuid was nil, so set it anyway");
+//                _conversationGuid = conversationGuid;
+//            }
+//        }
+//        else
+//        {
+//            _isUpdating = YES;
+//            
+//            if (!_notificationsAreDisabled) {
+//                _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//            }
+//            
+//            NSLog(@"%s - conversationGuid is: %@", __FUNCTION__, _conversationGuid);
+//            //            NSLog(@"conversationGuid: %@ / messageGuid: %@", notificationPayload[@"conversationGuid"], notificationPayload[@"messageGuid"]);
+//            
+//            // Set userVisible, userViewed and viewer values prior to issuing the getConversationForId call
+//            if (_isFromNotification) {
+//                _homeObject.referenceString = @"userVisible=1&userViewed=0&viewer=user";
+//                NSLogDetailed(@"loadConvo triggered by notification");
+//            }
+//            else
+//            {
+//                //                [_conversationArray removeAllObjects];
+//                _homeObject.referenceString = @"userVisible=1&viewer=user";
+//            }
+//            
+//            CSRequestController *requestController = [[CSRequestController alloc] init];
+//            
+//            // call the getAllMessagesForConversation API method
+//            [requestController getConversationForId:_conversationGuid withSession:_userSession withCallback:^(NSDictionary *returnDict, NSError *error)
+//             {
+//                 if (error)
+//                 {
+//                     NSLogDetailed(@"API - loadConversation error: %@", error);
+//                     NSString *alertMessage = @"Please try again";
+//                     UIBAlertView *alert = [[UIBAlertView alloc]
+//                                            initWithTitle:@"Error"
+//                                            message:alertMessage
+//                                            cancelButtonTitle:@"OK"
+//                                            otherButtonTitles:nil, nil];
+//                     
+//                     [alert showWithDismissHandler:^(NSInteger selectedIndex, NSString *selectedTitle, BOOL didCancel) {
+//                         if (didCancel)
+//                         {
+//                             NSLogDetailed(@"OK pressed, proceed with dismissing screen");
+//                             // remove notification observers and dismiss this screen
+//                             [self backPressed:self];
+//                             return;
+//                         }
+//                     }];
+//                 }
+//                 else if (!returnDict)
+//                 {
+//                     NSLogDetailed(@"ERROR: %@", error);
+//                 }
+//                 else
+//                 {
+//                     NSLog(@"stateData is: %@", returnDict[@"stateData"]);
+//                     NSLog(@"returnDict is: %@", returnDict);
+//                     _conversationData.stateData = returnDict[@"stateData"];
+//                     _conversationData.subject = returnDict[@"subject"];
+//                     _conversationData.userState = returnDict[@"userState"];
+//                     
+//                     if ([_conversationData.userState isEqualToString:@"term"]) {
+//                         self.navigationItem.rightBarButtonItem = nil;
+//                     }
+//                     
+//                     NSLog(@"conversationData.stateData is: %@", _conversationData.stateData);
+//                 }
+//                 
+//                 NSArray *messageArray = returnDict[@"messages"];
+//                 // add all messages to the conversationArray
+//                 NSLogDetailed(@"loadConvo proceed with adding messages and reloading table view");
+//                 
+//                 BOOL addedMsg = NO;
+//                 
+//                 if(messageArray != nil)
+//                 {
+//                     NSLogDetailed(@"loadConvo API call has returned with messages");
+//                     // isFromNotification will be set if a message notification arrives, or if notifications are disabled and we are polling
+//                     if (_isFromNotification)
+//                     {
+//                         NSLogDetailed(@"loadConvo has been triggered by a notification or polling request");
+//                     }
+//                     else
+//                     {
+//                         NSLogDetailed(@"loadConvo remove all objects from conversationArray");
+//                         [_conversationArray removeAllObjects];
+//                     }
+//                     
+//                     for (NSDictionary *messageDict in messageArray)
+//                     {
+//                         CSMessage *message = [CSMessage instanceFromDictionary:messageDict];
+//                         [_conversationArray addObject:message];
+//                         NSLogDetailed(@"loadConvo message is: %@", message.messageText);
+//                         // Only now should we scroll the list
+//                         addedMsg = YES;
+//                     }
+//                     NSLogDetailed(@"loadConvo has added a new message: %@", addedMsg ? @"YES" : @"NO");
+//                 }
+//                 
+//                 // notifications are enabled and we have a new message
+//                 if (!_notificationsAreDisabled)
+//                 {
+//                     NSLogDetailed(@"loadConvo notifications are enabled, reload table with new message");
+//                     // reload the tableView
+//                     [_conversationTableView reloadData];
+//                     // This scrolls to the bottom message
+//                     [self updateConversationTableView];
+//                     [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                 }
+//                 // polling and we have a new message
+//                 else if (addedMsg)
+//                 {
+//                     NSLogDetailed(@"loadConvo notifications are disabled, reload table with new message");
+//                     // Since notifications are disabled here, we only want to scroll down to the bottom if we actually got a new message
+//                     // reload the tableView
+//                     [_conversationTableView reloadData];
+//                     // This scrolls to the bottom message
+//                     [self updateConversationTableView];
+//                 }
+//                 
+//                 // if loadConvo is being driven by a notification and if there is a new agent message
+//                 if (addedMsg && self.isFromNotification)
+//                 {
+//                     CSMessage *newMessage = [self.conversationArray lastObject];
+//                     NSString *mimeType = [newMessage.mimeType substringWithRange:NSMakeRange(0, 4)];
+//                     NSString *typeToSend = ([mimeType isEqualToString:@"text"]) ? @"Text" : @"Photo";
+//                     
+//                     NSLogDetailed(@"loadConvo message mimeType: %@ and typeToSend: %@", mimeType, typeToSend);
+//                     
+//                     [self.broadcastSend liveChatReceiveMessageType:typeToSend withGuid:self.conversationGuid];
+//                 }
+//                 
+//                 _isUpdating = NO;
+//                 _isFromNotification = NO;
+//                 _homeObject.referenceString = @"";
+//             }];
+//        }
+//    }
+//    
+//    // set conversation guid for sdk isActiveConversation
+//    [CSSingletonClass singleObject].activeConversationGuid = self.conversationGuid;
+//    NSLogDetailed(@"activeConversationGuid set: %@", self.conversationGuid);
+//    
+    NSLog(@"End loadConversation");
+}
 
 - (void)postFindRequest
 {
@@ -631,87 +881,9 @@
                                  @"user_id":[_dataModel userId],
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"text":text};
-        
-        
-        
-        // These next few lines have no use other than as an example of seeing this as JSON
-        // since this is not using JSON but instead a form post
-        NSLog(@"URL: http://www.altcoinfolio.com/whereru/api/api.php");
-        
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params
-                                                           options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                             error:&error];
-        
-        if (! jsonData) {
-            NSLog(@"Got an error: %@", error);
-        } else {
-            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSLog(@"JSON - Sent(Actually aa form was sent - chg later): %@",jsonString);
-        }
-        
-        
-        
-        
-        
-        
-        
-        [_client
-         postPath:@"/whereru/api/api.php"
-         parameters:params
-         success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             [MBProgressHUD hideHUDForView:self.view animated:YES];
-             _isUpdating = NO;
-             if (operation.response.statusCode != 200) {
-                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-             } else {
-                 NSLog(@"SMVC Find request sent to all devices");
-                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                 NSLog(@"responseObject: %@", responseObject);
-                 NSLog(@"responseString: %@", responseString);
-                 NSLog(@"operation: %@", operation);
-                 
-                 
-                 
-                 NSError *e = nil;
-                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-                 
-                 if (!jsonArray) {
-                     NSLog(@"Error parsing JSON: %@", e);
-                 } else {
-                     
-//                     Blank out and reload _roomArray
-                     if (!_roomArray) {
-                         _roomArray = [[NSMutableArray alloc] init];
-                     } else {
-                         [_roomArray removeAllObjects];
-                     }
 
-                     for(NSDictionary *item in jsonArray) {
-                         NSString *mNickName = [item objectForKey:@"nickname"];
-                         NSString *mLocation = [item objectForKey:@"location"];
-                         NSString *mLocTime = [item objectForKey:@"loc_time"];
-                         
-                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
-                             if (!_roomArray) _roomArray = [[NSMutableArray alloc] init];
-                             [_roomArray addObject:roomObj];
-                             
-                         }
-                         
-                     }
-                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
-                 }
-
-             }
-         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             if ([self isViewLoaded]) {
-                 _isUpdating = NO;
-                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                 ShowErrorAlert([error localizedDescription]);
-             }
-         }];
+        
+        [self getAPI:params];
     } else {
         NSLog(@"Aint nobody got time for that");
         _isUpdating = NO;
@@ -721,33 +893,6 @@
 #pragma mark -
 #pragma mark Map
 
-//-(MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(id <MKAnnotation>)annotation
-//{
-//    MKAnnotationView *pinView = nil;
-//    NSLog(@"annotation.title: %@",annotation.title);
-//    NSLog(@"annotation.subtitle: %@", annotation.subtitle);
-//    
-//    if(annotation != _mapView.userLocation)
-//    {
-//        static NSString *defaultPinID = @"com.harnk.pin";
-//        pinView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:defaultPinID];
-//        if ( pinView == nil ) {
-//            pinView = [[MKAnnotationView alloc]
-//                       initWithAnnotation:annotation reuseIdentifier:defaultPinID];
-//        }
-//        pinView.canShowCallout = YES;
-//
-////        scxtt WIP - https://bakyelli.wordpress.com/2013/10/13/creating-custom-map-annotations-using-mkannotation-protocol/
-//        
-//        pinView.image = [UIImage imageNamed:@"cyan.png"];    //as suggested by Squatch
-//        // NEED to scxtt adjust the centerOffset
-//        
-//    }
-//    else {
-//        [_mapView.userLocation setTitle:@"I am here"];
-//    }
-//    return pinView;
-//}
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     if([annotation isKindOfClass:[VBAnnotation class]]) {
@@ -806,6 +951,7 @@
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
             NSString *who = item.memberNickName;
+            UIImage *useThisPin = item.memberPinImage;
             
             NSString *gmtDateStr = item.memberUpdateTime; //UTC needs to be converted to currentLocale
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -849,7 +995,7 @@
             if (!whoFound) {
                 NSLog(@"Adding new who %@", who);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date];
+                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
                     [annNew setCoordinate:location];
@@ -930,7 +1076,7 @@
         // new who so add addAnnotation and set coordinate
         if (!whoFound) {
             NSLog(@"Adding new who %@", who);
-            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date]];
+            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date] PinImage:[UIImage imageNamed:@"blue.png"]];
             
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];
