@@ -14,14 +14,14 @@
 @property (strong, nonatomic) NSString *memberNickName;
 @property (strong, nonatomic) NSString *memberLocation;
 @property (strong, nonatomic) NSString *memberUpdateTime;
-@property (strong, nonatomic) UIImage *memberPinImage;
+@property (strong, nonatomic) NSString *memberPinImage;
 //@property (strong, nonatomic) NSDate *memberUpdateTime;
 
 #pragma mark - 
 #pragma mark Class Methods
 
 //-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberUpdateTime:(NSDate *)mUpdateTime;
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(UIImage *)mPinImage;
+-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString;
 
 
 @end

@@ -517,7 +517,7 @@
                      @"cyangray.png"};
                  
                  int i = 0;
-                 
+                 UIImage *mPinImage;
                  for(NSDictionary *item in jsonArray) {
                      NSString *mNickName = [item objectForKey:@"nickname"];
                      NSString *mLocation = [item objectForKey:@"location"];
@@ -534,27 +534,29 @@
                      NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
                      double secondsInAnMinute = 60;
                      NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
-                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d", (long)minutesBetweenDates, mNickName, i);
+                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
                      
                      //                        SCXTT need to test if date is old and use a gray pin if so
                      
                      
                      //                         UIImage *mPinImage = [UIImage imageNamed:@"green.png"];
-                     UIImage *mPinImage;
+//                     UIImage *mPinImage;
                      if (minutesBetweenDates > 500) {
                          mPinImage = [UIImage imageNamed:@"cyangray.png"];
                      } else {
+//                         NSLog(@"scxtt using pin %@", myPinImages[i]);
                          mPinImage = [UIImage imageNamed:myPinImages[i]];
                      }
                      
-                     if (i > 9) {
+                     if (i > 10) {
                          i = 0;
                      } else {
                          i++;
                      }
                      
                      if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:mPinImage];
+//                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:mPinImage];
+                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
                          if (!_roomArray) {
                              _roomArray = [[NSMutableArray alloc] init];
                          }
@@ -942,16 +944,18 @@
     // each item is a Room object with memberNickName memberLocation & roomName
     for (Room *item in _roomArray) {
         
-//        NSLog(@"updatePointsOnMapWithAPIData %@", item.memberNickName);
-//        NSLog(@"---------------------------- %@", item.memberLocation);
-//        NSLog(@"---------------------------- %@", item.memberUpdateTime);
-//        NSLog(@"---------------------------- %@", item.roomName);
+        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
+//        NSLog(@"----------------------------:memberLocation %@", item.memberLocation);
+//        NSLog(@"----------------------------:memberUpdateTime %@", item.memberUpdateTime);
+//        NSLog(@"----------------------------:roomName %@", item.roomName);
+        NSLog(@"----------------------------:memberPinImage %@", item.memberPinImage);
         
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
             NSString *who = item.memberNickName;
-            UIImage *useThisPin = item.memberPinImage;
+            NSString *imageString = item.memberPinImage;
+            UIImage *useThisPin = [UIImage imageNamed:imageString];
             
             NSString *gmtDateStr = item.memberUpdateTime; //UTC needs to be converted to currentLocale
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -993,7 +997,7 @@
             }
             // new who so add addAnnotation and set coordinate and location time
             if (!whoFound) {
-                NSLog(@"Adding new who %@", who);
+                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];

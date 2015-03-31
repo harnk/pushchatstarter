@@ -12,7 +12,7 @@
 
 @implementation Room
 
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(UIImage *)mPinImage; {
+-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString; {
 
     self = [super init];
     if (self) {
@@ -21,7 +21,7 @@
         self.memberLocation = mLocation;
         self.memberUpdateTime = mLocTime;
 //        mPinImage = [UIImage imageNamed:@"cyan.png"];
-        self.memberPinImage = mPinImage;
+        self.memberPinImage = mPinImageString;
 //        _memberUpdateTime = mUpdateTime;
     }
 //    NSLog(@"adding to Room self %@ at loc %@ last updated %@ color %@", self.memberNickName, self.memberLocation, self.memberUpdateTime, self.memberPinImage);
