@@ -541,18 +541,21 @@
                      
                      //                         UIImage *mPinImage = [UIImage imageNamed:@"green.png"];
 //                     UIImage *mPinImage;
-                     if (minutesBetweenDates > 500) {
-                         mPinImage = [UIImage imageNamed:@"cyangray.png"];
-                     } else {
-//                         NSLog(@"scxtt using pin %@", myPinImages[i]);
-                         mPinImage = [UIImage imageNamed:myPinImages[i]];
-                     }
                      
-                     if (i > 10) {
-                         i = 0;
-                     } else {
-                         i++;
-                     }
+                     
+                     
+//                     
+//                     if (minutesBetweenDates > 500) {
+//                         mPinImage = [UIImage imageNamed:@"cyangray.png"];
+//                     } else {
+////                         NSLog(@"scxtt using pin %@", myPinImages[i]);
+//                         mPinImage = [UIImage imageNamed:myPinImages[i]];
+//                     }
+                     
+                     
+                     mPinImage = [UIImage imageNamed:myPinImages[i]];
+                     
+                     
                      
                      if (![mLocation isEqual: @"0.000000, 0.000000"]) {
 //                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:mPinImage];
@@ -561,6 +564,11 @@
                              _roomArray = [[NSMutableArray alloc] init];
                          }
                          [_roomArray addObject:roomObj];
+                     }
+                     if (i > 10) {
+                         i = 0;
+                     } else {
+                         i++;
                      }
                  }
                  NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
@@ -897,19 +905,29 @@
 
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+
     if([annotation isKindOfClass:[VBAnnotation class]]) {
-        VBAnnotation *myLocation = (VBAnnotation *)annotation;
+        NSLog(@"HUBABUBBA VBAnnotation class");
+        VBAnnotation *myAnnotation = (VBAnnotation *)annotation;
+//        VBAnnotation *myFile = annotation._pinImageFile;
+        
+//        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation ??pinImageFile is WHAT?? annotation:%@", annotation);
+        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation ??pinImageFile is WHAT?? myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
         if (annotationView == nil) {
-            annotationView = myLocation.annotationView;
+            annotationView = myAnnotation.annotationView;
         } else {
             annotationView.annotation = annotation;
+//            annotationView.annotation.pinFileImage = @"blue.png";
+            
 //            annotationView.centerOffset = CGPointMake(170,-150);
 //            annotationView.calloutOffset = CGPointMake(0,0);
         }
         return annotationView;
     } else {
+        NSLog(@"HUBABUBBA NOT VBAnnotation class");
+
         return nil;
     }
     
@@ -999,7 +1017,7 @@
             if (!whoFound) {
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImage:useThisPin];
+                    VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
                     [annNew setCoordinate:location];
@@ -1080,7 +1098,8 @@
         // new who so add addAnnotation and set coordinate
         if (!whoFound) {
             NSLog(@"Adding new who %@", who);
-            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date] PinImage:[UIImage imageNamed:@"blue.png"]];
+//            -(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:loctime PinImageFile:pinImageFile PinImage:pinImage;
+            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date] PinImageFile:@"blue.png" PinImage:[UIImage imageNamed:@"blue.png"]];
             
             location.latitude = [strings[0] doubleValue];
             location.longitude = [strings[1] doubleValue];

@@ -17,10 +17,12 @@
 @property (nonatomic, copy) NSDate *loctime;
 @property (nonatomic, assign) MKPinAnnotationColor *pinColor;
 @property (nonatomic, assign) UIImage *pinImage;
+@property (nonatomic, copy) NSString *pinImageFile;
+
 
 - initWithPosition:(CLLocationCoordinate2D)coords;
 
--(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:loctime PinImage:pinImage;
+-(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:loctime PinImageFile:pinImageFile PinImage:pinImage;
 -(MKAnnotationView *)annotationView;
 
 @end

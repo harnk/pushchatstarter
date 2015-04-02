@@ -17,7 +17,7 @@
     return self;
 }
 
--(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:(NSDate *)loctime PinImage:(UIImage *)pinImage; {
+-(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:(NSDate *)loctime PinImageFile:pinImageFile PinImage:pinImage; {
     self = [super init];
     if(self) {
         _title = newTitle;
@@ -25,7 +25,7 @@
         _subtitle = newSubTitle;
         _loctime = loctime;
         _pinImage = pinImage;
-        
+        _pinImageFile = pinImageFile;
     }
     return self;
 }
@@ -36,6 +36,15 @@
     annotationView.canShowCallout = YES;
 //    NSLog(@"scxtt %@", annotationView.annotation.title);
     annotationView.image = _pinImage;
+    
+    
+    
+    NSLog(@"ZZXZX VBAnnotation is doing this _title:%@ _pinImageFile:%@", _title, _pinImageFile );
+    
+    
+//    annotationView.image = [UIImage imageNamed:@"cyangray.png"];
+    
+    
     
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
 
