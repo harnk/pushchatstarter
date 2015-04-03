@@ -909,25 +909,20 @@
     if([annotation isKindOfClass:[VBAnnotation class]]) {
         NSLog(@"HUBABUBBA VBAnnotation class");
         VBAnnotation *myAnnotation = (VBAnnotation *)annotation;
-//        VBAnnotation *myFile = annotation._pinImageFile;
         
-//        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation ??pinImageFile is WHAT?? annotation:%@", annotation);
-        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation ??pinImageFile is WHAT?? myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
+        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
         if (annotationView == nil) {
             annotationView = myAnnotation.annotationView;
         } else {
+//            annotationView = myAnnotation.annotationView;
+
             annotationView.annotation = annotation;
-//            annotationView.annotation.pinFileImage = @"blue.png";
-            
-//            annotationView.centerOffset = CGPointMake(170,-150);
-//            annotationView.calloutOffset = CGPointMake(0,0);
         }
         return annotationView;
     } else {
         NSLog(@"HUBABUBBA NOT VBAnnotation class");
-
         return nil;
     }
     

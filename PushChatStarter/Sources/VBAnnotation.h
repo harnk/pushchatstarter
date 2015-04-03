@@ -15,7 +15,6 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, copy) NSDate *loctime;
-@property (nonatomic, assign) MKPinAnnotationColor *pinColor;
 @property (nonatomic, assign) UIImage *pinImage;
 @property (nonatomic, copy) NSString *pinImageFile;
 
