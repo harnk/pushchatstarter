@@ -697,181 +697,6 @@
 
 
 
-
-
-
-
-
-
-- (void)loadConversation:(NSString *)conversationGuid
-{
-    NSLog(@"Start loadConversation");
-    //    NSLogDetailed(@"incoming conversationGuid is %@ and current active _conversationGuid is %@", conversationGuid, _conversationGuid);
-//    
-//    if (![[MyTimeSDK csmtSessionInstance] isValidSession]) {
-//        [[MyTimeSDK csmtSessionInstance] endSession:nil withCompletion:nil];
-//        return;
-//    }
-//    
-//    if (!_isUpdating)
-//    {
-//        //        if (![conversationGuid isEqualToString:_conversationGuid])
-//        if (!([conversationGuid caseInsensitiveCompare:_conversationGuid] == NSOrderedSame))
-//        {
-//            
-//            // conversationGuids don't match -- do not reload
-//            NSLog(@"%s The conversationGuids DID NOT MATCH: %@ / %@", __FUNCTION__, conversationGuid, _conversationGuid);
-//            
-//            if (!_conversationGuid)
-//            {
-//                NSLog(@"but the conversationGuid was nil, so set it anyway");
-//                _conversationGuid = conversationGuid;
-//            }
-//        }
-//        else
-//        {
-//            _isUpdating = YES;
-//            
-//            if (!_notificationsAreDisabled) {
-//                _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//            }
-//            
-//            NSLog(@"%s - conversationGuid is: %@", __FUNCTION__, _conversationGuid);
-//            //            NSLog(@"conversationGuid: %@ / messageGuid: %@", notificationPayload[@"conversationGuid"], notificationPayload[@"messageGuid"]);
-//            
-//            // Set userVisible, userViewed and viewer values prior to issuing the getConversationForId call
-//            if (_isFromNotification) {
-//                _homeObject.referenceString = @"userVisible=1&userViewed=0&viewer=user";
-//                NSLogDetailed(@"loadConvo triggered by notification");
-//            }
-//            else
-//            {
-//                //                [_conversationArray removeAllObjects];
-//                _homeObject.referenceString = @"userVisible=1&viewer=user";
-//            }
-//            
-//            CSRequestController *requestController = [[CSRequestController alloc] init];
-//            
-//            // call the getAllMessagesForConversation API method
-//            [requestController getConversationForId:_conversationGuid withSession:_userSession withCallback:^(NSDictionary *returnDict, NSError *error)
-//             {
-//                 if (error)
-//                 {
-//                     NSLogDetailed(@"API - loadConversation error: %@", error);
-//                     NSString *alertMessage = @"Please try again";
-//                     UIBAlertView *alert = [[UIBAlertView alloc]
-//                                            initWithTitle:@"Error"
-//                                            message:alertMessage
-//                                            cancelButtonTitle:@"OK"
-//                                            otherButtonTitles:nil, nil];
-//                     
-//                     [alert showWithDismissHandler:^(NSInteger selectedIndex, NSString *selectedTitle, BOOL didCancel) {
-//                         if (didCancel)
-//                         {
-//                             NSLogDetailed(@"OK pressed, proceed with dismissing screen");
-//                             // remove notification observers and dismiss this screen
-//                             [self backPressed:self];
-//                             return;
-//                         }
-//                     }];
-//                 }
-//                 else if (!returnDict)
-//                 {
-//                     NSLogDetailed(@"ERROR: %@", error);
-//                 }
-//                 else
-//                 {
-//                     NSLog(@"stateData is: %@", returnDict[@"stateData"]);
-//                     NSLog(@"returnDict is: %@", returnDict);
-//                     _conversationData.stateData = returnDict[@"stateData"];
-//                     _conversationData.subject = returnDict[@"subject"];
-//                     _conversationData.userState = returnDict[@"userState"];
-//                     
-//                     if ([_conversationData.userState isEqualToString:@"term"]) {
-//                         self.navigationItem.rightBarButtonItem = nil;
-//                     }
-//                     
-//                     NSLog(@"conversationData.stateData is: %@", _conversationData.stateData);
-//                 }
-//                 
-//                 NSArray *messageArray = returnDict[@"messages"];
-//                 // add all messages to the conversationArray
-//                 NSLogDetailed(@"loadConvo proceed with adding messages and reloading table view");
-//                 
-//                 BOOL addedMsg = NO;
-//                 
-//                 if(messageArray != nil)
-//                 {
-//                     NSLogDetailed(@"loadConvo API call has returned with messages");
-//                     // isFromNotification will be set if a message notification arrives, or if notifications are disabled and we are polling
-//                     if (_isFromNotification)
-//                     {
-//                         NSLogDetailed(@"loadConvo has been triggered by a notification or polling request");
-//                     }
-//                     else
-//                     {
-//                         NSLogDetailed(@"loadConvo remove all objects from conversationArray");
-//                         [_conversationArray removeAllObjects];
-//                     }
-//                     
-//                     for (NSDictionary *messageDict in messageArray)
-//                     {
-//                         CSMessage *message = [CSMessage instanceFromDictionary:messageDict];
-//                         [_conversationArray addObject:message];
-//                         NSLogDetailed(@"loadConvo message is: %@", message.messageText);
-//                         // Only now should we scroll the list
-//                         addedMsg = YES;
-//                     }
-//                     NSLogDetailed(@"loadConvo has added a new message: %@", addedMsg ? @"YES" : @"NO");
-//                 }
-//                 
-//                 // notifications are enabled and we have a new message
-//                 if (!_notificationsAreDisabled)
-//                 {
-//                     NSLogDetailed(@"loadConvo notifications are enabled, reload table with new message");
-//                     // reload the tableView
-//                     [_conversationTableView reloadData];
-//                     // This scrolls to the bottom message
-//                     [self updateConversationTableView];
-//                     [MBProgressHUD hideHUDForView:self.view animated:YES];
-//                 }
-//                 // polling and we have a new message
-//                 else if (addedMsg)
-//                 {
-//                     NSLogDetailed(@"loadConvo notifications are disabled, reload table with new message");
-//                     // Since notifications are disabled here, we only want to scroll down to the bottom if we actually got a new message
-//                     // reload the tableView
-//                     [_conversationTableView reloadData];
-//                     // This scrolls to the bottom message
-//                     [self updateConversationTableView];
-//                 }
-//                 
-//                 // if loadConvo is being driven by a notification and if there is a new agent message
-//                 if (addedMsg && self.isFromNotification)
-//                 {
-//                     CSMessage *newMessage = [self.conversationArray lastObject];
-//                     NSString *mimeType = [newMessage.mimeType substringWithRange:NSMakeRange(0, 4)];
-//                     NSString *typeToSend = ([mimeType isEqualToString:@"text"]) ? @"Text" : @"Photo";
-//                     
-//                     NSLogDetailed(@"loadConvo message mimeType: %@ and typeToSend: %@", mimeType, typeToSend);
-//                     
-//                     [self.broadcastSend liveChatReceiveMessageType:typeToSend withGuid:self.conversationGuid];
-//                 }
-//                 
-//                 _isUpdating = NO;
-//                 _isFromNotification = NO;
-//                 _homeObject.referenceString = @"";
-//             }];
-//        }
-//    }
-//    
-//    // set conversation guid for sdk isActiveConversation
-//    [CSSingletonClass singleObject].activeConversationGuid = self.conversationGuid;
-//    NSLogDetailed(@"activeConversationGuid set: %@", self.conversationGuid);
-//    
-    NSLog(@"End loadConversation");
-}
-
 - (void)postFindRequest
 {
     if (!_isUpdating)
@@ -902,6 +727,19 @@
 #pragma mark -
 #pragma mark Map
 
+- (void)openAnnotation:(id)annotation;
+{
+    //mv is the mapView
+    [_mapView selectAnnotation:annotation animated:YES];
+    
+}
+
+- (void)closeAnnotation:(id)annotation;
+{
+    //mv is the mapView
+    [_mapView deselectAnnotation:annotation animated:YES];
+    
+}
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     
@@ -917,6 +755,7 @@
         } else {
             annotationView.annotation = annotation;
             annotationView.image = [UIImage imageNamed:myAnnotation.pinImageFile];
+//            annotationView.highlighted = YES;
         }
         return annotationView;
     } else {
@@ -984,6 +823,7 @@
 //            for (id<MKAnnotation> ann in _mapView.annotations)
             for (VBAnnotation *ann in _mapView.annotations)
             {
+                [self openAnnotation:ann];
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
                 northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
@@ -1015,6 +855,7 @@
                     [annNew setCoordinate:location];
 
                     [self.mapView addAnnotation:annNew];
+                    [self openAnnotation:annNew];
                     
                 }
             }
