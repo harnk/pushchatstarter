@@ -34,23 +34,11 @@
     MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"MyCustomAnnotation"];
     annotationView.enabled = YES;
     annotationView.canShowCallout = YES;
-//    NSLog(@"scxtt %@", annotationView.annotation.title);
     annotationView.image = _pinImage;
-    
-    
-    
-    NSLog(@"ZZXZX VBAnnotation is doing this _title:%@ _pinImageFile:%@", _title, _pinImageFile );
-    
-    
 //    annotationView.image = [UIImage imageNamed:@"cyangray.png"];
-    
-    
-    
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-
     return annotationView;
 }
-
 
 @end
 

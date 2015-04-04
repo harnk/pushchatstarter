@@ -11,9 +11,9 @@
 
 @interface VBAnnotation : NSObject <MKAnnotation>
 
-@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *subtitle;
+@property (nonatomic, assign) CLLocationCoordinate2D coordinate; // MKAnnotation property
+@property (nonatomic, copy) NSString *title;  // MKAnnotation property
+@property (nonatomic, copy) NSString *subtitle;  // MKAnnotation property
 @property (nonatomic, copy) NSDate *loctime;
 @property (nonatomic, assign) UIImage *pinImage;
 @property (nonatomic, copy) NSString *pinImageFile;

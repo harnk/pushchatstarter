@@ -20,7 +20,6 @@
         self.memberNickName = mNickName;
         self.memberLocation = mLocation;
         self.memberUpdateTime = mLocTime;
-//        mPinImage = [UIImage imageNamed:@"cyan.png"];
         self.memberPinImage = mPinImageString;
 //        _memberUpdateTime = mUpdateTime;
     }

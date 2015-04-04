@@ -543,7 +543,6 @@
 //                     UIImage *mPinImage;
                      
                      
-                     
 //                     
 //                     if (minutesBetweenDates > 500) {
 //                         mPinImage = [UIImage imageNamed:@"cyangray.png"];
@@ -905,24 +904,22 @@
 
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-
+    
     if([annotation isKindOfClass:[VBAnnotation class]]) {
-        NSLog(@"HUBABUBBA VBAnnotation class");
         VBAnnotation *myAnnotation = (VBAnnotation *)annotation;
-        
-        NSLog(@"SCXXXXXXXXXXXXTT mapView viewForAnnotation myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
+//      NSLog(@"SCXTT mapView viewForAnnotation myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
+//      Need to add code to test for old pins and use gray ones here
         if (annotationView == nil) {
             annotationView = myAnnotation.annotationView;
+            annotationView.image = myAnnotation.pinImage;
         } else {
-//            annotationView = myAnnotation.annotationView;
-
             annotationView.annotation = annotation;
+            annotationView.image = [UIImage imageNamed:myAnnotation.pinImageFile];
         }
         return annotationView;
     } else {
-        NSLog(@"HUBABUBBA NOT VBAnnotation class");
         return nil;
     }
     
@@ -957,11 +954,11 @@
     // each item is a Room object with memberNickName memberLocation & roomName
     for (Room *item in _roomArray) {
         
-        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
+//        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
 //        NSLog(@"----------------------------:memberLocation %@", item.memberLocation);
 //        NSLog(@"----------------------------:memberUpdateTime %@", item.memberUpdateTime);
 //        NSLog(@"----------------------------:roomName %@", item.roomName);
-        NSLog(@"----------------------------:memberPinImage %@", item.memberPinImage);
+//        NSLog(@"----------------------------:memberPinImage %@", item.memberPinImage);
         
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
@@ -1010,7 +1007,7 @@
             }
             // new who so add addAnnotation and set coordinate and location time
             if (!whoFound) {
-                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
+//                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
