@@ -266,6 +266,52 @@
 
 
 #pragma mark -
+#pragma mark Date String Methods
+
+- (NSString *)localDateStrFromUTCDateStr:(NSString *) utcDateStr {
+    NSString * localDateStr;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    //Create the date assuming the given string is in GMT
+    formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    NSDate *date = [formatter dateFromString:utcDateStr];
+    
+    //Create a date string in the local timezone
+    formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[NSTimeZone localTimeZone].secondsFromGMT];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDoesRelativeDateFormatting:YES];
+    localDateStr = [formatter stringFromDate:date];
+    return localDateStr;
+}
+
+- (NSDate *)dateFromUTCDateStr:(NSString *) utcDateStr {
+    NSDate * date;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    //Create the date assuming the given string is in GMT
+    formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    date = [formatter dateFromString:utcDateStr];
+    return date;
+}
+
+- (NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    //Create the date assuming the given string is in GMT
+    NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
+    NSDate *now = [NSDate date];
+    
+    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
+    double secondsInAnMinute = 60;
+    NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
+    return minutesBetweenDates;
+}
+
+
+
 #pragma mark - UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -474,6 +520,7 @@
     [self postGetRoom];
 }
 
+
 - (void)getAPI:(NSDictionary *)params
 {
     [_client
@@ -521,19 +568,12 @@
                  for(NSDictionary *item in jsonArray) {
                      NSString *mNickName = [item objectForKey:@"nickname"];
                      NSString *mLocation = [item objectForKey:@"location"];
+                     
                      NSString *gmtDateStr = [item objectForKey:@"loc_time"];
+                     NSInteger minutesBetweenDates;
+                     minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
                      
                      
-                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                     [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-                     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-                     //Create the date assuming the given string is in GMT
-                     NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
-                     NSDate *now = [NSDate date];
-                     
-                     NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
-                     double secondsInAnMinute = 60;
-                     NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
                      NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
                      
                      //                        SCXTT need to test if date is old and use a gray pin if so
@@ -557,7 +597,6 @@
                      
                      
                      if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-//                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:mPinImage];
                          Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
                          if (!_roomArray) {
                              _roomArray = [[NSMutableArray alloc] init];
@@ -578,7 +617,8 @@
          if ([self isViewLoaded]) {
              _isUpdating = NO;
              [MBProgressHUD hideHUDForView:self.view animated:YES];
-             ShowErrorAlert([error localizedDescription]);
+//             ShowErrorAlert([error localizedDescription]);
+             [self toastMsg:[error localizedDescription]];
          }
      }];
 }
@@ -604,6 +644,34 @@
         
     } else {
         NSLog(@"Worse yet Aint nobody got time for that");
+        _isUpdating = NO;
+    }
+}
+
+
+- (void)postFindRequest
+{
+    if (!_isUpdating)
+    {
+        _isUpdating = YES;
+        
+        //    [_messageTextView resignFirstResponder];
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"whereru", nil);
+        
+        //    NSString *text = self.messageTextView.text;
+        NSString *text = @"Hey WhereRU?";
+        
+        NSDictionary *params = @{@"cmd":@"find",
+                                 @"user_id":[_dataModel userId],
+                                 @"location":[[SingletonClass singleObject] myLocStr],
+                                 @"text":text};
+        
+        
+        [self getAPI:params];
+    } else {
+        NSLog(@"Aint nobody got time for that");
         _isUpdating = NO;
     }
 }
@@ -696,34 +764,6 @@
 }
 
 
-
-- (void)postFindRequest
-{
-    if (!_isUpdating)
-    {
-        _isUpdating = YES;
-        
-        //    [_messageTextView resignFirstResponder];
-        
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = NSLocalizedString(@"whereru", nil);
-        
-        //    NSString *text = self.messageTextView.text;
-        NSString *text = @"Hey WhereRU?";
-        
-        NSDictionary *params = @{@"cmd":@"find",
-                                 @"user_id":[_dataModel userId],
-                                 @"location":[[SingletonClass singleObject] myLocStr],
-                                 @"text":text};
-
-        
-        [self getAPI:params];
-    } else {
-        NSLog(@"Aint nobody got time for that");
-        _isUpdating = NO;
-    }
-}
-
 #pragma mark -
 #pragma mark Map
 
@@ -770,7 +810,7 @@
 // this currently gets the first item (room object) then cycles through all map
 // annotations until the ann.title = who. MAY WANT TO change it to use key value pairs
 // instead to immediately grab the annotation that needs updating
-//
+
 -(void) updatePointsOnMapWithAPIData {
     
 //    NSString *toast = [NSString stringWithFormat:@" Getting locations of all in the room"];
@@ -807,23 +847,13 @@
             UIImage *useThisPin = [UIImage imageNamed:imageString];
             
             NSString *gmtDateStr = item.memberUpdateTime; //UTC needs to be converted to currentLocale
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-            //Create the date assuming the given string is in GMT
-            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-            NSDate *date = [formatter dateFromString:gmtDateStr];
-            
-            //Create a date string in the local timezone
-            formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[NSTimeZone localTimeZone].secondsFromGMT];
-            [formatter setDateStyle:NSDateFormatterShortStyle];
-            [formatter setTimeStyle:NSDateFormatterShortStyle];
-            [formatter setDoesRelativeDateFormatting:YES];
-            NSString* dateString = [formatter stringFromDate:date];
+            NSString* dateString = [self localDateStrFromUTCDateStr:gmtDateStr];
+            NSDate* date = [self dateFromUTCDateStr:gmtDateStr];
             
 //            for (id<MKAnnotation> ann in _mapView.annotations)
             for (VBAnnotation *ann in _mapView.annotations)
             {
-                [self openAnnotation:ann];
+//                [self openAnnotation:ann];
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
                 northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
@@ -855,7 +885,7 @@
                     [annNew setCoordinate:location];
 
                     [self.mapView addAnnotation:annNew];
-                    [self openAnnotation:annNew];
+//                    [self openAnnotation:annNew];
                     
                 }
             }
@@ -903,8 +933,7 @@
         NSString* dateString = [formatter stringFromDate:[NSDate date]];
         
 //        for (id<MKAnnotation> ann in _mapView.annotations)
-        for (VBAnnotation *ann in _mapView.annotations)
-        {
+        for (VBAnnotation *ann in _mapView.annotations){
             NSLog(@"moving points checking ann.title is %@",ann.title);
             
             // reset the span to include each and every pin as you go thru the list
@@ -919,6 +948,7 @@
             if ([ann.title isEqualToString:who])
             {
                 NSLog(@"found %@ moving %@", who, who);
+                [self openAnnotation:ann];
                 whoFound = YES;
                 location.latitude = [strings[0] doubleValue];
                 location.longitude = [strings[1] doubleValue];
@@ -1050,6 +1080,7 @@
     [self.tableView reloadData];
     [self scrollToNewestMessage];
 }
+
 
 /*
 #pragma mark - Navigation

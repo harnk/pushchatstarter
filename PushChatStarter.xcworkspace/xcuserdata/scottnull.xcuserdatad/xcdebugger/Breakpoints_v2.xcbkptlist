@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "449813401.196221"
+            timestampString = "449887240.206029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "798"
-            endingLineNumber = "798"
+            startingLineNumber = "838"
+            endingLineNumber = "838"
             landmarkName = "-updatePointsOnMapWithAPIData"
             landmarkType = "5">
          </BreakpointContent>
