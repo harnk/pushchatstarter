@@ -89,15 +89,6 @@ void ShowErrorAlert(NSString* text)
         NSString *asker = [userInfo valueForKey:@"asker"];
         [self postImhere:asker];
         
-        // This should shut off after like 5 minutes scxtt
-        //still need to code that
-//        [NSTimer scheduledTimerWithTimeInterval: 10
-//                                         target: self
-//                                       selector: @selector(timerUpdateLoc)
-//                                       userInfo: nil
-//                                        repeats: YES];
-        
-        
     } else {
         if ([extra isEqualToString:@"imhere"]) {
             NSLog(@"Found someone - dont put into the message bubble");
@@ -251,11 +242,15 @@ void ShowErrorAlert(NSString* text)
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
     [self.locationManager startMonitoringSignificantLocationChanges];
-    [NSTimer scheduledTimerWithTimeInterval: 30
+    [self.locationManager startUpdatingLocation];
+    
+    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 60
                                                target: self
                                              selector: @selector(postMyLoc)
                                              userInfo: nil
                                               repeats: YES];
+    //Kill the getRoomTimer
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"killGetRoomTimer" object:nil userInfo:nil];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -269,12 +264,19 @@ void ShowErrorAlert(NSString* text)
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"applicationDidBecomeActive");
     application.applicationIconBadgeNumber = 0;
+    //Start the getRoomTimer going again
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+    [backgroundTimer invalidate];
+    backgroundTimer = nil;
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        NSLog(@"applicationWillTerminate");
 }
 
 -(void)application:(UIApplication *)application didRegisterUserNotificationSettings:   (UIUserNotificationSettings *)notificationSettings
@@ -321,9 +323,13 @@ void ShowErrorAlert(NSString* text)
     
 }
 
+-(void)resetIsUpdating {
+    _isUpdating = NO;
+}
+
 -(void)postLiveUpdate
 {
-    NSLog(@"After responding to WhereRU with Im Here back to asker update my loc on server for 5 minutes");
+    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
     NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
@@ -337,9 +343,17 @@ void ShowErrorAlert(NSString* text)
      postPath:@"/whereru/api/api.php"
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         _isUpdating = NO;
+         [NSTimer scheduledTimerWithTimeInterval: 5
+                                          target: self
+                                        selector: @selector(resetIsUpdating)
+                                        userInfo: nil
+                                         repeats: NO];
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         _isUpdating = NO;
+         [NSTimer scheduledTimerWithTimeInterval: 5
+                                          target: self
+                                        selector: @selector(resetIsUpdating)
+                                        userInfo: nil
+                                         repeats: NO];
      }];
     
 }
@@ -347,20 +361,14 @@ void ShowErrorAlert(NSString* text)
 -(void) postMyLoc {
     
     if (!_isUpdating) {
-        _isUpdating = YES;
         if (_deviceHasMoved) {
+            _isUpdating = YES;
             NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
             [self postLiveUpdate];
             _deviceHasMoved = NO;
         }
-    }
-}
-
--(void)timerUpdateLoc {
-    if (_deviceHasMoved) {
-        NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
-        [self postLiveUpdate];
-        _deviceHasMoved = NO;
+    } else {
+        NSLog(@"no API call since _isUpdating is already YES = Busy");
     }
 }
 
@@ -382,7 +390,7 @@ void ShowErrorAlert(NSString* text)
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
 //        NSLog(@"didUpdateLocations Move to: %@", [locations lastObject]);
-        NSLog(@"didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
         // If moved farther than 20 yards do an API call scxtt
         _deviceHasMoved = YES;
         [self postMyLoc];

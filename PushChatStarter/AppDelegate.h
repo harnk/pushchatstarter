@@ -16,6 +16,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
+    NSTimer *backgroundTimer;
 }
 
 

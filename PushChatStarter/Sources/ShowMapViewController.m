@@ -34,6 +34,7 @@
 @interface ShowMapViewController () {
     AFHTTPClient *_client;
     NSArray *pinImages;
+    NSTimer *getRoomTimer;
 }
 @end
 
@@ -90,11 +91,11 @@
                                    userInfo: nil
                                     repeats: NO];
 
-    _timer  = [NSTimer scheduledTimerWithTimeInterval: 5
-                                               target: self
-                                             selector: @selector(postGetRoom)
-                                             userInfo: nil
-                                              repeats: YES];
+//    getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
+//                                               target: self
+//                                                   selector: @selector(postGetRoom)
+//                                             userInfo: nil
+//                                              repeats: YES];
     
     //Set up a timer to check for new messages if the user has notifications disabled
     [NSTimer scheduledTimerWithTimeInterval: 30
@@ -123,6 +124,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(postGetRoomMessages)
                                                  name:@"userJoinedRoom"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(stopGetRoomTimer)
+                                                 name:@"killGetRoomTimer"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(startGetRoomTimer)
+                                                 name:@"commenceGetRoomTimer"
                                                object:nil];
     
     
@@ -210,15 +221,34 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    NSLog(@"scXtt viewWillDisappear");
+}
+
+- (void)stopGetRoomTimer {
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
-    NSLog(@"scXtt viewWillDisappear");
-    if(_timer)
+    NSLog(@"scXtt stopGetRoomTimer");
+    if(getRoomTimer)
     {
-        [_timer invalidate];
-        _timer = nil;
+        NSLog(@"scXtt [_getRoomTimer invalidate]");
+        [getRoomTimer invalidate];
+        getRoomTimer = nil;
+    } else {
+        
+        NSLog(@"did nothing");
     }
+
+}
+
+-(void)startGetRoomTimer {
+    NSLog(@"scXtt startGetRoomTimer");
+    getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
+                                                      target: self
+                                                   selector: @selector(postGetRoom)
+                                                    userInfo: nil
+                                                     repeats: YES];
+    
 }
 
 -(void) areNotificationsEnabled {
@@ -690,7 +720,7 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-        NSString *toast = [NSString stringWithFormat:@"Getting room messages"];
+        NSString *toast = [NSString stringWithFormat:@"Getting messages for this map group"];
         [self longToastMsg:toast];
 
         NSString *secret_code = [_dataModel secretCode];
@@ -728,7 +758,7 @@
                          Message *message = [[Message alloc] init];
                          
                          //If message user_id == my userID then senderName = nil
-                         NSLog(@"MONOSPITA [_dataModel userId] == [item objectForKey:@user_id]: %@ == %@",[_dataModel userId], [item objectForKey:@"user_id"]);
+//                         NSLog(@"[_dataModel userId] == [item objectForKey:@user_id]: %@ == %@",[_dataModel userId], [item objectForKey:@"user_id"]);
                          
                          if ([[_dataModel userId] isEqualToString:[item objectForKey:@"user_id"]]) {
                              message.senderName = nil;
@@ -739,7 +769,7 @@
                          message.date = [self dateFromUTCDateStr:[item objectForKey:@"time_posted"]];
                          message.location = [item objectForKey:@"location"];
                          message.text = [item objectForKey:@"message"];
-                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
+//                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
                          [self didSaveMessage:message atIndex:index];
                          
