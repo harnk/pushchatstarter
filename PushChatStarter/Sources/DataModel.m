@@ -54,6 +54,12 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 	return [documentsDirectory stringByAppendingPathComponent:@"Messages.plist"];
 }
 
+// Loads the messages from the API call
+- (void)loadRoomMessages:(NSMutableArray*)roomMessages {
+
+    
+}
+
 - (void)loadMessages:(NSString*)myLoc
 {
     

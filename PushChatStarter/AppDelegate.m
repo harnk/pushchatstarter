@@ -91,11 +91,11 @@ void ShowErrorAlert(NSString* text)
         
         // This should shut off after like 5 minutes scxtt
         //still need to code that
-        [NSTimer scheduledTimerWithTimeInterval: 10
-                                         target: self
-                                       selector: @selector(timerUpdateLoc)
-                                       userInfo: nil
-                                        repeats: YES];
+//        [NSTimer scheduledTimerWithTimeInterval: 10
+//                                         target: self
+//                                       selector: @selector(timerUpdateLoc)
+//                                       userInfo: nil
+//                                        repeats: YES];
         
         
     } else {
@@ -132,23 +132,6 @@ void ShowErrorAlert(NSString* text)
         
         completionHandler(UIBackgroundFetchResultNewData);
         
-    }
-}
-
--(void) postMyLoc {
-    
-    if (_deviceHasMoved) {
-        NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
-        [self postLiveUpdate];
-        _deviceHasMoved = NO;
-    }
-}
-
--(void)timerUpdateLoc {
-    if (_deviceHasMoved) {
-        NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
-        [self postLiveUpdate];
-        _deviceHasMoved = NO;
     }
 }
 
@@ -215,6 +198,8 @@ void ShowErrorAlert(NSString* text)
         }
     }
     
+    _isUpdating = NO;
+    
     //SCXTT Need to review this and see if it is still necesary
     [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     // register for types of remote notifications
@@ -266,7 +251,7 @@ void ShowErrorAlert(NSString* text)
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
     [self.locationManager startMonitoringSignificantLocationChanges];
-    [NSTimer scheduledTimerWithTimeInterval: 60
+    [NSTimer scheduledTimerWithTimeInterval: 30
                                                target: self
                                              selector: @selector(postMyLoc)
                                              userInfo: nil
@@ -351,11 +336,33 @@ void ShowErrorAlert(NSString* text)
     [client
      postPath:@"/whereru/api/api.php"
      parameters:params
-     success:nil failure:nil];
+     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         _isUpdating = NO;
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         _isUpdating = NO;
+     }];
     
 }
 
-//scxtt
+-(void) postMyLoc {
+    
+    if (!_isUpdating) {
+        _isUpdating = YES;
+        if (_deviceHasMoved) {
+            NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+            [self postLiveUpdate];
+            _deviceHasMoved = NO;
+        }
+    }
+}
+
+-(void)timerUpdateLoc {
+    if (_deviceHasMoved) {
+        NSLog(@"timer is doing it again from here: %@", [[SingletonClass singleObject] myLocStr]);
+        [self postLiveUpdate];
+        _deviceHasMoved = NO;
+    }
+}
 
 
 //Ref: http://stackoverflow.com/questions/12602463/didupdatelocations-instead-of-didupdatetolocation
@@ -378,6 +385,7 @@ void ShowErrorAlert(NSString* text)
         NSLog(@"didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
         // If moved farther than 20 yards do an API call scxtt
         _deviceHasMoved = YES;
+        [self postMyLoc];
     }
 }
 

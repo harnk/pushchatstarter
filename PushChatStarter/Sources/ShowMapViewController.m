@@ -89,8 +89,8 @@
                                    selector: @selector(areNotificationsEnabled)
                                    userInfo: nil
                                     repeats: NO];
-    
-    _timer  = [NSTimer scheduledTimerWithTimeInterval: 10
+
+    _timer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                target: self
                                              selector: @selector(postGetRoom)
                                              userInfo: nil
@@ -119,6 +119,13 @@
                                              selector:@selector(updatePointsOnMapWithAPIData)
                                                  name:@"receivedNewAPIData"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(postGetRoomMessages)
+                                                 name:@"userJoinedRoom"
+                                               object:nil];
+    
+    
 }
 
 - (void)setUpButtonBarItems {
@@ -136,6 +143,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _okToRecenterMap = YES;
     
     [self.mapView setDelegate:self];
     self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
@@ -549,7 +557,7 @@
                      _roomArray = [[NSMutableArray alloc] init];
                  } else {
                      [_roomArray removeAllObjects];
-                     [self.mapView removeAnnotations:_mapView.annotations];
+//                     [self.mapView removeAnnotations:_mapView.annotations];
                  }
                  NSString *myPinImages[11] = {@"blue.png",
                      @"cyan.png",
@@ -682,6 +690,8 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
+        NSString *toast = [NSString stringWithFormat:@"Getting room messages"];
+        [self longToastMsg:toast];
 
         NSString *secret_code = [_dataModel secretCode];
         NSDictionary *params = @{@"cmd":@"getroommessages",
@@ -714,24 +724,27 @@
                      } else {
 //                         [_roomMessagesArray removeAllObjects];
                      }
-                     
                      for(NSDictionary *item in jsonArray) {
+                         Message *message = [[Message alloc] init];
                          
-                         NSLog(@"postGetRoomMessages message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
-//                         NSString *mNickName = [item objectForKey:@"nickname"];
-//                         NSString *mLocation = [item objectForKey:@"location"];
-//                         NSString *mLocTime = [item objectForKey:@"loc_time"];
-//                         
-//                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-//                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:mLocTime];
-//                             [_roomArray addObject:roomObj];
-//                         }
+                         //If message user_id == my userID then senderName = nil
+                         NSLog(@"MONOSPITA [_dataModel userId] == [item objectForKey:@user_id]: %@ == %@",[_dataModel userId], [item objectForKey:@"user_id"]);
+                         
+                         if ([[_dataModel userId] isEqualToString:[item objectForKey:@"user_id"]]) {
+                             message.senderName = nil;
+                         } else {
+                             message.senderName = [item objectForKey:@"nickname"];
+                         }
+                         
+                         message.date = [self dateFromUTCDateStr:[item objectForKey:@"time_posted"]];
+                         message.location = [item objectForKey:@"location"];
+                         message.text = [item objectForKey:@"message"];
+                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
+                         int index = [self.dataModel addMessage:message];
+                         [self didSaveMessage:message atIndex:index];
                          
                      }
-//                     NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
-//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
                  }
-                 
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              if ([self isViewLoaded]) {
@@ -770,6 +783,7 @@
 - (void)openAnnotation:(id)annotation;
 {
     //mv is the mapView
+    _okToRecenterMap = NO;
     [_mapView selectAnnotation:annotation animated:YES];
     
 }
@@ -777,8 +791,24 @@
 - (void)closeAnnotation:(id)annotation;
 {
     //mv is the mapView
+    _okToRecenterMap = YES;
     [_mapView deselectAnnotation:annotation animated:YES];
     
+}
+
+-(BOOL)annTitleHasLeftRoom:(NSString *)nickname {
+//    NSLog(@"Has %@ left yet?", nickname);
+    if ([nickname isEqualToString:@"Current Location"]) {
+        return NO;
+    }
+    // Search _roomArray for nickname
+    for (Room *item in _roomArray) {
+        if ([nickname isEqualToString:item.memberNickName]) {
+            return NO;
+            break; //this break may not be necessary
+        }
+    }
+    return YES;
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -826,13 +856,17 @@
     southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
 
-    BOOL whoFound = NO;
     NSLog(@"updatePointsOnMapWithAPIData");
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
+//    NSLog(@"_roomArray count is:%lu",(unsigned long)[_roomArray count]);
+    if ([_roomArray count] == 0) {
+        [_mapView removeAnnotations:_mapView.annotations];
+    }
+//    NSLog(@"_mapView.annotations count is:%lu",(unsigned long)[_mapView.annotations count]);
     for (Room *item in _roomArray) {
-        
+        BOOL whoFound = NO;
 //        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
 //        NSLog(@"----------------------------:memberLocation %@", item.memberLocation);
 //        NSLog(@"----------------------------:memberUpdateTime %@", item.memberUpdateTime);
@@ -853,6 +887,17 @@
 //            for (id<MKAnnotation> ann in _mapView.annotations)
             for (VBAnnotation *ann in _mapView.annotations)
             {
+//                whoFound = NO;
+                //First see if this ann still has a _roomArray match
+                //or if the person has left the room kill this ann
+                if ([self annTitleHasLeftRoom:ann.title]) {
+                    //toast it
+                    NSString *toast = [NSString stringWithFormat:@"%@ has left the map group", ann.title];
+                    [self toastMsg:toast];
+                    //kill it
+                    [self.mapView removeAnnotation:ann];
+                }
+//                NSLog(@"updatePointsOnMapWithAPIData looking thru ann.title:%@ compared to who:%@", ann.title, who);
 //                [self openAnnotation:ann];
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
@@ -868,17 +913,22 @@
                     location.longitude = [strings[1] doubleValue];
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                         //Scxtt need to find a cool way to animate sliding points
-                        ann.coordinate = location;
-                        ann.subtitle = dateString;
-                        ann.loctime = date;
+//                        ann.coordinate = location; // this line doesnt work
+                        ann.subtitle = dateString; // i dont think this line works either
+                        ann.loctime = date; // this prob isnt working either
+                        [ann setCoordinate:location];
                     }
-                    break;
+//                    break;
                 }
             }
             // new who so add addAnnotation and set coordinate and location time
             if (!whoFound) {
-//                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
+                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
+                    //toast it
+                    NSString *toast = [NSString stringWithFormat:@"%@ has entered the map group", who];
+                    [self toastMsg:toast];
+
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
@@ -896,12 +946,12 @@
             // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
             CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
             
-            [self reCenterMap:region meters:meters];
-
+            if (_okToRecenterMap) {
+                [self reCenterMap:region meters:meters];
+            }
         }
     }
 }
-
 
 -(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
 
@@ -953,7 +1003,8 @@
                 location.latitude = [strings[0] doubleValue];
                 location.longitude = [strings[1] doubleValue];
                 NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
-                ann.coordinate = location;
+//                ann.coordinate = location;
+                [ann setCoordinate:location];
                 ann.subtitle = dateString;
                 break;
             }
@@ -978,11 +1029,11 @@
         
         // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
         CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-        
-        [self reCenterMap:region meters:meters];
-    
+
+        if (_okToRecenterMap) {
+            [self reCenterMap:region meters:meters];
+        }
     }
-    
 }
 
 

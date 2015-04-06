@@ -19,6 +19,9 @@
 // Loads the list of messages from a file.
 - (void)loadMessages:(NSString*)myLoc;
 
+// Loads the messages from the API call
+- (void)loadRoomMessages:(NSMutableArray*)roomMessages;
+
 // Saves the list of messages to a file.
 - (void)saveMessages;
 

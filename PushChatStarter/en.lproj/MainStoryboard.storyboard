@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D113c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D127a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -178,10 +178,6 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="S80-aW-BTx"/>
-                                <exclude reference="bcn-2e-XFE"/>
-                                <exclude reference="krW-ho-vFO"/>
-                                <exclude reference="voI-xZ-pOm"/>
                                 <exclude reference="0xZ-Nc-lQE"/>
                                 <exclude reference="59S-DX-R8Q"/>
                                 <exclude reference="L9K-jj-oMr"/>
@@ -191,6 +187,10 @@
                                 <exclude reference="ewG-qS-xwe"/>
                                 <exclude reference="s1A-af-RNr"/>
                                 <exclude reference="ygM-JQ-rxk"/>
+                                <exclude reference="S80-aW-BTx"/>
+                                <exclude reference="bcn-2e-XFE"/>
+                                <exclude reference="krW-ho-vFO"/>
+                                <exclude reference="voI-xZ-pOm"/>
                                 <exclude reference="ZxK-NM-aRV"/>
                                 <exclude reference="dic-XN-DA9"/>
                                 <exclude reference="nxf-cD-W9C"/>
@@ -198,13 +198,6 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <include reference="S80-aW-BTx"/>
-                                <exclude reference="XUz-9c-Fiw"/>
-                                <exclude reference="Zq0-tL-qsX"/>
-                                <include reference="bcn-2e-XFE"/>
-                                <exclude reference="gLH-4Z-9Pv"/>
-                                <exclude reference="iFf-ST-pV6"/>
-                                <exclude reference="n3u-Ml-91B"/>
                                 <include reference="0xZ-Nc-lQE"/>
                                 <exclude reference="7OZ-1G-afX"/>
                                 <exclude reference="CuC-gp-6Pr"/>
@@ -213,19 +206,26 @@
                                 <include reference="dbT-U3-nN0"/>
                                 <exclude reference="s1A-af-RNr"/>
                                 <include reference="ygM-JQ-rxk"/>
+                                <include reference="S80-aW-BTx"/>
+                                <exclude reference="XUz-9c-Fiw"/>
+                                <exclude reference="Zq0-tL-qsX"/>
+                                <include reference="bcn-2e-XFE"/>
+                                <exclude reference="gLH-4Z-9Pv"/>
+                                <exclude reference="iFf-ST-pV6"/>
+                                <exclude reference="n3u-Ml-91B"/>
                                 <include reference="dic-XN-DA9"/>
                                 <include reference="nxf-cD-W9C"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
                             <mask key="constraints">
+                                <include reference="59S-DX-R8Q"/>
+                                <include reference="ewG-qS-xwe"/>
                                 <exclude reference="XUz-9c-Fiw"/>
                                 <exclude reference="gLH-4Z-9Pv"/>
                                 <include reference="krW-ho-vFO"/>
                                 <exclude reference="n3u-Ml-91B"/>
                                 <include reference="voI-xZ-pOm"/>
-                                <include reference="59S-DX-R8Q"/>
-                                <include reference="ewG-qS-xwe"/>
                                 <include reference="ZxK-NM-aRV"/>
                             </mask>
                         </variation>

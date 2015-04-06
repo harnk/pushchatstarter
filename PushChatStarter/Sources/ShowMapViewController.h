@@ -39,6 +39,7 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic) BOOL isUpdating;
+@property (nonatomic) BOOL okToRecenterMap;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
 @property(nonatomic, copy) UIBarButtonItem *btnMapType;
 
