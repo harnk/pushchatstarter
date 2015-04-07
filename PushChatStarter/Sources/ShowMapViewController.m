@@ -720,7 +720,7 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-        NSString *toast = [NSString stringWithFormat:@"Getting messages for this map group"];
+        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
         [self longToastMsg:toast];
 
         NSString *secret_code = [_dataModel secretCode];
@@ -872,10 +872,6 @@
 // instead to immediately grab the annotation that needs updating
 
 -(void) updatePointsOnMapWithAPIData {
-    
-//    NSString *toast = [NSString stringWithFormat:@" Getting locations of all in the room"];
-//    [self longToastMsg:toast];
-    
     CLLocationCoordinate2D location, southWest, northEast;
     MKCoordinateRegion region;
     
@@ -922,8 +918,10 @@
                 //or if the person has left the room kill this ann
                 if ([self annTitleHasLeftRoom:ann.title]) {
                     //toast it
-                    NSString *toast = [NSString stringWithFormat:@"%@ has left the map group", ann.title];
-                    [self toastMsg:toast];
+//                    NSString *toast = [NSString stringWithFormat:@"%@ has left the map group", ann.title];
+//                    [self toastMsg:toast];
+                    [self multiLineToastMsg:ann.title detailText:@"has left the map group"];
+                    
                     //kill it
                     [self.mapView removeAnnotation:ann];
                 }
@@ -956,8 +954,9 @@
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     //toast it
-                    NSString *toast = [NSString stringWithFormat:@"%@ has entered the map group", who];
-                    [self toastMsg:toast];
+//                    NSString *toast = [NSString stringWithFormat:@"%@ has entered the map group", who];
+//                    [self toastMsg:toast];
+                    [self multiLineToastMsg:who detailText:@"has entered the map group"];
 
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
@@ -1028,7 +1027,7 @@
             if ([ann.title isEqualToString:who])
             {
                 NSLog(@"found %@ moving %@", who, who);
-                [self openAnnotation:ann];
+//                [self openAnnotation:ann];
                 whoFound = YES;
                 location.latitude = [strings[0] doubleValue];
                 location.longitude = [strings[1] doubleValue];
@@ -1042,7 +1041,6 @@
         // new who so add addAnnotation and set coordinate
         if (!whoFound) {
             NSLog(@"Adding new who %@", who);
-//            -(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:loctime PinImageFile:pinImageFile PinImage:pinImage;
             VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date] PinImageFile:@"blue.png" PinImage:[UIImage imageNamed:@"blue.png"]];
             
             location.latitude = [strings[0] doubleValue];
@@ -1051,7 +1049,6 @@
                 [annNew setCoordinate:location];
                 [self.mapView addAnnotation:annNew];
             }
-            
         }
         
         _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
@@ -1103,26 +1100,18 @@
     [hud hide:YES afterDelay:3];
 }
 
-
-//-(void) changeRegion {
-//    NSLog(@"changeRegion is called");
-//    
-//    
-//    for (id<MKAnnotation> ann in _mapView.annotations)
-//    {
-//        if ([ann.title isEqualToString:@"User1"])
-//        {
-//            NSLog(@"found user1");
-//            CLLocationCoordinate2D location;
-//            float rndV1 = (((float)arc4random()/0x100000000)*0.101);
-//            float rndV2 = (((float)arc4random()/0x100000000)*0.101);
-//            location.latitude = BE2_LATITUDE + rndV1;
-//            location.longitude = BE2_LONGITUDE + rndV2;
-//            ann.coordinate = location;
-//            break;
-//        }
-//    }
-//}
+-(void)multiLineToastMsg:(NSString *)toastStr detailText:(NSString *)detailsText {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    // Configure for text only and offset down
+    hud.frame = CGRectMake(0, 0, 120, 143);
+//    hud.mode = MBProgressHUDModeAnnularDeterminate;
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = toastStr;
+    hud.detailsLabelText = detailsText;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hide:YES afterDelay:2];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

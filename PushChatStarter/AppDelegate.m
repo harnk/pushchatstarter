@@ -349,7 +349,7 @@ void ShowErrorAlert(NSString* text)
                                         userInfo: nil
                                          repeats: NO];
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         [NSTimer scheduledTimerWithTimeInterval: 5
+         [NSTimer scheduledTimerWithTimeInterval: 10
                                           target: self
                                         selector: @selector(resetIsUpdating)
                                         userInfo: nil
