@@ -85,10 +85,10 @@ void ShowErrorAlert(NSString* text)
 
     if([extra isEqualToString:@"whereru"]) {
         NSLog(@"whereru - in ^completionHandlerSilent push received");
-//        NSString *asker = [[userInfo valueForKey:@"aps"] valueForKey:@"asker"];
         NSString *asker = [userInfo valueForKey:@"asker"];
+        [self.locationManager startMonitoringSignificantLocationChanges];
+        [self.locationManager startUpdatingLocation];
         [self postImhere:asker];
-        
     } else {
         if ([extra isEqualToString:@"imhere"]) {
             NSLog(@"Found someone - dont put into the message bubble");
@@ -96,6 +96,7 @@ void ShowErrorAlert(NSString* text)
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
+        
     }
     
     if(application.applicationState == UIApplicationStateInactive) {

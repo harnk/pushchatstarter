@@ -864,6 +864,22 @@
     
 }
 
+-(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    
+    NSLog(@"didSelectAnnotationView");
+    //    [mapView selectAnnotation:view.annotation animated:NO];
+    _okToRecenterMap = NO;
+}
+
+-(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
+{
+    
+    NSLog(@"didDeselectAnnotationView");
+    //    [mapView selectAnnotation:view.annotation animated:NO];
+    _okToRecenterMap = YES;
+}
+
 // This goes through all of the objects currently in the _roomArray
 // Seeds the region with this devices current location and sets the span
 // to include all the pins. This will not plot pins that are located at 0.00,0.00
