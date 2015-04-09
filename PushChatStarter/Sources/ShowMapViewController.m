@@ -35,6 +35,7 @@
     AFHTTPClient *_client;
     NSArray *pinImages;
     NSTimer *getRoomTimer;
+    UIPickerView *myPickerView;
 }
 @end
 
@@ -461,6 +462,10 @@
 #pragma mark Picker View Delegates
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
+    [self toastMsg:@"picker selected"];
+    // need to remove the subview
+    // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
+    [myPickerView removeFromSuperview];
 }
 
 // tell the picker how many rows are available for a given component
@@ -478,7 +483,7 @@
 // tell the picker the title for a given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSString *title;
-    title = [@"pin sham wah " stringByAppendingFormat:@"%d",row];
+    title = [@"pin nickname " stringByAppendingFormat:@"%d",row];
     
     return title;
 }
@@ -573,9 +578,11 @@
 
 }
 - (IBAction)showPinPicker:(id)sender {
-    UIPickerView *myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 200, 320, 200)];
+    myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 200, 320, 200)];
     myPickerView.delegate = self;
     myPickerView.showsSelectionIndicator = YES;
+//    myPickerView.layer.backgroundColor = (__bridge CGColorRef)([UIColor redColor]);
+    myPickerView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:myPickerView];
 }
 
