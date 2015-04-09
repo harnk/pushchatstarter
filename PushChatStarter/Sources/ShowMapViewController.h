@@ -19,7 +19,7 @@
 @class DataModel;
 //@class Message;
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate, UIPickerViewDelegate>{
     CLLocation*             locationObject;
 }
 @property (weak, nonatomic) IBOutlet UITextField *textView;
@@ -30,6 +30,8 @@
 @property (weak, nonatomic) IBOutlet UITextView *output;
 @property (weak, nonatomic) IBOutlet UITextField *value1TextField;
 @property (weak, nonatomic) IBOutlet UITextField *value2TextField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *satMapButton;
+
 - (IBAction)getDown:(id)sender;
 - (IBAction)postDown:(id)sender;
 //End Stuff for ServiceConnector //////////////////////////////
@@ -40,7 +42,7 @@
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL okToRecenterMap;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
-@property(nonatomic, copy) UIBarButtonItem *btnMapType;
+//@property(nonatomic, copy) UIBarButtonItem *btnMapType;
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;
