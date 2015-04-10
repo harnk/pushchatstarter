@@ -172,7 +172,12 @@
     location.longitude = BE_LONGITUDE;
     
     _textView.delegate = self;
+    myPickerView.delegate = self;
 
+    UITapGestureRecognizer* gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickerViewTapGestureRecognized:)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    
+    [myPickerView addGestureRecognizer:gestureRecognizer];
 
     [self setUpTimersAndObservers];
     [self setUpButtonBarItems];
@@ -185,14 +190,15 @@
     if (![_dataModel joinedChat])
     {
         [self showLoginViewController];
+    } else {
+        //Reset pins on map
+        [self.mapView removeAnnotations:_mapView.annotations];
+        //    [self postFindRequest];
+        [self postGetRoom];
+        
+        [self.tableView reloadData];
     }
     
-    //Reset pins on map
-    [self.mapView removeAnnotations:_mapView.annotations];
-//    [self postFindRequest];
-    [self postGetRoom];
-    
-    [self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -460,17 +466,47 @@
 
 #pragma mark -
 #pragma mark Picker View Delegates
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
-    // Handle the selection
-    [self toastMsg:@"picker selected"];
-    // need to remove the subview
-    // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
-    [myPickerView removeFromSuperview];
+
+//- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+//{
+//    UIView *myColorView = [UIView new]; //Set desired frame
+//    myColorView.backgroundColor = [UIColor redColor]; //Set desired color or add a UIImageView if you want...
+//    UIImageView *myImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cyan.png"]];
+//    [view addSubview:myImageView];
+//    [view addSubview:myColorView];
+//    
+//    return view;
+//}
+
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    UIView *pickerCustomView = (id)view;
+    UILabel *pickerViewLabel;
+    UIImageView *pickerImageView;
+    
+    if (!pickerCustomView) {
+        pickerCustomView= [[UIView alloc] initWithFrame:CGRectMake(100.0f, 0.0f,
+                                                                   [pickerView rowSizeForComponent:component].width - 10.0f, [pickerView rowSizeForComponent:component].height)];
+        pickerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 35.0f, 35.0f)];
+        pickerViewLabel= [[UILabel alloc] initWithFrame:CGRectMake(37.0f, -5.0f,
+                                                                   [pickerView rowSizeForComponent:component].width - 10.0f, [pickerView rowSizeForComponent:component].height)];
+
+        // the values for x and y are specific for my example
+        [pickerCustomView addSubview:pickerImageView];
+        [pickerCustomView addSubview:pickerViewLabel];
+    }
+    pickerImageView.image = [UIImage imageNamed:[[_roomArray objectAtIndex:row] memberPinImage]];
+    pickerViewLabel.backgroundColor = [UIColor clearColor];
+    pickerViewLabel.text = [[_roomArray objectAtIndex:row] memberNickName];
+//    pickerViewLabel.font = [UIFont fontWithName:@"ChalkboardSE-Regular" size:20];
+    
+    return pickerCustomView;
 }
 
 // tell the picker how many rows are available for a given component
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    NSUInteger numRows = 10;
+    NSUInteger numRows = [_roomArray count];
     
     return numRows;
 }
@@ -483,7 +519,22 @@
 // tell the picker the title for a given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSString *title;
-    title = [@"pin nickname " stringByAppendingFormat:@"%d",row];
+//    title = [@"pin nickname " stringByAppendingFormat:@"%d",row];
+    
+    title = [[_roomArray objectAtIndex:row] memberNickName];
+    
+    
+    
+    
+    
+    //        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
+    //        NSLog(@"----------------------------:memberLocation %@", item.memberLocation);
+    //        NSLog(@"----------------------------:memberUpdateTime %@", item.memberUpdateTime);
+    //        NSLog(@"----------------------------:roomName %@", item.roomName);
+    //        NSLog(@"----------------------------:memberPinImage %@", item.memberPinImage);
+    
+    
+    
     
     return title;
 }
@@ -494,6 +545,30 @@
     
     return sectionWidth;
 }
+
+- (void)pickerViewTapGestureRecognized:(UITapGestureRecognizer*)gestureRecognizer
+{
+    CGPoint touchPoint = [gestureRecognizer locationInView:gestureRecognizer.view.superview];
+    
+    CGRect frame = myPickerView.frame;
+    CGRect selectorFrame = CGRectInset( frame, 0.0, myPickerView.bounds.size.height * 0.85 / 2.0 );
+    
+    if( CGRectContainsPoint( selectorFrame, touchPoint) )
+    {
+//        NSLog( @"Selected Row: %i", [self.currentArticles objectAtIndex:[myPickerView selectedRowInComponent:0]] );
+        NSLog( @"Selected Row: %@", [[_roomArray objectAtIndex:[myPickerView selectedRowInComponent:0]] memberNickName]);
+    }
+}
+
+//- (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
+//    // Handle the selection
+//    [self toastMsg:@"picker selected"];
+//    // need to remove the subview
+//    // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
+//    [myPickerView removeFromSuperview];
+//}
+//
+
 
 #pragma mark -
 #pragma mark Actions
@@ -578,12 +653,28 @@
 
 }
 - (IBAction)showPinPicker:(id)sender {
-    myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 200, 320, 200)];
+    myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
     myPickerView.delegate = self;
     myPickerView.showsSelectionIndicator = YES;
 //    myPickerView.layer.backgroundColor = (__bridge CGColorRef)([UIColor redColor]);
     myPickerView.backgroundColor = [UIColor whiteColor];
+    
+//    scxtt
+    myPickerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:myPickerView];
+    
+//    [self.view addConstraints:[NSLayoutConstraint
+//                               constraintsWithVisualFormat:@"V:|-[myView(>=200)]-|"
+//                               options:NSLayoutFormatDirectionLeadingToTrailing
+//                               metrics:nil
+//                               views:NSDictionaryOfVariableBindings(myPickerView)]];
+//    
+//    [self.view addConstraints:[NSLayoutConstraint
+//                               constraintsWithVisualFormat:@"H:[myView(==200)]-|"
+//                               options:NSLayoutFormatDirectionLeadingToTrailing
+//                               metrics:nil
+//                               views:NSDictionaryOfVariableBindings(myPickerView)]];
+    
 }
 
 - (IBAction)composeAction
@@ -713,25 +804,27 @@
 
 - (void)postGetRoom
 {
-    if (!_isUpdating)
-    {
-        _isUpdating = YES;
-        
-        //    [_messageTextView resignFirstResponder];
-        
-        //    NSString *text = self.messageTextView.text;
-        NSString *text = @"Hey WhereRU?";
-        
-        NSDictionary *params = @{@"cmd":@"getroom",
-                                 @"user_id":[_dataModel userId],
-                                 @"location":[[SingletonClass singleObject] myLocStr],
-                                 @"text":text};
-        
-        [self getAPI:params];
-        
-    } else {
-        NSLog(@"Worse yet Aint nobody got time for that");
-        _isUpdating = NO;
+    if ([_dataModel joinedChat]) {
+        if (!_isUpdating)
+        {
+            _isUpdating = YES;
+            
+            //    [_messageTextView resignFirstResponder];
+            
+            //    NSString *text = self.messageTextView.text;
+            NSString *text = @"Hey WhereRU?";
+            
+            NSDictionary *params = @{@"cmd":@"getroom",
+                                     @"user_id":[_dataModel userId],
+                                     @"location":[[SingletonClass singleObject] myLocStr],
+                                     @"text":text};
+            
+            [self getAPI:params];
+            
+        } else {
+            NSLog(@"Worse yet Aint nobody got time for that");
+            _isUpdating = NO;
+        }
     }
 }
 

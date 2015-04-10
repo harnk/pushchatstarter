@@ -41,7 +41,6 @@
 		9E702E971A6CB1C700D0E91E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E961A6CB1C700D0E91E /* Images.xcassets */; };
 		9E702E991A6CB4BF00D0E91E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */; };
 		9E7453691A85C6D900522BCA /* SingletonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7453681A85C6D900522BCA /* SingletonClass.m */; };
-		9E7AC7E21AB2834E004996B6 /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7D81AB2834E004996B6 /* blue.png */; };
 		9E7AC7E31AB2834E004996B6 /* cyan.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7D91AB2834E004996B6 /* cyan.png */; };
 		9E7AC7E41AB2834E004996B6 /* darkgreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7DA1AB2834E004996B6 /* darkgreen.png */; };
 		9E7AC7E51AB2834E004996B6 /* gold.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7DB1AB2834E004996B6 /* gold.png */; };
@@ -56,6 +55,8 @@
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */; };
+		D6FAA1E61AD7482300A68B6A /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E41AD7482300A68B6A /* blue.png */; };
+		D6FAA1E71AD7482300A68B6A /* bluemenuitem.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,7 +110,6 @@
 		9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		9E7453671A85C6D900522BCA /* SingletonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingletonClass.h; sourceTree = "<group>"; };
 		9E7453681A85C6D900522BCA /* SingletonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingletonClass.m; sourceTree = "<group>"; };
-		9E7AC7D81AB2834E004996B6 /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		9E7AC7D91AB2834E004996B6 /* cyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyan.png; sourceTree = "<group>"; };
 		9E7AC7DA1AB2834E004996B6 /* darkgreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = darkgreen.png; sourceTree = "<group>"; };
 		9E7AC7DB1AB2834E004996B6 /* gold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gold.png; sourceTree = "<group>"; };
@@ -130,6 +130,8 @@
 		9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyangray.png; sourceTree = "<group>"; };
 		A18058E202D844758047AD1F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA74DB54E5F2B5D84B2548E0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D6FAA1E41AD7482300A68B6A /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
+		D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluemenuitem.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,8 +231,9 @@
 		61489EBA17041CB20049C6F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D6FAA1E41AD7482300A68B6A /* blue.png */,
+				D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */,
 				9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */,
-				9E7AC7D81AB2834E004996B6 /* blue.png */,
 				9E7AC7D91AB2834E004996B6 /* cyan.png */,
 				9E7AC7DA1AB2834E004996B6 /* darkgreen.png */,
 				9E7AC7DB1AB2834E004996B6 /* gold.png */,
@@ -347,6 +350,7 @@
 				9E702E991A6CB4BF00D0E91E /* LaunchScreen.xib in Resources */,
 				9E7AC7E81AB2834E004996B6 /* pink.png in Resources */,
 				61489EAC17041C660049C6F9 /* Default@2x.png in Resources */,
+				D6FAA1E71AD7482300A68B6A /* bluemenuitem.png in Resources */,
 				9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */,
 				9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */,
 				61489EAE17041C660049C6F9 /* Default-568h@2x.png in Resources */,
@@ -356,9 +360,9 @@
 				9E7AC7E91AB2834E004996B6 /* purple.png in Resources */,
 				61489EBF17041E370049C6F9 /* BubbleLefthand.png in Resources */,
 				61489EC817041F0D0049C6F9 /* Icon-72.png in Resources */,
-				9E7AC7E21AB2834E004996B6 /* blue.png in Resources */,
 				9E7AC7E31AB2834E004996B6 /* cyan.png in Resources */,
 				9E7AC7EA1AB2834E004996B6 /* red.png in Resources */,
+				D6FAA1E61AD7482300A68B6A /* blue.png in Resources */,
 				61489EC917041F0D0049C6F9 /* Icon-Small-50.png in Resources */,
 				61489ECA17041F0D0049C6F9 /* Icon-Small.png in Resources */,
 				61489ECB17041F0D0049C6F9 /* Icon-Small@2x.png in Resources */,
