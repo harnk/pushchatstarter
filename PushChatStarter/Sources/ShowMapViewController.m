@@ -152,10 +152,44 @@
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
 }
 
+- (void) setUpPickerView {
+    CGFloat w, h, x, y;
+    w = 300;
+    h = 200;
+    x = (self.view.frame.size.width / 2) - w / 2;
+    y = ((self.view.frame.size.height) - h) - 25;
+    myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    myPickerView.delegate = self;
+    myPickerView.showsSelectionIndicator = YES;
+    myPickerView.layer.backgroundColor = (__bridge CGColorRef)([UIColor clearColor]);
+    myPickerView.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:244.0f/255.0f blue:238.0f/255.0f alpha:1.0f];
+    myPickerView.opaque = NO;
+    
+    
+    myPickerView.layer.cornerRadius = 12;
+    myPickerView.layer.masksToBounds = YES;
+    
+    //    scxtt
+    //    myPickerView.translatesAutoresizingMaskIntoConstraints = YES;
+    [self.view addSubview:myPickerView];
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"V:|-[myPickerView(>=200)]-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(myPickerView)]];
+    
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:[myPickerView(==200)]-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(myPickerView)]];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _okToRecenterMap = YES;
-    
+    _pickerIsUp = NO;
     [self.mapView setDelegate:self];
     self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
     self.mapView.layer.borderWidth = 0.5;
@@ -174,13 +208,14 @@
     _textView.delegate = self;
     myPickerView.delegate = self;
 
-    UITapGestureRecognizer* gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickerViewTapGestureRecognized:)];
-    gestureRecognizer.cancelsTouchesInView = NO;
-    
-    [myPickerView addGestureRecognizer:gestureRecognizer];
+//    UITapGestureRecognizer* gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickerViewTapGestureRecognized:)];
+//    gestureRecognizer.cancelsTouchesInView = NO;
+//    
+//    [UIPickerView addGestureRecognizer:gestureRecognizer];
 
     [self setUpTimersAndObservers];
     [self setUpButtonBarItems];
+    
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
     
 }
@@ -195,7 +230,6 @@
         [self.mapView removeAnnotations:_mapView.annotations];
         //    [self postFindRequest];
         [self postGetRoom];
-        
         [self.tableView reloadData];
     }
     
@@ -554,6 +588,28 @@
     // need to remove the subview
     // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
     [myPickerView removeFromSuperview];
+    _pickerIsUp = NO;
+
+    //    _okToRecenterMap = YES;
+    //    set center point and zoom level
+    
+    CLLocationCoordinate2D location;
+    MKCoordinateRegion region;
+    
+    
+    NSArray *strings = [[[_roomArray objectAtIndex:row] memberLocation] componentsSeparatedByString:@","];
+    location.latitude = [strings[0] doubleValue];
+    location.longitude = [strings[1] doubleValue];
+    
+    _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+    _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+    
+    // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+//    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+    CLLocationDistance meters = 1000;
+    
+    
+    [self reCenterMap:region meters:meters];
 }
 
 
@@ -575,43 +631,20 @@
     
     NSLog(@"SCXTT ROTATING - current location is: %@", [[SingletonClass singleObject] myLocStr]);
     [myPickerView removeFromSuperview];
-
+    _pickerIsUp = NO;
     [self.tableView reloadData];
 //    [self scrollToNewestMessage];
 }
 
 - (IBAction)showPinPicker:(id)sender {
-    CGFloat w, h, x, y;
-    w = 300;
-    h = 200;
-    x = (self.view.frame.size.width / 2) - w / 2;
-    y = ((self.view.frame.size.height) - h) - 25;
-    myPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, w, h)];
-    myPickerView.delegate = self;
-    myPickerView.showsSelectionIndicator = YES;
-    myPickerView.layer.backgroundColor = (__bridge CGColorRef)([UIColor clearColor]);
-    myPickerView.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:244.0f/255.0f blue:238.0f/255.0f alpha:1.0f];
-    myPickerView.opaque = NO;
-    
-    
-    myPickerView.layer.cornerRadius = 12;
-    myPickerView.layer.masksToBounds = YES;
-    
-    //    scxtt
-    //    myPickerView.translatesAutoresizingMaskIntoConstraints = YES;
-    [self.view addSubview:myPickerView];
-    
-        [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"V:|-[myPickerView(>=200)]-|"
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:NSDictionaryOfVariableBindings(myPickerView)]];
-    
-        [self.view addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"H:[myPickerView(==200)]-|"
-                                   options:NSLayoutFormatDirectionLeadingToTrailing
-                                   metrics:nil
-                                   views:NSDictionaryOfVariableBindings(myPickerView)]];
+
+    if (_pickerIsUp) {
+        // do nothing
+    } else {
+        _pickerIsUp = YES;
+        [self setUpPickerView];
+        _okToRecenterMap = NO;
+    }
     
 }
 
@@ -731,21 +764,16 @@
                      [_roomArray removeAllObjects];
 //                     [self.mapView removeAnnotations:_mapView.annotations];
                  }
-                 NSString *myPinImages[11] = {@"blue.png",
-                     @"cyan.png",
-                     @"darkgreen.png",
-                     @"gold.png",
-                     @"green.png",
-                     @"orange.png",
-                     @"pink.png",
-                     @"purple.png",
-                     @"red.png",
-                     @"yellow.png",
+                 NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
+                     @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
                      @"cyangray.png"};
                  
                  int i = 0;
                  UIImage *mPinImage;
                  for(NSDictionary *item in jsonArray) {
+                     if (i > 10) {
+                         i = 0;
+                     }
                      NSString *mNickName = [item objectForKey:@"nickname"];
                      NSString *mLocation = [item objectForKey:@"location"];
                      
@@ -753,28 +781,17 @@
                      NSInteger minutesBetweenDates;
                      minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
                      
-                     
                      NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
                      
-                     //                        SCXTT need to test if date is old and use a gray pin if so
-                     
-                     
-                     //                         UIImage *mPinImage = [UIImage imageNamed:@"green.png"];
-//                     UIImage *mPinImage;
-                     
-                     
-//                     
-//                     if (minutesBetweenDates > 500) {
-//                         mPinImage = [UIImage imageNamed:@"cyangray.png"];
-//                     } else {
-////                         NSLog(@"scxtt using pin %@", myPinImages[i]);
-//                         mPinImage = [UIImage imageNamed:myPinImages[i]];
-//                     }
-                     
+//                     SCXTT need to test if date is old and use a gray pin if so
+//                         if (minutesBetweenDates > 500) {
+//                             mPinImage = [UIImage imageNamed:@"cyangray.png"];
+//                         } else {
+//                             //                         NSLog(@"scxtt using pin %@", myPinImages[i]);
+//                             mPinImage = [UIImage imageNamed:myPinImages[i]];
+//                         }
                      
                      mPinImage = [UIImage imageNamed:myPinImages[i]];
-                     
-                     
                      
                      if (![mLocation isEqual: @"0.000000, 0.000000"]) {
                          Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
@@ -783,11 +800,8 @@
                          }
                          [_roomArray addObject:roomObj];
                      }
-                     if (i > 10) {
-                         i = 0;
-                     } else {
-                         i++;
-                     }
+                     i++;
+                     
                  }
                  NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
                  [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
@@ -810,9 +824,7 @@
         if (!_isUpdating)
         {
             _isUpdating = YES;
-            
             //    [_messageTextView resignFirstResponder];
-            
             //    NSString *text = self.messageTextView.text;
             NSString *text = @"Hey WhereRU?";
             
@@ -1128,14 +1140,14 @@
                     
                 }
             }
-            
-            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-            
-            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-            CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-            
             if (_okToRecenterMap) {
+                _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+                _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+                
+                // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+                CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+                
+                
                 [self reCenterMap:region meters:meters];
             }
         }
@@ -1210,14 +1222,14 @@
                 [self.mapView addAnnotation:annNew];
             }
         }
-        
-        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-        
-        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-        CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-
         if (_okToRecenterMap) {
+            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+            
+            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+            CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+            
+            
             [self reCenterMap:region meters:meters];
         }
     }
@@ -1225,6 +1237,8 @@
 
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
+    NSLog(@"recentering map");
+    
     region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
     region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
     region.span.latitudeDelta = meters / 111319.5;

@@ -20,8 +20,9 @@
 //@class Message;
 
 @interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate, UIPickerViewDelegate>{
-    CLLocation*             locationObject;
+    CLLocation* locationObject;
 }
+
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
@@ -40,9 +41,11 @@
 @property (nonatomic, strong, readonly) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic) BOOL isUpdating;
+@property (nonatomic) BOOL pickerIsUp;
 @property (nonatomic) BOOL okToRecenterMap;
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
 //@property(nonatomic, copy) UIBarButtonItem *btnMapType;
+//@property (nonatomic, strong) UIPickerView *myPickerView;
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;

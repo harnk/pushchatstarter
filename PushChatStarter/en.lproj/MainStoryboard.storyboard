@@ -104,7 +104,7 @@
                                     <constraint firstAttribute="height" constant="196" id="RjX-Pk-Kld">
                                         <variation key="heightClass=compact" constant="336"/>
                                         <variation key="widthClass=compact" constant="196"/>
-                                        <variation key="heightClass=regular-widthClass=regular" constant="736"/>
+                                        <variation key="heightClass=regular-widthClass=regular" constant="692"/>
                                     </constraint>
                                     <constraint firstAttribute="width" constant="240" id="zjg-Ti-ed0"/>
                                 </constraints>
@@ -130,6 +130,7 @@
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <mask key="constraints">
+                                        <exclude reference="RjX-Pk-Kld"/>
                                         <include reference="zjg-Ti-ed0"/>
                                     </mask>
                                 </variation>
@@ -140,6 +141,9 @@
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K66-ty-hky">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="ukj-jH-DE3"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem title="Sat" id="twj-gq-7Ha">
                                         <connections>
@@ -159,6 +163,16 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ukj-jH-DE3"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <include reference="ukj-jH-DE3"/>
+                                    </mask>
+                                </variation>
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
