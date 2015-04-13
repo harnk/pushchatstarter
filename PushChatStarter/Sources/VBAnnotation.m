@@ -41,5 +41,10 @@
     return annotationView;
 }
 
+//- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate
+//{
+//    //do nothing
+//}
+
 @end
 

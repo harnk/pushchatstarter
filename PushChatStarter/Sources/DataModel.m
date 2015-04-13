@@ -71,32 +71,32 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
     
     _myLoc = myLoc;
 	
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path])
-	{
-		// We store the messages in a plist file inside the app's Documents
-		// directory. The Message object conforms to the NSCoding protocol,
-		// which means that it can "freeze" itself into a data structure that
-		// can be saved into a plist file. So can the NSMutableArray that holds
-		// these Message objects. When we load the plist back in, the array and
-		// its Messages "unfreeze" and are restored to their old state.
-
-		NSData* data = [[NSData alloc] initWithContentsOfFile:path];
-		NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-		self.messages = [unarchiver decodeObjectForKey:@"Messages"];
-        
-        
-
-//      scxtt lets look at what messages are stored on the device
-        for (Message *msg in self.messages) {
-            NSLog(@"msg.senderName:%@ text:%@ date:%@ location:%@ ", msg.senderName, msg.text, msg.date, msg.location);
-        }
-        
-        [unarchiver finishDecoding];
-	}
-	else
-	{
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+//	{
+//		// We store the messages in a plist file inside the app's Documents
+//		// directory. The Message object conforms to the NSCoding protocol,
+//		// which means that it can "freeze" itself into a data structure that
+//		// can be saved into a plist file. So can the NSMutableArray that holds
+//		// these Message objects. When we load the plist back in, the array and
+//		// its Messages "unfreeze" and are restored to their old state.
+//
+//		NSData* data = [[NSData alloc] initWithContentsOfFile:path];
+//		NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+//		self.messages = [unarchiver decodeObjectForKey:@"Messages"];
+//        
+//        
+//
+////      scxtt lets look at what messages are stored on the device
+//        for (Message *msg in self.messages) {
+//            NSLog(@"msg.senderName:%@ text:%@ date:%@ location:%@ ", msg.senderName, msg.text, msg.date, msg.location);
+//        }
+//        
+//        [unarchiver finishDecoding];
+//	}
+//	else
+//	{
 		self.messages = [NSMutableArray arrayWithCapacity:20];
-	}
+//	}
 }
 
 - (void)saveMessages
@@ -111,7 +111,8 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 - (int)addMessage:(Message*)message
 {
 	[self.messages addObject:message];
-	[self saveMessages];
+    // SCXTT COMMENTING THIS NEXT LINE CUTS AWAY FROM STORING ON DEVICE
+    //	[self saveMessages];
 
 	return (int)self.messages.count - 1;
 }

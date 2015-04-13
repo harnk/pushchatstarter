@@ -23,6 +23,9 @@
 - initWithPosition:(CLLocationCoordinate2D)coords;
 
 -(id)initWithTitle:(NSString *)newTitle newSubTitle:(NSString *)newSubTitle Location:(CLLocationCoordinate2D)location LocTime:loctime PinImageFile:pinImageFile PinImage:pinImage;
+
 -(MKAnnotationView *)annotationView;
+
+//- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
 
 @end

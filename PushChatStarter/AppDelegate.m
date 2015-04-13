@@ -96,6 +96,7 @@ void ShowErrorAlert(NSString* text)
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationReceivedSoGetRoomMessages" object:nil userInfo:nil];
         
     }
     
@@ -269,6 +270,7 @@ void ShowErrorAlert(NSString* text)
     application.applicationIconBadgeNumber = 0;
     //Start the getRoomTimer going again
     [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+    //This next line crashes SCXTT n start up, only do for real APNS notifications
     [backgroundTimer invalidate];
     backgroundTimer = nil;
     

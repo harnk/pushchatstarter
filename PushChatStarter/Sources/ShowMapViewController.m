@@ -99,11 +99,11 @@
 //                                              repeats: YES];
     
     //Set up a timer to check for new messages if the user has notifications disabled
-    [NSTimer scheduledTimerWithTimeInterval: 30
+    [NSTimer scheduledTimerWithTimeInterval: 10
                                      target: self
                                    selector: @selector(checkForNewMessage:)
                                    userInfo: nil
-                                    repeats: YES];
+                                    repeats: NO];
     
     
     
@@ -127,6 +127,11 @@
                                                  name:@"userJoinedRoom"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(postGetRoomMessages)
+                                                 name:@"notificationReceivedSoGetRoomMessages"
+                                               object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(stopGetRoomTimer)
                                                  name:@"killGetRoomTimer"
@@ -244,7 +249,7 @@
     if (self.dataModel.messages.count == 0)
     {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 30)];
-        label.text = NSLocalizedString(@"You have no messages", nil);
+//        label.text = NSLocalizedString(@"You have no messages", nil);
         label.font = [UIFont boldSystemFontOfSize:16.0f];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor colorWithRed:76.0f/255.0f green:86.0f/255.0f blue:108.0f/255.0f alpha:1.0f];
@@ -633,7 +638,6 @@
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     [self.tableView reloadData];
-//    [self scrollToNewestMessage];
 }
 
 - (IBAction)showPinPicker:(id)sender {
@@ -877,6 +881,7 @@
     {
         _isUpdating = YES;
         NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
+        NSLog(@"Getting map group messages");
         [self toastMsg:toast];
 
         NSString *secret_code = [_dataModel secretCode];
@@ -908,8 +913,11 @@
                      if (!_roomMessagesArray) {
                          _roomMessagesArray = [[NSMutableArray alloc] init];
                      } else {
+                         NSLog(@"SCXTT reset roomMessagesArray");
 //                         [_roomMessagesArray removeAllObjects];
                      }
+                     [self.dataModel.messages removeAllObjects];
+                     
                      for(NSDictionary *item in jsonArray) {
                          Message *message = [[Message alloc] init];
                          
@@ -927,9 +935,14 @@
                          message.text = [item objectForKey:@"message"];
 //                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
-                         [self didSaveMessage:message atIndex:index];
-                         
+                         NSLog(@"SCXTT THIS NEXT LINE WAS CAUSING DELAYS - DO I NEED IT");
+//                         [self didSaveMessage:message atIndex:index];
+                         NSLog(@"SCXTT 6 ADD MESSAGE to roomMessagesArray");
                      }
+//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+                     NSLog(@"SCXTT RELOAD TABLE DATA");
+                     [self.tableView reloadData];
+                     [self scrollToNewestMessage];
                  }
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -952,9 +965,9 @@
     
 //    _isFromNotification = YES;
     
-    //    NSString *conversationGuid = notification.userInfo[@"conversationGuid"];
+    [self postGetRoomMessages];
     
-    NSLog(@"newMessage polling check for new messages");
+    NSLog(@"newMessage polling check for new messages COMMENTED OUT");
     
 //    [self loadConversation:_conversationGuid];
     
@@ -1034,6 +1047,19 @@
     NSLog(@"didDeselectAnnotationView");
     //    [mapView selectAnnotation:view.annotation animated:NO];
     _okToRecenterMap = YES;
+}
+
+
+- (void)mapView:(MKMapView *)mapView
+didAddAnnotationViews:(NSArray *)annotationViews
+{
+    for (MKAnnotationView *annView in annotationViews)
+    {
+        CGRect endFrame = annView.frame;
+        annView.frame = CGRectOffset(endFrame, 0, -500);
+        [UIView animateWithDuration:0.5
+                         animations:^{ annView.frame = endFrame; }];
+    }
 }
 
 // This goes through all of the objects currently in the _roomArray
@@ -1314,15 +1340,12 @@
 {
     NSLog(@"SCxTT rotating now");
 //    update the table view now
-//    [self scrollToNewestMessage];
-
-    
 }
 
 -(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     NSLog(@"SCxTT did rotate");
     [self.tableView reloadData];
-    [self scrollToNewestMessage];
+//    [self scrollToNewestMessage];
 }
 
 
