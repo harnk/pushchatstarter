@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *value1TextField;
 @property (weak, nonatomic) IBOutlet UITextField *value2TextField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *satMapButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *pinPickerButton;
 
 - (IBAction)getDown:(id)sender;
 - (IBAction)postDown:(id)sender;

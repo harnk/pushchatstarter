@@ -1086,7 +1086,10 @@ didAddAnnotationViews:(NSArray *)annotationViews
     // each item is a Room object with memberNickName memberLocation & roomName
 //    NSLog(@"_roomArray count is:%lu",(unsigned long)[_roomArray count]);
     if ([_roomArray count] == 0) {
+        _pinPickerButton.enabled = NO;
         [_mapView removeAnnotations:_mapView.annotations];
+    } else {
+        _pinPickerButton.enabled = YES;
     }
 //    NSLog(@"_mapView.annotations count is:%lu",(unsigned long)[_mapView.annotations count]);
     for (Room *item in _roomArray) {

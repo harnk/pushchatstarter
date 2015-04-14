@@ -277,6 +277,7 @@
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
+                        <outlet property="pinPickerButton" destination="Az7-a3-cc8" id="cm5-Hd-9RL"/>
                         <outlet property="satMapButton" destination="twj-gq-7Ha" id="9mO-dC-Kgp"/>
                         <outlet property="tableView" destination="Tog-1q-ick" id="IkC-BC-ZYC"/>
                     </connections>
