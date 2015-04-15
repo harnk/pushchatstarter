@@ -573,20 +573,6 @@
     return sectionWidth;
 }
 
-//- (void)pickerViewTapGestureRecognized:(UITapGestureRecognizer*)gestureRecognizer
-//{
-//    CGPoint touchPoint = [gestureRecognizer locationInView:gestureRecognizer.view.superview];
-//    
-//    CGRect frame = myPickerView.frame;
-//    CGRect selectorFrame = CGRectInset( frame, 0.0, myPickerView.bounds.size.height * 0.85 / 2.0 );
-//    
-//    if( CGRectContainsPoint( selectorFrame, touchPoint) )
-//    {
-////        NSLog( @"Selected Row: %i", [self.currentArticles objectAtIndex:[myPickerView selectedRowInComponent:0]] );
-//        NSLog( @"Selected Row: %@", [[_roomArray objectAtIndex:[myPickerView selectedRowInComponent:0]] memberNickName]);
-//    }
-//}
-
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
     [self toastMsg:[[_roomArray objectAtIndex:row] memberNickName]];
@@ -729,6 +715,7 @@
 - (void)findAction {
     NSLog(@"SCXTT findAction");
 //    [self postGetRoom];
+    _okToRecenterMap = YES;
     [self postFindRequest];
 }
 
@@ -907,6 +894,11 @@
                  
                  if (!jsonArray) {
                      NSLog(@"Error parsing JSON: %@", e);
+                     [self.dataModel.messages removeAllObjects];
+                     // SCXTT these next three lines dont do what I wanted, I want one table cell to say No one is here
+//                     Message *message = [[Message alloc] init];
+//                     message.text = @"No one is here";
+//                     int index = [self.dataModel addMessage:message];
                  } else {
                      
                      //                   Blank out and reload _roomArray
@@ -914,10 +906,11 @@
                          _roomMessagesArray = [[NSMutableArray alloc] init];
                      } else {
                          NSLog(@"SCXTT reset roomMessagesArray");
-//                         [_roomMessagesArray removeAllObjects];
+                         [_roomMessagesArray removeAllObjects];
                      }
                      [self.dataModel.messages removeAllObjects];
                      
+                     // Process all messages from JSON array ///////////////////////////////////////////////////////////////////////////////////////
                      for(NSDictionary *item in jsonArray) {
                          Message *message = [[Message alloc] init];
                          
@@ -935,9 +928,6 @@
                          message.text = [item objectForKey:@"message"];
 //                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
-                         NSLog(@"SCXTT THIS NEXT LINE WAS CAUSING DELAYS - DO I NEED IT");
-//                         [self didSaveMessage:message atIndex:index];
-                         NSLog(@"SCXTT 6 ADD MESSAGE to roomMessagesArray");
                      }
 //                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
                      NSLog(@"SCXTT RELOAD TABLE DATA");
@@ -1266,7 +1256,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
-    NSLog(@"recentering map");
+//    NSLog(@"recentering map");
     
     region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
     region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
