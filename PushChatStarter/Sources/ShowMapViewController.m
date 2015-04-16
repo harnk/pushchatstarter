@@ -146,8 +146,8 @@
 }
 
 - (void)setUpButtonBarItems {
-    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
-    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
+//    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
+//    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
 //    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
@@ -928,6 +928,7 @@
                          message.text = [item objectForKey:@"message"];
 //                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
+                         NSLog(@"Message added at index:%d" ,index);
                      }
 //                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
                      NSLog(@"SCXTT RELOAD TABLE DATA");
@@ -1145,9 +1146,9 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     //toast it
-//                    NSString *toast = [NSString stringWithFormat:@"%@ has entered the map group", who];
+//                    NSString *toast = [NSString stringWithFormat:@"%@ is in the map group", who];
 //                    [self toastMsg:toast];
-                    [self multiLineToastMsg:who detailText:@"has entered the map group"];
+                    [self multiLineToastMsg:who detailText:@"is in the map group"];
 
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
