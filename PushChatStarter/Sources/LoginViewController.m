@@ -23,18 +23,37 @@
 	self.secretCodeTextField.text = [self.dataModel secretCode];
     _secretCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     _nicknameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    
+    UIViewController *c = [[UIViewController alloc]init];
+    [self presentViewController:c animated:NO completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-
+    
 	if (self.nicknameTextField.text.length == 0)
 		[self.nicknameTextField becomeFirstResponder];
 	else
 		[self.secretCodeTextField becomeFirstResponder];
 }
 
+-(void)viewDidAppear:(BOOL)animated {    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+}
+
+- (BOOL)shouldAutorotate {
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+//    CGFloat screenHeight = screenRect.size.height;
+    if (screenWidth == 320) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
 
 #pragma mark -
 #pragma mark Actions

@@ -615,6 +615,8 @@
     loginController.client = _client;
     
     [self presentViewController:loginController animated:YES completion:nil];
+//    scxtt
+    
 }
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
