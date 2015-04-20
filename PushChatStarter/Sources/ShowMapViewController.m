@@ -72,8 +72,10 @@
 - (void)scrollToNewestMessage
 {
     // The newest message is at the bottom of the table
-    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:(self.dataModel.messages.count - 1) inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    if (!self.dataModel.messages.count == 0) {
+        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:(self.dataModel.messages.count - 1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -99,11 +101,11 @@
 //                                              repeats: YES];
     
     //Set up a timer to check for new messages if the user has notifications disabled
-    [NSTimer scheduledTimerWithTimeInterval: 10
-                                     target: self
-                                   selector: @selector(checkForNewMessage:)
-                                   userInfo: nil
-                                    repeats: NO];
+//    [NSTimer scheduledTimerWithTimeInterval: 10
+//                                     target: self
+//                                   selector: @selector(checkForNewMessage:)
+//                                   userInfo: nil
+//                                    repeats: NO];
     
     
     
@@ -122,10 +124,10 @@
                                                  name:@"receivedNewAPIData"
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(postGetRoomMessages)
-                                                 name:@"userJoinedRoom"
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(postGetRoomMessages)
+//                                                 name:@"userJoinedRoom"
+//                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(postGetRoomMessages)
@@ -217,6 +219,8 @@
 //    gestureRecognizer.cancelsTouchesInView = NO;
 //    
 //    [UIPickerView addGestureRecognizer:gestureRecognizer];
+    
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 
     [self setUpTimersAndObservers];
     [self setUpButtonBarItems];
@@ -234,6 +238,7 @@
         //Reset pins on map
         [self.mapView removeAnnotations:_mapView.annotations];
         //    [self postFindRequest];
+        [self postGetRoomMessages];
         [self postGetRoom];
         [self.tableView reloadData];
     }
@@ -1143,7 +1148,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 //                    break;
                 }
             }
-            // new who so add addAnnotation and set coordinate and location time
+            // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
@@ -1151,6 +1156,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 //                    NSString *toast = [NSString stringWithFormat:@"%@ is in the map group", who];
 //                    [self toastMsg:toast];
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
+                    _okToRecenterMap = YES;
 
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
@@ -1260,11 +1266,20 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
 //    NSLog(@"recentering map");
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenHeight = screenRect.size.height;
     
     region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
     region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
     region.span.latitudeDelta = meters / 111319.5;
-    region.span.longitudeDelta = 0.0;
+//    region.span.latitudeDelta = meters / 100319.5;
+//    region.span.longitudeDelta = 0.0;
+    if (screenHeight == 320) {
+        region.span.longitudeDelta = meters / 80319.5;
+    } else {
+        region.span.longitudeDelta = 0;
+    }
+    
     
     MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
     [_mapView setRegion:savedRegion animated:YES];
@@ -1341,7 +1356,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 -(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     NSLog(@"SCxTT did rotate");
     [self.tableView reloadData];
-//    [self scrollToNewestMessage];
+    [self scrollToNewestMessage];
 }
 
 

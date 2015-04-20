@@ -54,7 +54,12 @@ static UIColor* color = nil;
 		_label.autoresizingMask = 0;
 		_label.font = [UIFont systemFontOfSize:11];
         // Use WhereRU orange
-		_label.textColor = [UIColor colorWithRed:242/255.0 green:149/255.0 blue:0/255.0 alpha:1.0];
+//        _label.textColor = [UIColor colorWithRed:242/255.0 green:149/255.0 blue:0/255.0 alpha:1.0];
+//         Use WhereRU blue
+//                _label.textColor = [UIColor colorWithRed:6/255.0 green:128/255.0 blue:255/255.0 alpha:1.0];
+//         Use Apple blue
+                _label.textColor = [UIColor colorWithRed:0/255.0 green:118/255.0 blue:255/255.0 alpha:1.0];
+//        _label.textColor = [UIColor blueColor];
 		[self.contentView addSubview:_label];
 	}
 	return self;
@@ -126,6 +131,8 @@ static UIColor* color = nil;
 	[formatter setDateStyle:NSDateFormatterShortStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
 	[formatter setDoesRelativeDateFormatting:YES];
+//    right here is where to fix the dates being off by 6 hours scxtt utc
+    
 	NSString* dateString = [formatter stringFromDate:message.date];
     
 

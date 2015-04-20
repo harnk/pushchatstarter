@@ -94,10 +94,9 @@ void ShowErrorAlert(NSString* text)
             NSLog(@"Found someone - dont put into the message bubble");
         } else {
             [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationReceivedSoGetRoomMessages" object:nil userInfo:nil];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationReceivedSoGetRoomMessages" object:nil userInfo:nil];
-        
     }
     
     if(application.applicationState == UIApplicationStateInactive) {

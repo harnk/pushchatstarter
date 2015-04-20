@@ -38,12 +38,26 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 	if (self == [SpeechBubbleView class])
 	{
 		font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        
+        
+        
+//        return [self resizableImageWithCapInsets:UIEdgeInsetsMake(19, 22, 19, 22)];
+//    } else {
+//        return [self stretchableImageWithLeftCapWidth:22 topCapHeight:19];
+//    }
+//    
+        
+        
+        
+        
 
 		lefthandImage = [[UIImage imageNamed:@"BubbleLefthand"]
-			stretchableImageWithLeftCapWidth:20 topCapHeight:19];
+                         resizableImageWithCapInsets:UIEdgeInsetsMake(19, 19, 19, 19)];
+//			stretchableImageWithLeftCapWidth:22 topCapHeight:19];
 
 		righthandImage = [[UIImage imageNamed:@"BubbleRighthand"]
-			stretchableImageWithLeftCapWidth:20 topCapHeight:19];
+                          resizableImageWithCapInsets:UIEdgeInsetsMake(19, 21, 19, 21)];
+//			stretchableImageWithLeftCapWidth:18 topCapHeight:19];
 	}
 }
 
