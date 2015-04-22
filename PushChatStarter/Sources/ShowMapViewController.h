@@ -51,6 +51,7 @@
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *mapViewSouthWest;
 @property (nonatomic, retain) CLLocation *mapViewNorthEast;
+
 //@property CLLocationDistance distanceFromMeInMeters;
 
 @property (nonatomic, strong) NSMutableArray * roomArray; // Current locations of all in the room

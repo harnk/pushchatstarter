@@ -36,7 +36,9 @@
     NSArray *pinImages;
     NSTimer *getRoomTimer;
     UIPickerView *myPickerView;
+    NSInteger *centerOnThisRoomArrayRow;
 }
+
 @end
 
 //RotationIn_IOS6 is a Category for overriding the default orientation
@@ -214,6 +216,9 @@
     
     _textView.delegate = self;
     myPickerView.delegate = self;
+    centerOnThisRoomArrayRow = nil;
+    
+
 
 //    UITapGestureRecognizer* gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickerViewTapGestureRecognized:)];
 //    gestureRecognizer.cancelsTouchesInView = NO;
@@ -585,6 +590,8 @@
     // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
+    
+    centerOnThisRoomArrayRow = row;
 
     //    _okToRecenterMap = YES;
     //    set center point and zoom level
@@ -1177,6 +1184,25 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 
                 
                 [self reCenterMap:region meters:meters];
+            } else if (centerOnThisRoomArrayRow != nil) {
+                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", centerOnThisRoomArrayRow);
+                CLLocationCoordinate2D location;
+                MKCoordinateRegion region;
+                
+                
+                NSArray *strings = [[[_roomArray objectAtIndex:centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
+                location.latitude = [strings[0] doubleValue];
+                location.longitude = [strings[1] doubleValue];
+                
+                _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+                _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+                
+                // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+                //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+                CLLocationDistance meters = 1000;
+                
+                [self reCenterMap:region meters:meters];
+
             }
         }
     }
