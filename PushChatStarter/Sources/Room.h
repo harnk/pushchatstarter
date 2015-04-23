@@ -20,7 +20,6 @@
 #pragma mark - 
 #pragma mark Class Methods
 
-//-(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberUpdateTime:(NSDate *)mUpdateTime;
 -(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString;
 
 

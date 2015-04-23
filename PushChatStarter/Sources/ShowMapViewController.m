@@ -36,7 +36,7 @@
     NSArray *pinImages;
     NSTimer *getRoomTimer;
     UIPickerView *myPickerView;
-    NSInteger *centerOnThisRoomArrayRow;
+//    NSInteger *centerOnThisRoomArrayRow;
 }
 
 @end
@@ -216,14 +216,12 @@
     
     _textView.delegate = self;
     myPickerView.delegate = self;
-    centerOnThisRoomArrayRow = nil;
-    
+    _centerOnThisRoomArrayRow = -1;
 
-
-//    UITapGestureRecognizer* gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickerViewTapGestureRecognized:)];
-//    gestureRecognizer.cancelsTouchesInView = NO;
-//    
-//    [UIPickerView addGestureRecognizer:gestureRecognizer];
+    // Add this to detect user dragging map
+    UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    [panRec setDelegate:self];
+    [self.mapView addGestureRecognizer:panRec];
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 
@@ -591,7 +589,7 @@
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     
-    centerOnThisRoomArrayRow = row;
+    _centerOnThisRoomArrayRow = row;
 
     //    _okToRecenterMap = YES;
     //    set center point and zoom level
@@ -995,6 +993,7 @@
 - (void)closeAnnotation:(id)annotation;
 {
     //mv is the mapView
+    _centerOnThisRoomArrayRow = -1;
     _okToRecenterMap = YES;
     [_mapView deselectAnnotation:annotation animated:YES];
     
@@ -1064,6 +1063,16 @@ didAddAnnotationViews:(NSArray *)annotationViews
         annView.frame = CGRectOffset(endFrame, 0, -500);
         [UIView animateWithDuration:0.5
                          animations:^{ annView.frame = endFrame; }];
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        NSLog(@"YOU DRAGGGGGED ME YOU DRAGGGGGGGED ME drag ended");
     }
 }
 
@@ -1184,13 +1193,13 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 
                 
                 [self reCenterMap:region meters:meters];
-            } else if (centerOnThisRoomArrayRow != nil) {
-                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", centerOnThisRoomArrayRow);
+            } else if (_centerOnThisRoomArrayRow >= 0) {
+                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
                 CLLocationCoordinate2D location;
                 MKCoordinateRegion region;
                 
                 
-                NSArray *strings = [[[_roomArray objectAtIndex:centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
+                NSArray *strings = [[[_roomArray objectAtIndex:_centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
                 location.latitude = [strings[0] doubleValue];
                 location.longitude = [strings[1] doubleValue];
                 
