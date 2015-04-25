@@ -17,17 +17,17 @@
 #import "JSONDictionaryExtensions.h"
 #import "Room.h"
 
-// Carpinteria
-#define CA_LATITUDE 37
-#define CA_LONGITUDE -95
+// DAD 41.723240, -86.184829
+#define CA_LATITUDE 41.723240
+#define CA_LONGITUDE -86.184829
 // Beach
-#define BE_LATITUDE -45
-#define BE_LONGITUDE 45
+#define BE_LATITUDE 41.723240
+#define BE_LONGITUDE -86.184829
 // Reston hotel
 //#define BE_LATITUDE 38.960663
 //#define BE_LONGITUDE -77.423423
-#define BE2_LATITUDE 41.736207
-#define BE2_LONGITUDE -86.098724
+#define BE2_LATITUDE 41.723240
+#define BE2_LONGITUDE -86.184829
 
 #define SPAN_VALUE 0.005f
 
@@ -736,6 +736,10 @@
     [self postGetRoom];
 }
 
+-(NSString *)setPinImageBasedOnNickName {
+    
+    return @"";
+}
 
 - (void)getAPI:(NSDictionary *)params
 {
@@ -784,7 +788,7 @@
                      NSInteger minutesBetweenDates;
                      minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
                      
-                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
+//                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
                      
 //                     SCXTT need to test if date is old and use a gray pin if so
 //                         if (minutesBetweenDates > 500) {
@@ -1073,6 +1077,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"YOU DRAGGGGGED ME YOU DRAGGGGGGGED ME drag ended");
+        _centerOnThisRoomArrayRow = -1;
+        _okToRecenterMap = NO;
     }
 }
 
@@ -1132,6 +1138,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 //First see if this ann still has a _roomArray match
                 //or if the person has left the room kill this ann
                 if ([self annTitleHasLeftRoom:ann.title]) {
+                    _centerOnThisRoomArrayRow = -1;
                     //toast it
 //                    NSString *toast = [NSString stringWithFormat:@"%@ has left the map group", ann.title];
 //                    [self toastMsg:toast];
@@ -1193,7 +1200,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 
                 
                 [self reCenterMap:region meters:meters];
-            } else if (_centerOnThisRoomArrayRow >= 0) {
+            } else if ((_centerOnThisRoomArrayRow >= 0) && ([_roomArray count] >_centerOnThisRoomArrayRow)) {
                 NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
                 CLLocationCoordinate2D location;
                 MKCoordinateRegion region;
