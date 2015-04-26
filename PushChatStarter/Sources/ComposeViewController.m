@@ -31,6 +31,7 @@
 {
 	[super viewWillAppear:animated];
 	[_messageTextView becomeFirstResponder];
+//    _messageTextView.dataDetectorTypes = UIDataDetectorTypeAll;
     
 }
 

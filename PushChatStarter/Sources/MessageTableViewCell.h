@@ -14,6 +14,7 @@
 
 - (void)setMessage:(Message*)message;
 @property (nonatomic, retain) CLLocationManager *locationManager;
+//@property(nonatomic) UIDataDetectorTypes dataDetectorTypes;
 
 
 @end

@@ -3,6 +3,7 @@
 // a push notification is limited to 256 bytes and that includes the JSON 
 // overhead and the name of the sender.
 #define MaxMessageLength 190
+//#define MaxMessageLength 158
 
 // for local testing use the next line
 //#define ServerApiURL @"http://10.0.0.27:44447"

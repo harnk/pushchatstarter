@@ -42,8 +42,10 @@
 @property (nonatomic, strong, readonly) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic) BOOL isUpdating;
+@property (nonatomic) BOOL isFromNotification;
 @property (nonatomic) BOOL pickerIsUp;
 @property (nonatomic) BOOL okToRecenterMap;
+
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
 //@property(nonatomic, copy) UIBarButtonItem *btnMapType;
 //@property (nonatomic, strong) UIPickerView *myPickerView;

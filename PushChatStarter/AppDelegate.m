@@ -91,10 +91,13 @@ void ShowErrorAlert(NSString* text)
         [self postImhere:asker];
     } else {
         if ([extra isEqualToString:@"imhere"]) {
-            NSLog(@"Found someone - dont put into the message bubble");
+            NSLog(@"Found someone - dont put into the message bubble but do a toast that receiving updates is working");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedLocationUpdate" object:nil userInfo:userInfo];
         } else {
-            [self addMessageFromRemoteNotification:userInfo updateUI:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
+            //Prod doing away with the next line because API calls should get the new message
+//            [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+            //Prod I think I may no longer need this next line either
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMessage" object:nil userInfo:userInfo];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationReceivedSoGetRoomMessages" object:nil userInfo:nil];
         }
     }

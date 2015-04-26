@@ -111,8 +111,13 @@
     
     
     
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(updatePointsOnMapWithNotification:) //SCXTT TIME TO RETIRE THIS ONE COMPLETELY
+//                                                 name:@"receivedNewMessage"
+//                                               object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePointsOnMapWithNotification:)
+                                             selector:@selector(updatePointsOnMapWithAPIData)
                                                  name:@"receivedNewMessage"
                                                object:nil];
     
@@ -132,10 +137,15 @@
 //                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(postGetRoomMessages)
+                                             selector:@selector(checkForNewMessage)
                                                  name:@"notificationReceivedSoGetRoomMessages"
                                                object:nil];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(tellUserLocationUpdatesReceived)
+                                                 name:@"receivedLocationUpdate"
+                                               object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(stopGetRoomTimer)
                                                  name:@"killGetRoomTimer"
@@ -199,6 +209,7 @@
     [super viewDidLoad];
     _okToRecenterMap = YES;
     _pickerIsUp = NO;
+    _isFromNotification = NO;
     [self.mapView setDelegate:self];
     self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
     self.mapView.layer.borderWidth = 0.5;
@@ -234,6 +245,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    NSLog(@"scXtt viewDidAppear");
     if (![_dataModel joinedChat])
     {
         [self showLoginViewController];
@@ -252,7 +264,7 @@
 {
     [super viewWillAppear:animated];
     self.title = [_dataModel secretCode];
-    
+    NSLog(@"scXtt viewWillAppear");
     // Show a label in the table's footer if there are no messages
     if (self.dataModel.messages.count == 0)
     {
@@ -296,6 +308,7 @@
 
 -(void)startGetRoomTimer {
     NSLog(@"scXtt startGetRoomTimer");
+    _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                       target: self
                                                    selector: @selector(postGetRoom)
@@ -827,24 +840,29 @@
 
 - (void)postGetRoom
 {
-    if ([_dataModel joinedChat]) {
-        if (!_isUpdating)
-        {
-            _isUpdating = YES;
-            //    [_messageTextView resignFirstResponder];
-            //    NSString *text = self.messageTextView.text;
-            NSString *text = @"Hey WhereRU?";
-            
-            NSDictionary *params = @{@"cmd":@"getroom",
-                                     @"user_id":[_dataModel userId],
-                                     @"location":[[SingletonClass singleObject] myLocStr],
-                                     @"text":text};
-            
-            [self getAPI:params];
-            
-        } else {
-            NSLog(@"Worse yet Aint nobody got time for that");
-            _isUpdating = NO;
+    if (_isFromNotification) {
+        [self postGetRoomMessages];
+    } else {
+        
+        if ([_dataModel joinedChat]) {
+            if (!_isUpdating)
+            {
+                _isUpdating = YES;
+                //    [_messageTextView resignFirstResponder];
+                //    NSString *text = self.messageTextView.text;
+                NSString *text = @"Hey WhereRU?";
+                
+                NSDictionary *params = @{@"cmd":@"getroom",
+                                         @"user_id":[_dataModel userId],
+                                         @"location":[[SingletonClass singleObject] myLocStr],
+                                         @"text":text};
+                
+                [self getAPI:params];
+                
+            } else {
+                NSLog(@"Worse yet Aint nobody got time for that");
+                _isUpdating = NO;
+            }
         }
     }
 }
@@ -883,9 +901,10 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
+        //Prod comment these next 2 lines out scxtt
+//        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
+//        [self toastMsg:toast];
         NSLog(@"Getting map group messages");
-        [self toastMsg:toast];
 
         NSString *secret_code = [_dataModel secretCode];
         NSDictionary *params = @{@"cmd":@"getroommessages",
@@ -950,11 +969,14 @@
                      NSLog(@"SCXTT RELOAD TABLE DATA");
                      [self.tableView reloadData];
                      [self scrollToNewestMessage];
+                     // We got it so reset below
+                     _isFromNotification = NO;
                  }
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              if ([self isViewLoaded]) {
                  _isUpdating = NO;
+                 _isFromNotification = NO;
                  //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
                  //                 ShowErrorAlert([error localizedDescription]);
              }
@@ -965,23 +987,26 @@
     }
 }
 
-- (void)checkForNewMessage:(NSNotification *)notification
+- (void)checkForNewMessage
 {
-    //NSLog(@"loadConversation userInfo: %@ ", notification.userInfo);
-    //NSDictionary *notificationPayload = notification.userInfo[@"aps"];
+
+    _isFromNotification = YES;
     
-//    _isFromNotification = YES;
+    // Need to keep trying until we successfully execute postGetRoomMessages
+    
     
     [self postGetRoomMessages];
     
     NSLog(@"newMessage polling check for new messages COMMENTED OUT");
     
-//    [self loadConversation:_conversationGuid];
     
 //  don't think i need this next line unless to updateScrollBar
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
 }
 
+-(void)tellUserLocationUpdatesReceived {
+    [self toastMsg:@"Receiving Updates"];
+}
 
 #pragma mark -
 #pragma mark Map
@@ -1101,6 +1126,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
     northEast = southWest;
 
     NSLog(@"updatePointsOnMapWithAPIData");
+    NSLog(@"We will center on this if its not -1 centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
@@ -1201,7 +1227,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 
                 [self reCenterMap:region meters:meters];
             } else if ((_centerOnThisRoomArrayRow >= 0) && ([_roomArray count] >_centerOnThisRoomArrayRow)) {
-                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
+//                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
                 CLLocationCoordinate2D location;
                 MKCoordinateRegion region;
                 
@@ -1232,8 +1258,9 @@ didAddAnnotationViews:(NSArray *)annotationViews
     if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]) {
 
         NSString *who = [dict valueForKey:@"who"];
-        NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
-        [self toastMsg:toast];
+        //Prod remove this toast scxtt
+//        NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
+//        [self toastMsg:toast];
         NSLog(@"who=%@",who);
         
         CLLocationCoordinate2D location, southWest, northEast;
