@@ -322,7 +322,7 @@ void ShowErrorAlert(NSString* text)
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:nil failure:nil];
     
@@ -345,7 +345,7 @@ void ShowErrorAlert(NSString* text)
     
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          [NSTimer scheduledTimerWithTimeInterval: 5
@@ -364,16 +364,17 @@ void ShowErrorAlert(NSString* text)
 }
 
 -(void) postMyLoc {
-    
-    if (!_isUpdating) {
-        if (_deviceHasMoved) {
-            _isUpdating = YES;
-            NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
-            [self postLiveUpdate];
-            _deviceHasMoved = NO;
+    if ([_dataModel joinedChat]) {
+        if (!_isUpdating) {
+            if (_deviceHasMoved) {
+                _isUpdating = YES;
+                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+                [self postLiveUpdate];
+                _deviceHasMoved = NO;
+            }
+        } else {
+            NSLog(@"no API call since _isUpdating is already YES = Busy");
         }
-    } else {
-        NSLog(@"no API call since _isUpdating is already YES = Busy");
     }
 }
 
@@ -419,7 +420,7 @@ void ShowErrorAlert(NSString* text)
                              @"token":[[NSUserDefaults standardUserDefaults] stringForKey:@"DeviceToken"]};
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:nil failure:nil];
 }

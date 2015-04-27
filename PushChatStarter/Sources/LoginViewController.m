@@ -78,7 +78,7 @@
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"code":[_dataModel secretCode]};
     
-    [_client postPath:@"/whereru/api/api.php"
+    [_client postPath:ServerPostPathURL
            parameters:params
               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                   

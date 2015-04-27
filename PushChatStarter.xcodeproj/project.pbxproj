@@ -278,7 +278,7 @@
 		61489ECF1704226E0049C6F9 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */,
+				61489ED6170423F90049C6F9 /* defs.h */,
 				61489EAF17041C660049C6F9 /* MainStoryboard.storyboard */,
 				9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */,
 				9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */,
@@ -294,7 +294,6 @@
 				61489EDB170424CB0049C6F9 /* MessageTableViewCell.m */,
 				61489ED7170424080049C6F9 /* SpeechBubbleView.h */,
 				61489ED8170424080049C6F9 /* SpeechBubbleView.m */,
-				61489ED6170423F90049C6F9 /* defs.h */,
 				9E7CE7891AAAA88500C7364D /* Room.h */,
 				9E7CE78A1AAAA88500C7364D /* Room.m */,
 				61489ED0170422A20049C6F9 /* DataModel.h */,
@@ -305,6 +304,7 @@
 				9E7453681A85C6D900522BCA /* SingletonClass.m */,
 				9E084B2D1A9AA9BE004439FA /* ServiceConnector.h */,
 				9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */,
+				9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */,
 				9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */,
 			);
 			path = Sources;

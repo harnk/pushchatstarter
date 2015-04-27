@@ -76,7 +76,7 @@
                              @"text":text};
     
     [_client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          [MBProgressHUD hideHUDForView:self.view animated:YES];

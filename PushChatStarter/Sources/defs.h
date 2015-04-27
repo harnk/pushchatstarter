@@ -10,6 +10,11 @@
 // for the real deal on bluehost use the next line
 #define ServerApiURL @"http://www.altcoinfolio.com"
 
+//Test
+//#define ServerPostPathURL @"/whereru/api/api.php"
+//Prod
+#define ServerPostPathURL @"/whereruprod/api/api.php"
+
 #define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
 #define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
 #define IS_OS_8_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)

@@ -683,7 +683,7 @@
                              @"user_id":[_dataModel userId]};
     //    [ApplicationDelegate.client
     [_client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          if ([self isViewLoaded]) {
@@ -739,9 +739,10 @@
 
 - (void)findAction {
     NSLog(@"SCXTT findAction");
-//    [self postGetRoom];
-    _okToRecenterMap = YES;
-    [self postFindRequest];
+    if ([_dataModel joinedChat]) {
+        _okToRecenterMap = YES;
+        [self postFindRequest];
+    }
 }
 
 - (void)getRoomAction {
@@ -757,7 +758,7 @@
 - (void)getAPI:(NSDictionary *)params
 {
     [_client
-     postPath:@"/whereru/api/api.php"
+     postPath:ServerPostPathURL
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -840,28 +841,30 @@
 
 - (void)postGetRoom
 {
-    if (_isFromNotification) {
-        [self postGetRoomMessages];
-    } else {
-        
-        if ([_dataModel joinedChat]) {
-            if (!_isUpdating)
-            {
-                _isUpdating = YES;
-                //    [_messageTextView resignFirstResponder];
-                //    NSString *text = self.messageTextView.text;
-                NSString *text = @"Hey WhereRU?";
-                
-                NSDictionary *params = @{@"cmd":@"getroom",
-                                         @"user_id":[_dataModel userId],
-                                         @"location":[[SingletonClass singleObject] myLocStr],
-                                         @"text":text};
-                
-                [self getAPI:params];
-                
-            } else {
-                NSLog(@"Worse yet Aint nobody got time for that");
-                _isUpdating = NO;
+    if ([_dataModel joinedChat]) {
+        if (_isFromNotification) {
+            [self postGetRoomMessages];
+        } else {
+            
+            if ([_dataModel joinedChat]) {
+                if (!_isUpdating)
+                {
+                    _isUpdating = YES;
+                    //    [_messageTextView resignFirstResponder];
+                    //    NSString *text = self.messageTextView.text;
+                    NSString *text = @"Hey WhereRU?";
+                    
+                    NSDictionary *params = @{@"cmd":@"getroom",
+                                             @"user_id":[_dataModel userId],
+                                             @"location":[[SingletonClass singleObject] myLocStr],
+                                             @"text":text};
+                    
+                    [self getAPI:params];
+                    
+                } else {
+                    NSLog(@"Worse yet Aint nobody got time for that");
+                    _isUpdating = NO;
+                }
             }
         }
     }
@@ -913,7 +916,7 @@
                                  @"secret_code":secret_code};
         
         [_client
-         postPath:@"/whereru/api/api.php"
+         postPath:ServerPostPathURL
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
              _isUpdating = NO;
