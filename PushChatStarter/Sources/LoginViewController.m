@@ -62,6 +62,7 @@
 {
 	// Close the Login screen
 	[self.dataModel setJoinedChat:YES];
+    [[SingletonClass singleObject] setImInARoom:YES];
 	[self dismissViewControllerAnimated:YES completion:nil];
     //Send notification
     [[NSNotificationCenter defaultCenter] postNotificationName:@"userJoinedRoom" object:nil userInfo:nil];

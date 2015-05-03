@@ -212,7 +212,7 @@
     _isFromNotification = NO;
     [self.mapView setDelegate:self];
     self.mapView.layer.borderColor = [[UIColor colorWithRed:200/255.0 green:199/255.0 blue:204/255.0 alpha:1] CGColor];
-    self.mapView.layer.borderWidth = 0.5;
+    self.mapView.layer.borderWidth = 1.0f;
     
     MKCoordinateRegion region;
     region.center.latitude = CA_LATITUDE;
@@ -248,8 +248,10 @@
     NSLog(@"scXtt viewDidAppear");
     if (![_dataModel joinedChat])
     {
+        [[SingletonClass singleObject] setImInARoom:NO];
         [self showLoginViewController];
     } else {
+        [[SingletonClass singleObject] setImInARoom:YES];
         //Reset pins on map
         [self.mapView removeAnnotations:_mapView.annotations];
         //    [self postFindRequest];
@@ -557,6 +559,11 @@
         [pickerCustomView addSubview:pickerViewLabel];
     }
     
+    
+    NSLog(@"SCXTT picker row is:%ld", (long)row);
+    
+    
+    
     NSString *pickerPin = [[_roomArray objectAtIndex:row] memberPinImage];
     
     pickerImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"pk%@",pickerPin]];
@@ -668,6 +675,7 @@
 - (void)userDidLeave
 {
     [self.dataModel setJoinedChat:NO];
+    [[SingletonClass singleObject] setImInARoom:NO];
     
     // Show the Login screen. This requires the user to join a new
     // chat map group before he can return to the chat screen.
@@ -841,6 +849,7 @@
 
 - (void)postGetRoom
 {
+
     if ([_dataModel joinedChat]) {
         if (_isFromNotification) {
             [self postGetRoomMessages];
@@ -901,6 +910,7 @@
 
 - (void)postGetRoomMessages
 {
+    //SCXTT first run is crashing here
     if (!_isUpdating)
     {
         _isUpdating = YES;
@@ -1343,7 +1353,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
     
     region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
     region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
-    region.span.latitudeDelta = meters / 111319.5;
+    region.span.latitudeDelta = meters / 95319.5;
 //    region.span.latitudeDelta = meters / 100319.5;
 //    region.span.longitudeDelta = 0.0;
     if (screenHeight == 320) {

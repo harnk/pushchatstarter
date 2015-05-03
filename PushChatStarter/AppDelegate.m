@@ -86,7 +86,9 @@ void ShowErrorAlert(NSString* text)
     if([extra isEqualToString:@"whereru"]) {
         NSLog(@"whereru - in ^completionHandlerSilent push received");
         NSString *asker = [userInfo valueForKey:@"asker"];
-        [self.locationManager startMonitoringSignificantLocationChanges];
+//        [self.locationManager startMonitoringSignificantLocationChanges];
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+        self.locationManager.activityType = CLActivityTypeFitness;
         [self.locationManager startUpdatingLocation];
         [self postImhere:asker];
     } else {
@@ -194,6 +196,7 @@ void ShowErrorAlert(NSString* text)
     }
     
     _isUpdating = NO;
+    [[SingletonClass singleObject] setImInARoom:NO];
     
     //SCXTT Need to review this and see if it is still necesary
     [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
@@ -214,8 +217,10 @@ void ShowErrorAlert(NSString* text)
         //        [self.locationManager requestWhenInUseAuthorization];
         [self.locationManager requestAlwaysAuthorization];
     }
-    self.locationManager.pausesLocationUpdatesAutomatically = YES;
-    [self.locationManager startMonitoringSignificantLocationChanges];
+//    self.locationManager.pausesLocationUpdatesAutomatically = YES;
+//    [self.locationManager startMonitoringSignificantLocationChanges];
+
+    self.locationManager.pausesLocationUpdatesAutomatically = NO;
     self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
     
@@ -227,7 +232,7 @@ void ShowErrorAlert(NSString* text)
 {
     NSLog(@"########### Received Background Fetch ###########");
     //Download  the Content .
-    
+    [self postMyLoc];
     //Cleanup
     completionHandler(UIBackgroundFetchResultNewData);
     
@@ -245,7 +250,9 @@ void ShowErrorAlert(NSString* text)
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
-    [self.locationManager startMonitoringSignificantLocationChanges];
+//    [self.locationManager startMonitoringSignificantLocationChanges];
+    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
     
     backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 60
@@ -364,8 +371,10 @@ void ShowErrorAlert(NSString* text)
 }
 
 -(void) postMyLoc {
-    if ([_dataModel joinedChat]) {
+    if ([[SingletonClass singleObject] imInARoom]) {
+        NSLog(@"imInARoom is true");
         if (!_isUpdating) {
+            NSLog(@"were not _isUpdating");
             if (_deviceHasMoved) {
                 _isUpdating = YES;
                 NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
@@ -375,6 +384,8 @@ void ShowErrorAlert(NSString* text)
         } else {
             NSLog(@"no API call since _isUpdating is already YES = Busy");
         }
+    } else {
+        NSLog(@"imInARoom is false - no update");
     }
 }
 

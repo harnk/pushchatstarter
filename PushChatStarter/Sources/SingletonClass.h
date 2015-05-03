@@ -15,6 +15,7 @@
 @property(nonatomic, strong)NSString *myLocStr;
 @property(nonatomic, strong)CLLocation *myNewLocation;
 @property (nonatomic) BOOL notificationsAreDisabled;
+@property (nonatomic) BOOL imInARoom;
 @property BOOL mapIsActive;
 
 @end

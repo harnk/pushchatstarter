@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -45,7 +45,7 @@
                                                 <action selector="cancelAction" destination="PVS-JL-Wjs" id="JYU-7U-mVU"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="maB-Lw-86p">
+                                        <barButtonItem key="rightBarButtonItem" title="Send" id="maB-Lw-86p">
                                             <connections>
                                                 <action selector="saveAction" destination="PVS-JL-Wjs" id="OUx-sg-ZfQ"/>
                                             </connections>
@@ -306,7 +306,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="102" id="NKf-dH-ALX"/>
                                 </constraints>
-                                <string key="text">WhereRU lets you chat with and see the current locations on a map of anyone else currently in the same map group. Choose or create a map group name and share it with your friends. If they join the same map group, you can see each other's location and messages. You can exit a map group at any time and your location will no longer be visible by others.</string>
+                                <string key="text">WhereRU lets you chat with and see the current locations on a map of anyone else currently in the same map group. Join or create a map group name and share it with your friends. If they join the same map group, you can see each other's location and messages. You can exit a map group at any time and your location will no longer be visible by others.</string>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
