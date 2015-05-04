@@ -31,9 +31,7 @@ void ShowErrorAlert(NSString* text)
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    
     ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    
     DataModel *dataModel = showMapViewController.dataModel;
     
     Message *message = [[Message alloc] init];

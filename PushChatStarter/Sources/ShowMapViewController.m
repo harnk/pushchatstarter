@@ -171,6 +171,15 @@
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
 }
 
+-(void) returnToAll {
+    [self findAction];
+//    self.title = [_dataModel secretCode];
+    self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
+    
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+}
+
 - (void) setUpPickerView {
     CGFloat w, h, x, y;
     w = 300;
@@ -265,7 +274,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.title = [_dataModel secretCode];
+    self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
+
     NSLog(@"scXtt viewWillAppear");
     // Show a label in the table's footer if there are no messages
     if (self.dataModel.messages.count == 0)
@@ -610,7 +620,19 @@
     _pickerIsUp = NO;
     
     _centerOnThisRoomArrayRow = row;
+//    self.title = [_dataModel secretCode];
+    self.title = [[_roomArray objectAtIndex:row] memberNickName];
+    
+    
+    
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"< All" style:UIBarButtonItemStyleBordered target:self action:@selector(returnToAll)];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
 
+    
+    
+    
+    
+    
     //    _okToRecenterMap = YES;
     //    set center point and zoom level
     
@@ -662,6 +684,8 @@
 
     if (_pickerIsUp) {
         // do nothing
+        [myPickerView removeFromSuperview];
+        _pickerIsUp = NO;
     } else {
         _pickerIsUp = YES;
         [self setUpPickerView];
@@ -713,7 +737,10 @@
 
 - (IBAction)exitAction
 {
-    //	[self userDidLeave];
+    // SCXTT make this next part coexist with the alertview that launches the app settings TBD
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out" message:@"Are you sure you wish to sign out of this map group? You friends will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
+//    [alert show];
+
     [self postLeaveRequest];
 }
 
@@ -1027,7 +1054,7 @@
 - (void)openAnnotation:(id)annotation;
 {
     //mv is the mapView
-    _okToRecenterMap = NO;
+//    _okToRecenterMap = NO;
     [_mapView selectAnnotation:annotation animated:YES];
     
 }
@@ -1035,8 +1062,8 @@
 - (void)closeAnnotation:(id)annotation;
 {
     //mv is the mapView
-    _centerOnThisRoomArrayRow = -1;
-    _okToRecenterMap = YES;
+//    _centerOnThisRoomArrayRow = -1;
+//    _okToRecenterMap = YES;
     [_mapView deselectAnnotation:annotation animated:YES];
     
 }
@@ -1102,6 +1129,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
     for (MKAnnotationView *annView in annotationViews)
     {
         CGRect endFrame = annView.frame;
+        ////SCXTT can we make the -500 instead be the last location of this annotation?
         annView.frame = CGRectOffset(endFrame, 0, -500);
         [UIView animateWithDuration:0.5
                          animations:^{ annView.frame = endFrame; }];
