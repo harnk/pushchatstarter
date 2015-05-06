@@ -34,6 +34,7 @@
 		61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EDE170425EA0049C6F9 /* ComposeViewController.m */; };
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
 		9E084B2F1A9AA9BE004439FA /* ServiceConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */; };
+		9E09A6681AF9BCAA00E09331 /* back-button.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9E09A6671AF9BCAA00E09331 /* back-button.jpg */; };
 		9E15E2541AE86CE00031A6D7 /* pkall.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E15E2531AE86CE00031A6D7 /* pkall.png */; };
 		9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E1CE5831AD9E9660052B768 /* pkcyangray.png */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
@@ -113,6 +114,7 @@
 		9E084B2D1A9AA9BE004439FA /* ServiceConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceConnector.h; sourceTree = "<group>"; };
 		9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceConnector.m; sourceTree = "<group>"; };
 		9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONDictionaryExtensions.h; sourceTree = "<group>"; };
+		9E09A6671AF9BCAA00E09331 /* back-button.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button.jpg"; sourceTree = "<group>"; };
 		9E15E2531AE86CE00031A6D7 /* pkall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkall.png; sourceTree = "<group>"; };
 		9E1CE5831AD9E9660052B768 /* pkcyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkcyangray.png; sourceTree = "<group>"; };
 		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 		61489EBA17041CB20049C6F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9E09A6671AF9BCAA00E09331 /* back-button.jpg */,
 				9E4408EE1AD8B3870079A4CA /* pickerimages */,
 				D6FAA1E41AD7482300A68B6A /* blue.png */,
 				D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */,
@@ -412,6 +415,7 @@
 				9E7AC7E31AB2834E004996B6 /* cyan.png in Resources */,
 				9E7AC7EA1AB2834E004996B6 /* red.png in Resources */,
 				D6FAA1E61AD7482300A68B6A /* blue.png in Resources */,
+				9E09A6681AF9BCAA00E09331 /* back-button.jpg in Resources */,
 				9E15E2541AE86CE00031A6D7 /* pkall.png in Resources */,
 				9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */,
 				61489EC917041F0D0049C6F9 /* Icon-Small-50.png in Resources */,

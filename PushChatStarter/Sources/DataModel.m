@@ -63,7 +63,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 - (void)loadMessages:(NSString*)myLoc
 {
     
-//    scxtt this NEEDS to change from getting from defaults to instead use getRoomMessages
+//    scxtt this NEEDS to change from getting from defaults to instead use getRoomMessages but only after being logged into a room
     
 	NSString* path = [self messagesPath];
     NSLog(@"loadMessages - messagesPath: %@", path);

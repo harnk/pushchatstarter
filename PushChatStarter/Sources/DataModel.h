@@ -12,7 +12,8 @@
 @interface DataModel : NSObject
 
 // The complete history of messages this user has sent and received, in
-// chronological order (oldest first).
+// chronological order (oldest first). - deprecated
+
 @property (nonatomic, strong) NSMutableArray* messages;
 @property (nonatomic, strong) NSString* myLoc;
 

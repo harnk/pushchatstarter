@@ -82,11 +82,19 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1)
-    {
-        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        [[UIApplication sharedApplication] openURL:url];
+    if(alertView.tag == kAlertViewNotifications) {
+        if (buttonIndex == 1)
+        {
+            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    } else if(alertView.tag == kAlertViewSignOut) {
+        if (buttonIndex == 1)
+        {
+            [self postLeaveRequest];
+        }
     }
+
 }
 
 - (void)setUpTimersAndObservers {
@@ -370,9 +378,11 @@
     if (isdisabled) {
         if (IS_OS_8_OR_LATER){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+            alert.tag = kAlertViewNotifications;
             [alert show];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications in Settings - Notification Center." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil, nil];
+            alert.tag = kAlertViewNotifications;
             [alert show];
         }
     }
@@ -625,9 +635,19 @@
     
     
     
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"< All" style:UIBarButtonItemStyleBordered target:self action:@selector(returnToAll)];
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+//    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"< All" style:UIBarButtonItemStyleBordered target:self action:@selector(returnToAll)];
+//    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
 
+    
+    
+    
+    UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(returnToAll)forControlEvents:UIControlEventTouchUpInside];
+    [button setFrame:CGRectMake(0, 0, 42, 22)];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = barButton;
+    
     
     
     
@@ -738,10 +758,11 @@
 - (IBAction)exitAction
 {
     // SCXTT make this next part coexist with the alertview that launches the app settings TBD
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out" message:@"Are you sure you wish to sign out of this map group? You friends will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
-//    [alert show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out of This Map Group" message:@"Are you sure you wish to sign out of this map group? You friends here will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
+    alert.tag = kAlertViewSignOut;
+    [alert show];
 
-    [self postLeaveRequest];
+//    [self postLeaveRequest];
 }
 
 - (IBAction)chgMapAction
@@ -947,15 +968,23 @@
         NSLog(@"Getting map group messages");
 
         NSString *secret_code = [_dataModel secretCode];
+        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
+        
         NSDictionary *params = @{@"cmd":@"getroommessages",
                                  @"user_id":[_dataModel userId],
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"secret_code":secret_code};
         
+        NSLog(@"params set, now do the API call with params: %@", params);
+
+        
         [_client
          postPath:ServerPostPathURL
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             
+             NSLog(@"in callback - success");
+
              _isUpdating = NO;
              if (operation.response.statusCode != 200) {
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
@@ -965,6 +994,7 @@
                  NSLog(@"getroommessages responseString: %@", responseString);
                  
                  NSError *e = nil;
+                 NSLog(@"getroommessages responseString: %@", responseString);
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
                  if (!jsonArray) {
