@@ -327,6 +327,7 @@
 }
 
 -(void)startGetRoomTimer {
+    [self stopGetRoomTimer];
     NSLog(@"scXtt startGetRoomTimer");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
@@ -881,6 +882,7 @@
                      
                  }
                  NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                 //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
                  [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
              }
          }
