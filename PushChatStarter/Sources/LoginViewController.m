@@ -110,7 +110,7 @@
 
 	if (self.secretCodeTextField.text.length == 0)
 	{
-		ShowErrorAlert(NSLocalizedString(@"Fill in a secret code", nil));
+		ShowErrorAlert(NSLocalizedString(@"Fill in a map group name", nil));
 		return;
 	}
 

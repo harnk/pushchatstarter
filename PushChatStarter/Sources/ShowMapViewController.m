@@ -168,20 +168,20 @@
 }
 
 - (void)setUpButtonBarItems {
-//    UIBarButtonItem *btnGet = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(getDown:)];
-//    UIBarButtonItem *btnPost = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(postDown:)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-//    UIBarButtonItem *btnCompose = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
-//    _btnMapType = [[UIBarButtonItem alloc] initWithTitle:@" Sat" style:UIBarButtonItemStyleBordered target:self action:@selector(chgMapAction)];
-    //    [self.navigationItem setLeftBarButtonItem:leftBarButton];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
 }
 
 -(void) returnToAll {
-    [self findAction];
+//    [self findAction];
 //    self.title = [_dataModel secretCode];
+    [self multiLineToastMsg:[_dataModel secretCode] detailText:@"returning to view of entire map group"];
+
+    if ([_dataModel joinedChat]) {
+        _okToRecenterMap = YES;
+    }
     self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
     
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
@@ -569,6 +569,7 @@
     UIImageView *pickerImageView;
     
     if (!pickerCustomView) {
+        NSLog(@"SCXTT !pickerCustomView");
         pickerCustomView= [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f,
                                                                    [pickerView rowSizeForComponent:component].width - 10.0f, [pickerView rowSizeForComponent:component].height)];
         pickerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 55.0f, 30.0f)];
@@ -624,23 +625,11 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
     // Handle the selection
-    [self toastMsg:[[_roomArray objectAtIndex:row] memberNickName]];
-    // need to remove the subview
-    // see: http://stackoverflow.com/questions/9820113/iphone-remove-sub-view
+    [self multiLineToastMsg:@"Locating" detailText:[[_roomArray objectAtIndex:row] memberNickName]];
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
-    
     _centerOnThisRoomArrayRow = row;
-//    self.title = [_dataModel secretCode];
     self.title = [[_roomArray objectAtIndex:row] memberNickName];
-    
-    
-    
-//    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"< All" style:UIBarButtonItemStyleBordered target:self action:@selector(returnToAll)];
-//    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
-
-    
-    
     
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
@@ -648,14 +637,6 @@
     [button setFrame:CGRectMake(0, 0, 42, 22)];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     self.navigationItem.leftBarButtonItem = barButton;
-    
-    
-    
-    
-    
-    
-    //    _okToRecenterMap = YES;
-    //    set center point and zoom level
     
     CLLocationCoordinate2D location;
     MKCoordinateRegion region;
@@ -710,6 +691,7 @@
     } else {
         _pickerIsUp = YES;
         [self setUpPickerView];
+        //scxtt remove next line??
         _okToRecenterMap = NO;
     }
     
@@ -840,7 +822,6 @@
                      _roomArray = [[NSMutableArray alloc] init];
                  } else {
                      [_roomArray removeAllObjects];
-//                     [self.mapView removeAnnotations:_mapView.annotations];
                  }
                  NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
                      @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
@@ -848,27 +829,17 @@
                  
                  int i = 0;
                  UIImage *mPinImage;
+                 // Add Return to All first then the room
+                 
                  for(NSDictionary *item in jsonArray) {
                      if (i > 10) {
                          i = 0;
                      }
                      NSString *mNickName = [item objectForKey:@"nickname"];
                      NSString *mLocation = [item objectForKey:@"location"];
-                     
                      NSString *gmtDateStr = [item objectForKey:@"loc_time"];
                      NSInteger minutesBetweenDates;
                      minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
-                     
-//                     NSLog(@"%ld minutes ago %@ updated - assigning image# %d - %@", (long)minutesBetweenDates, mNickName, i, myPinImages[i]);
-                     
-//                     SCXTT need to test if date is old and use a gray pin if so
-//                         if (minutesBetweenDates > 500) {
-//                             mPinImage = [UIImage imageNamed:@"cyangray.png"];
-//                         } else {
-//                             //                         NSLog(@"scxtt using pin %@", myPinImages[i]);
-//                             mPinImage = [UIImage imageNamed:myPinImages[i]];
-//                         }
-                     
                      mPinImage = [UIImage imageNamed:myPinImages[i]];
                      
                      if (![mLocation isEqual: @"0.000000, 0.000000"]) {
@@ -1085,19 +1056,12 @@
 
 - (void)openAnnotation:(id)annotation;
 {
-    //mv is the mapView
-//    _okToRecenterMap = NO;
     [_mapView selectAnnotation:annotation animated:YES];
-    
 }
 
 - (void)closeAnnotation:(id)annotation;
 {
-    //mv is the mapView
-//    _centerOnThisRoomArrayRow = -1;
-//    _okToRecenterMap = YES;
     [_mapView deselectAnnotation:annotation animated:YES];
-    
 }
 
 -(BOOL)annTitleHasLeftRoom:(NSString *)nickname {
@@ -1140,18 +1104,12 @@
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    
     NSLog(@"didSelectAnnotationView");
-    //    [mapView selectAnnotation:view.annotation animated:NO];
-    _okToRecenterMap = NO;
 }
 
 -(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
-    
     NSLog(@"didDeselectAnnotationView");
-    //    [mapView selectAnnotation:view.annotation animated:NO];
-    _okToRecenterMap = YES;
 }
 
 
@@ -1274,9 +1232,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
             if (!whoFound) {
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
-                    //toast it
-//                    NSString *toast = [NSString stringWithFormat:@"%@ is in the map group", who];
-//                    [self toastMsg:toast];
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
                     _okToRecenterMap = YES;
 
@@ -1407,22 +1362,17 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 
 - (void)reCenterMap:(MKCoordinateRegion)region meters:(CLLocationDistance)meters {
-//    NSLog(@"recentering map");
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
     
     region.center.latitude = (_mapViewSouthWest.coordinate.latitude + _mapViewNorthEast.coordinate.latitude) / 2.0;
     region.center.longitude = (_mapViewSouthWest.coordinate.longitude + _mapViewNorthEast.coordinate.longitude) / 2.0;
     region.span.latitudeDelta = meters / 95319.5;
-//    region.span.latitudeDelta = meters / 100319.5;
-//    region.span.longitudeDelta = 0.0;
     if (screenHeight == 320) {
         region.span.longitudeDelta = meters / 80319.5;
     } else {
         region.span.longitudeDelta = 0;
     }
-    
-    
     MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
     [_mapView setRegion:savedRegion animated:YES];
 }
