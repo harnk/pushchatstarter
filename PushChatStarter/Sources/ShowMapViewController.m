@@ -174,18 +174,21 @@
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
 }
 
--(void) returnToAll {
-//    [self findAction];
-//    self.title = [_dataModel secretCode];
-    [self multiLineToastMsg:[_dataModel secretCode] detailText:@"returning to view of entire map group"];
-
+-(void) returnToAllWithMessage:(NSString *)toastMsg {
+    if (toastMsg.length > 0) {
+//        [self multiLineToastMsg:[_dataModel secretCode] detailText:@"returning to view of entire map group"];
+        [self multiLineToastMsg:[_dataModel secretCode] detailText:toastMsg];
+    }
     if ([_dataModel joinedChat]) {
         _okToRecenterMap = YES;
     }
     self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
-    
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+}
+
+-(void) returnToAll {
+     [self returnToAllWithMessage:@"returning to view of entire map group"];
 }
 
 - (void) setUpPickerView {
@@ -630,7 +633,6 @@
     _pickerIsUp = NO;
     _centerOnThisRoomArrayRow = row;
     self.title = [[_roomArray objectAtIndex:row] memberNickName];
-    
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(returnToAll)forControlEvents:UIControlEventTouchUpInside];
@@ -779,7 +781,8 @@
 - (void)findAction {
     NSLog(@"SCXTT findAction");
     if ([_dataModel joinedChat]) {
-        _okToRecenterMap = YES;
+//        [self returnToAllWithMessage:@"refresh request sent"];
+        [self returnToAllWithMessage:@""];
         [self postFindRequest];
     }
 }
@@ -1157,6 +1160,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
     northEast = southWest;
 
     NSLog(@"updatePointsOnMapWithAPIData");
+    NSLog(@"My loc:%@", mLoc);
     NSLog(@"We will center on this if its not -1 centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
@@ -1171,12 +1175,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
 //    NSLog(@"_mapView.annotations count is:%lu",(unsigned long)[_mapView.annotations count]);
     for (Room *item in _roomArray) {
         BOOL whoFound = NO;
-//        NSLog(@"updatePointsOnMapWithAPIData:memberNickName %@", item.memberNickName);
-//        NSLog(@"----------------------------:memberLocation %@", item.memberLocation);
-//        NSLog(@"----------------------------:memberUpdateTime %@", item.memberUpdateTime);
-//        NSLog(@"----------------------------:roomName %@", item.roomName);
-//        NSLog(@"----------------------------:memberPinImage %@", item.memberPinImage);
-        
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {
             
             NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
@@ -1188,24 +1186,15 @@ didAddAnnotationViews:(NSArray *)annotationViews
             NSString* dateString = [self localDateStrFromUTCDateStr:gmtDateStr];
             NSDate* date = [self dateFromUTCDateStr:gmtDateStr];
             
-//            for (id<MKAnnotation> ann in _mapView.annotations)
             for (VBAnnotation *ann in _mapView.annotations)
             {
-//                whoFound = NO;
                 //First see if this ann still has a _roomArray match
                 //or if the person has left the room kill this ann
                 if ([self annTitleHasLeftRoom:ann.title]) {
                     _centerOnThisRoomArrayRow = -1;
-                    //toast it
-//                    NSString *toast = [NSString stringWithFormat:@"%@ has left the map group", ann.title];
-//                    [self toastMsg:toast];
                     [self multiLineToastMsg:ann.title detailText:@"has left the map group"];
-                    
-                    //kill it
                     [self.mapView removeAnnotation:ann];
                 }
-//                NSLog(@"updatePointsOnMapWithAPIData looking thru ann.title:%@ compared to who:%@", ann.title, who);
-//                [self openAnnotation:ann];
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
                 northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
@@ -1221,11 +1210,58 @@ didAddAnnotationViews:(NSArray *)annotationViews
                     if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                         //Scxtt need to find a cool way to animate sliding points
 //                        ann.coordinate = location; // this line doesnt work
-                        ann.subtitle = dateString; // i dont think this line works either
+                        
+                        
+//                        ann.subtitle = dateString; // i dont think this line works either
+                        ann.subtitle = @"date and distance from me"; // i dont think this line works either
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        //Format the location to read distance from me now
+                        //get location from message.location
+                        NSString *mLoc = [[SingletonClass singleObject] myLocStr];
+                        NSArray *strings1 = [mLoc componentsSeparatedByString:@","];
+                        CLLocation *locA = [[CLLocation alloc] initWithLatitude:[strings1[0] doubleValue] longitude:[strings1[1] doubleValue]];
+                        
+                        
+                        // Handle the location of the remote devices from the saved messages
+                        NSArray *strings = [item.memberLocation componentsSeparatedByString:@","];
+                        CLLocation *locB = [[CLLocation alloc] initWithLatitude:[strings[0] doubleValue] longitude:[strings[1] doubleValue]];
+                        CLLocationDistance distance = [locA distanceFromLocation:locB];
+                        
+                        CLLocationDistance distanceFromMeInMeters;
+                        
+                        
+                        distanceFromMeInMeters = distance;
+                        
+                        //  SCXTT This is in two places, fix that, put it in one place
+                        double distanceMeters = distanceFromMeInMeters;
+                        double distanceInYards = distanceMeters * 1.09361;
+                        double distanceInMiles = distanceInYards / 1760;
+                        
+                        if (distanceInYards > 500) {
+                            ann.subtitle = [NSString stringWithFormat:@"%@, %.1f miles", dateString, distanceInMiles];
+                        } else {
+                            ann.subtitle = [NSString stringWithFormat:@"%@, %.1f y", dateString, distanceInYards];
+                        }
+                        
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         ann.loctime = date; // this prob isnt working either
                         [ann setCoordinate:location];
                     }
-//                    break;
                 }
             }
             // new who so add addAnnotation and set coordinate and location time and recenter the map
@@ -1233,7 +1269,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
-                    _okToRecenterMap = YES;
+                    //scxtt this next line causes problems when we are focused on a pin
+//                    _okToRecenterMap = YES;
 
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
@@ -1241,41 +1278,41 @@ didAddAnnotationViews:(NSArray *)annotationViews
                     [annNew setCoordinate:location];
 
                     [self.mapView addAnnotation:annNew];
-//                    [self openAnnotation:annNew];
-                    
                 }
             }
-            if (_okToRecenterMap) {
-                _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-                _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-                
-                // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-                CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-                
-                
-                [self reCenterMap:region meters:meters];
-            } else if ((_centerOnThisRoomArrayRow >= 0) && ([_roomArray count] >_centerOnThisRoomArrayRow)) {
-//                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
-                CLLocationCoordinate2D location;
-                MKCoordinateRegion region;
-                
-                
-                NSArray *strings = [[[_roomArray objectAtIndex:_centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
-                location.latitude = [strings[0] doubleValue];
-                location.longitude = [strings[1] doubleValue];
-                
-                _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
-                _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
-                
-                // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-                //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-                CLLocationDistance meters = 1000;
-                
-                [self reCenterMap:region meters:meters];
-
-            }
         }
+    } // end for (Room *item in _roomArray)
+    // Recenter map
+    if (_okToRecenterMap) {
+        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+        
+        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+        CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+        
+        
+        [self reCenterMap:region meters:meters];
+    } else if ((_centerOnThisRoomArrayRow >= 0) && ([_roomArray count] >_centerOnThisRoomArrayRow)) {
+        //                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
+        CLLocationCoordinate2D location;
+        MKCoordinateRegion region;
+        
+        
+        NSArray *strings = [[[_roomArray objectAtIndex:_centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
+        location.latitude = [strings[0] doubleValue];
+        location.longitude = [strings[1] doubleValue];
+        
+        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+        
+        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+        //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+        CLLocationDistance meters = 1000;
+        
+        [self reCenterMap:region meters:meters];
+        
     }
+
 }
 
 -(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
