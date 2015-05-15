@@ -111,11 +111,11 @@
 //                                              repeats: YES];
     
     //Set up a timer to check for new messages if the user has notifications disabled
-//    [NSTimer scheduledTimerWithTimeInterval: 10
-//                                     target: self
-//                                   selector: @selector(checkForNewMessage:)
-//                                   userInfo: nil
-//                                    repeats: NO];
+    [NSTimer scheduledTimerWithTimeInterval: 60
+                                     target: self
+                                   selector: @selector(pollForNewMessage)
+                                   userInfo: nil
+                                    repeats: YES];
     
     
     
@@ -1037,9 +1037,17 @@
     }
 }
 
+- (void)pollForNewMessage
+{
+    // NEED TO ADD CHECH FOR NOTIFICATIONS DISABLED and only do this if they are
+    
+    [self postGetRoomMessages];
+    NSLog(@"newMessage polling");
+}
+
 - (void)checkForNewMessage
 {
-
+    
     _isFromNotification = YES;
     
     // Need to keep trying until we successfully execute postGetRoomMessages
@@ -1050,8 +1058,8 @@
     NSLog(@"newMessage polling check for new messages COMMENTED OUT");
     
     
-//  don't think i need this next line unless to updateScrollBar
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
+    //  don't think i need this next line unless to updateScrollBar
+    //    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
 }
 
 -(void)tellUserLocationUpdatesReceived {
