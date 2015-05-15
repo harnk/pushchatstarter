@@ -67,7 +67,14 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
     
 	NSString* path = [self messagesPath];
     NSLog(@"loadMessages - messagesPath: %@", path);
-    NSLog(@"myLoc: %@", myLoc);
+    NSString *checkStartingLoc = [[SingletonClass singleObject] myLocStr];
+    if (nil == checkStartingLoc) {
+        CLLocation *startingPoint = [[CLLocation alloc] initWithLatitude:40.689124 longitude:-74.044611];
+        [[SingletonClass singleObject] setMyNewLocation:startingPoint];
+        CLLocation *newLoc = startingPoint;
+        [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
+    }
+    NSLog(@"myLoc: %@", [[SingletonClass singleObject] myLocStr]);
     
     _myLoc = myLoc;
 	

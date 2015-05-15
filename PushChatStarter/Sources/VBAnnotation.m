@@ -35,6 +35,11 @@
     annotationView.enabled = YES;
     annotationView.canShowCallout = YES;
     annotationView.image = [UIImage imageNamed:_pinImageFile];
+    
+//    UIImageView *imageView;
+//    [imageView setImage:[UIImage imageNamed:@"back-button.jpg"]];
+//    [annotationView setRightCalloutAccessoryView:imageView];
+    
 //    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     return annotationView;
 }

@@ -182,6 +182,14 @@ void ShowErrorAlert(NSString* text)
 
     
     //--- your custom code
+    // Init my location since it may not have gotten a read on me yet
+    // All points start at the statue of liberty: 40.689124, -74.044611
+    NSString *checkStartingLoc = [[SingletonClass singleObject] myLocStr];
+    if (nil == checkStartingLoc) {
+        CLLocation *startingPoint = [[CLLocation alloc] initWithLatitude:40.689124 longitude:-74.044611];
+        [[SingletonClass singleObject] setMyNewLocation:startingPoint];
+        NSLog(@"AppDelegate myLoc: %@", [[SingletonClass singleObject] myLocStr]);
+    }
     
     if (launchOptions != nil)
     {

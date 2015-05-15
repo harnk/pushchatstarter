@@ -934,7 +934,7 @@
 
 - (void)postGetRoomMessages
 {
-    //SCXTT first run is crashing here
+   
     if (!_isUpdating)
     {
         _isUpdating = YES;
@@ -945,6 +945,10 @@
 
         NSString *secret_code = [_dataModel secretCode];
         NSLog(@"secret_code is: %@ now seeting up params", secret_code);
+        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"user_id is: %@", [_dataModel userId]);
+        
+         //SCXTT swipe up then run again is crashing here - its either location or user_id is not set yet
         
         NSDictionary *params = @{@"cmd":@"getroommessages",
                                  @"user_id":[_dataModel userId],
