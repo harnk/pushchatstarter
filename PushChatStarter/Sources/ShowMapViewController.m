@@ -35,6 +35,7 @@
     AFHTTPClient *_client;
     NSArray *pinImages;
     NSTimer *getRoomTimer;
+    NSTimer *getMessagesTimer;
     UIPickerView *myPickerView;
 //    NSInteger *centerOnThisRoomArrayRow;
 }
@@ -111,11 +112,11 @@
 //                                              repeats: YES];
     
     //Set up a timer to check for new messages if the user has notifications disabled
-    [NSTimer scheduledTimerWithTimeInterval: 60
-                                     target: self
-                                   selector: @selector(pollForNewMessage)
-                                   userInfo: nil
-                                    repeats: YES];
+//    [NSTimer scheduledTimerWithTimeInterval: 60
+//                                     target: self
+//                                   selector: @selector(pollForNewMessage)
+//                                   userInfo: nil
+//                                    repeats: YES];
     
     
     
@@ -316,7 +317,7 @@
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
-    NSLog(@"scXtt stopGetRoomTimer");
+    NSLog(@"scXtt stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
         NSLog(@"scXtt [_getRoomTimer invalidate]");
@@ -326,7 +327,17 @@
         
         NSLog(@"did nothing");
     }
-
+    
+    if(getMessagesTimer)
+    {
+        NSLog(@"scXtt [_getRoomTimer invalidate]");
+        [getMessagesTimer invalidate];
+        getMessagesTimer = nil;
+    } else {
+        
+        NSLog(@"did nothing");
+    }
+    
 }
 
 -(void)startGetRoomTimer {
@@ -334,10 +345,16 @@
     NSLog(@"scXtt startGetRoomTimer");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
-                                                      target: self
+                                                     target: self
                                                    selector: @selector(postGetRoom)
-                                                    userInfo: nil
-                                                     repeats: YES];
+                                                   userInfo: nil
+                                                    repeats: YES];
+    
+    getMessagesTimer  = [NSTimer scheduledTimerWithTimeInterval: 60
+                                                     target: self
+                                                   selector: @selector(postGetRoomMessages)
+                                                   userInfo: nil
+                                                    repeats: YES];
     
 }
 
