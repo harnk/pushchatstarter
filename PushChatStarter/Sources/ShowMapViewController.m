@@ -103,26 +103,6 @@
                                    selector: @selector(areNotificationsEnabled)
                                    userInfo: nil
                                     repeats: NO];
-
-//    getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
-//                                               target: self
-//                                                   selector: @selector(postGetRoom)
-//                                             userInfo: nil
-//                                              repeats: YES];
-    
-    //Set up a timer to check for new messages if the user has notifications disabled
-//    [NSTimer scheduledTimerWithTimeInterval: 60
-//                                     target: self
-//                                   selector: @selector(pollForNewMessage)
-//                                   userInfo: nil
-//                                    repeats: YES];
-    
-    
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(updatePointsOnMapWithNotification:) //SCXTT TIME TO RETIRE THIS ONE COMPLETELY
-//                                                 name:@"receivedNewMessage"
-//                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updatePointsOnMapWithAPIData)
@@ -138,11 +118,6 @@
                                              selector:@selector(updatePointsOnMapWithAPIData)
                                                  name:@"receivedNewAPIData"
                                                object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(postGetRoomMessages)
-//                                                 name:@"userJoinedRoom"
-//                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(checkForNewMessage)
@@ -209,7 +184,6 @@
     myPickerView.layer.cornerRadius = 12;
     myPickerView.layer.masksToBounds = YES;
     
-    //    scxtt
     //    myPickerView.translatesAutoresizingMaskIntoConstraints = YES;
     [self.view addSubview:myPickerView];
     
@@ -266,7 +240,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    NSLog(@"scXtt viewDidAppear");
+//    NSLog(@"viewDidAppear");
     if (![_dataModel joinedChat])
     {
         [[SingletonClass singleObject] setImInARoom:NO];
@@ -274,7 +248,7 @@
     } else {
         [[SingletonClass singleObject] setImInARoom:YES];
         //Reset pins on map
-        [self.mapView removeAnnotations:_mapView.annotations];
+//        [self.mapView removeAnnotations:_mapView.annotations];
         //    [self postFindRequest];
         [self postGetRoomMessages];
         [self postGetRoom];
@@ -286,9 +260,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
+    if (_centerOnThisGuy.length == 0) {
+        self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
+    }
 
-    NSLog(@"scXtt viewWillAppear");
+//    NSLog(@"viewWillAppear");
     // Show a label in the table's footer if there are no messages
     if (self.dataModel.messages.count == 0)
     {
@@ -310,39 +286,39 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"scXtt viewWillDisappear");
+//    NSLog(@"viewWillDisappear");
 }
 
 - (void)stopGetRoomTimer {
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
-    NSLog(@"scXtt stopGetRoomTimer and GetRoomMessagesTimer");
+//    NSLog(@"stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
-        NSLog(@"scXtt [getRoomTimer invalidate]");
+//        NSLog(@"[getRoomTimer invalidate]");
         [getRoomTimer invalidate];
         getRoomTimer = nil;
     } else {
         
-        NSLog(@"did nothing");
+//        NSLog(@"did nothing");
     }
     
     if(getMessagesTimer)
     {
-        NSLog(@"scXtt [getMessagesTimer invalidate]");
+//        NSLog(@"[getMessagesTimer invalidate]");
         [getMessagesTimer invalidate];
         getMessagesTimer = nil;
     } else {
         
-        NSLog(@"did nothing");
+//        NSLog(@"did nothing");
     }
     
 }
 
 -(void)startGetRoomTimer {
     [self stopGetRoomTimer];
-    NSLog(@"scXtt startGetRoomTimer");
+//    NSLog(@"startGetRoomTimer");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                      target: self
@@ -350,10 +326,9 @@
                                                    userInfo: nil
                                                     repeats: YES];
     
-    NSLog(@"scXtt starting GetMessagesTimer WHY ISNT THIS WORKING?!?!?!?!?");
-    getMessagesTimer  = [NSTimer scheduledTimerWithTimeInterval: 60
+    getMessagesTimer  = [NSTimer scheduledTimerWithTimeInterval: 62
                                                      target: self
-                                                   selector: @selector(postGetRoomMessages)
+                                                   selector: @selector(getRoomMessageViaTimer)
                                                    userInfo: nil
                                                     repeats: YES];
     
@@ -361,10 +336,10 @@
 
 -(void) areNotificationsEnabled {
     BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
-    NSLog(@" SCXTT [[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
-    NSLog(@"Move the ALERT HERE for Notifs being off");
+    NSLog(@"[[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
+//    NSLog(@"Move the ALERT HERE for Notifs being off");
     
-    NSLog(@"SCXTT setting notificationsAreDisabled to YES by default");
+    NSLog(@"Setting notificationsAreDisabled to YES by default");
     [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
     // Check if notifications are enabled because this app won't work if they aren't
     //    _notificationsAreDisabled = false;
@@ -463,7 +438,7 @@
 #pragma mark - UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"SCXTT willDisplayCell CELL WIDTH %f", cell.contentView.frame.size.width);
+//    NSLog(@"willDisplayCell CELL WIDTH %f", cell.contentView.frame.size.width);
 }
 
 - (int)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
@@ -484,7 +459,7 @@
 //    NSLog(@"message.text:%@", message.text);
 //    NSLog(@"message.location:%@", message.location);
 
-//    NSLog(@"SCXTT What is the CELL WIDTH here???");
+//    NSLog(@"What is the CELL WIDTH here???");
 //    NSLog(@"%f", cell.contentView.frame.size.width);
     
     
@@ -561,10 +536,12 @@
     
     _value1TextField.text = [NSString stringWithFormat:@"%d",[[dictionary objectForKey:@"value1"] intValue]];
     _value2TextField.text = [dictionary objectForKey:@"value2"];
-    NSLog(@"requestReturnedData: %@",dictionary);
-    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
-    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
-    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
+    
+    //SCXTT RELEASE
+//    NSLog(@"requestReturnedData: %@",dictionary);
+//    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
+//    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
+//    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
 }
 
 
@@ -590,7 +567,7 @@
     UIImageView *pickerImageView;
     
     if (!pickerCustomView) {
-        NSLog(@"SCXTT !pickerCustomView");
+        NSLog(@"!pickerCustomView");
         pickerCustomView= [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f,
                                                                    [pickerView rowSizeForComponent:component].width - 10.0f, [pickerView rowSizeForComponent:component].height)];
         pickerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 55.0f, 30.0f)];
@@ -603,7 +580,7 @@
     }
     
     
-    NSLog(@"SCXTT picker row is:%ld", (long)row);
+//    NSLog(@"picker row is:%ld", (long)row);
     
     
     
@@ -650,7 +627,7 @@
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     _centerOnThisGuy = [[_roomArray objectAtIndex:row] memberNickName];
-    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
+//    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
     
     self.title = [[_roomArray objectAtIndex:row] memberNickName];
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
@@ -692,14 +669,12 @@
     loginController.client = _client;
     
     [self presentViewController:loginController animated:YES completion:nil];
-//    scxtt
-    
 }
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                  duration:(NSTimeInterval)duration {
     
-    NSLog(@"SCXTT ROTATING - current location is: %@", [[SingletonClass singleObject] myLocStr]);
+//    NSLog(@"ROTATING - current location is: %@", [[SingletonClass singleObject] myLocStr]);
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     [self.tableView reloadData];
@@ -800,7 +775,7 @@
 }
 
 - (void)findAction {
-    NSLog(@"SCXTT findAction");
+    NSLog(@"findAction");
     if ([_dataModel joinedChat]) {
 //        [self returnToAllWithMessage:@"refresh request sent"];
         [self returnToAllWithMessage:@""];
@@ -829,10 +804,13 @@
          if (operation.response.statusCode != 200) {
              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
          } else {
-             NSLog(@"getAPI cmd request sent");
+             //SCXTT RELEASE
+//             NSLog(@"getAPI cmd request sent");
              NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-             NSLog(@"responseString: %@", responseString);
-             NSLog(@"operation: %@", operation);
+             
+             //SCXTT RELEASE
+//             NSLog(@"responseString: %@", responseString);
+//             NSLog(@"operation: %@", operation);
              
              NSError *e = nil;
              NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -876,8 +854,11 @@
                      i++;
                      
                  }
-                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+//                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
                  //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
+                 if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
+                     [self returnToAllWithMessage:@"Eveyone has left the map group"];
+                 }
                  [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
              }
          }
@@ -916,7 +897,7 @@
                     [self getAPI:params];
                     
                 } else {
-                    NSLog(@"Worse yet Aint nobody got time for that");
+                    NSLog(@"busy, skipping getroom");
                     _isUpdating = NO;
                 }
             }
@@ -947,11 +928,15 @@
         
         [self getAPI:params];
     } else {
-        NSLog(@"Aint nobody got time for that");
+        NSLog(@"busy, skipping find");
         _isUpdating = NO;
     }
 }
 
+-(void)getRoomMessageViaTimer {
+    NSLog(@"getRoomMessageViaTimer");
+    [self postGetRoomMessages];
+}
 
 - (void)postGetRoomMessages
 {
@@ -959,15 +944,16 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-        //Prod comment these next 2 lines out scxtt
 //        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
 //        [self toastMsg:toast];
         NSLog(@"Getting map group messages");
 
         NSString *secret_code = [_dataModel secretCode];
-        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
-        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
-        NSLog(@"user_id is: %@", [_dataModel userId]);
+        
+        //SCXTT RELEASE
+//        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
+//        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
+//        NSLog(@"user_id is: %@", [_dataModel userId]);
         
          //SCXTT swipe up then run again is crashing here - its either location or user_id is not set yet
         
@@ -976,7 +962,8 @@
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"secret_code":secret_code};
         
-        NSLog(@"params set, now do the API call with params: %@", params);
+        //SCXTT RELEASE
+//        NSLog(@"params set, now do the API call with params: %@", params);
 
         
         [_client
@@ -992,10 +979,11 @@
              } else {
                  NSLog(@"SMVC Get all messages for this room");
                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                 NSLog(@"getroommessages responseString: %@", responseString);
+                 
+                 //SCXTT RELEASE
+//                 NSLog(@"getroommessages responseString: %@", responseString);
                  
                  NSError *e = nil;
-                 NSLog(@"getroommessages responseString: %@", responseString);
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
                  if (!jsonArray) {
@@ -1011,7 +999,7 @@
                      if (!_roomMessagesArray) {
                          _roomMessagesArray = [[NSMutableArray alloc] init];
                      } else {
-                         NSLog(@"SCXTT reset roomMessagesArray");
+                         NSLog(@"reset roomMessagesArray");
                          [_roomMessagesArray removeAllObjects];
                      }
                      [self.dataModel.messages removeAllObjects];
@@ -1034,10 +1022,10 @@
                          message.text = [item objectForKey:@"message"];
 //                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
-                         NSLog(@"Message added at index:%d" ,index);
+//                         NSLog(@"Message added at index:%d" ,index);
                      }
 //                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
-                     NSLog(@"SCXTT RELOAD TABLE DATA");
+//                     NSLog(@"Reload table data");
                      [self.tableView reloadData];
                      [self scrollToNewestMessage];
                      // We got it so reset below
@@ -1053,7 +1041,7 @@
              }
          }];
     } else {
-        NSLog(@"Aint nobody got time for that");
+        NSLog(@"busy, skipping getting room messages");
 //        _isUpdating = NO;
     }
 }
@@ -1065,11 +1053,7 @@
     
     // Need to keep trying until we successfully execute postGetRoomMessages
     
-    
     [self postGetRoomMessages];
-    
-    NSLog(@"newMessage polling check for new messages COMMENTED OUT");
-    
     
     //  don't think i need this next line unless to updateScrollBar
     //    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
@@ -1098,7 +1082,6 @@
     
     for (Room *item in _roomArray) {
         if ([thisGuy isEqualToString:item.memberNickName]) {
-//            NSLog(@"SCXTT Centering on %@ at row %ld",thisGuy,i);
             return i;
         }
         i++;
@@ -1126,7 +1109,6 @@
     
     if([annotation isKindOfClass:[VBAnnotation class]]) {
         VBAnnotation *myAnnotation = (VBAnnotation *)annotation;
-//      NSLog(@"SCXTT mapView viewForAnnotation myAnnotation.title:%@ myAnnotation.pinImageFile:%@", myAnnotation.title, myAnnotation.pinImageFile);
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
 //      Need to add code to test for old pins and use gray ones here
@@ -1175,7 +1157,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
-        NSLog(@"YOU DRAGGGGGED ME YOU DRAGGGGGGGED ME drag ended");
+        NSLog(@"drag ended");
         _okToRecenterMap = NO;
     }
 }
@@ -1198,8 +1180,11 @@ didAddAnnotationViews:(NSArray *)annotationViews
     southWest.longitude = [strs[1] doubleValue];
     northEast = southWest;
 
-    NSLog(@"updatePointsOnMapWithAPIData");
-    NSLog(@"My loc:%@", mLoc);
+    //SCXTT RELEASE
+//    NSLog(@"updatePointsOnMapWithAPIData");
+//    NSLog(@"My loc:%@", mLoc);
+
+    
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
@@ -1243,7 +1228,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 // Move the updated pin to its new locations
                 if ([ann.title isEqualToString:who])
                 {
-                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
+                    //SCXTT RELEASE
+//                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
@@ -1291,12 +1277,11 @@ didAddAnnotationViews:(NSArray *)annotationViews
             }
             // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
-                NSLog(@"SCXTT Adding new who %@ with pin %@", who, imageString);
+                //SCXTT RELEASE
+//                NSLog(@"Adding new who %@ with pin %@", who, imageString);
+
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
-                    //scxtt this next line causes problems when we are focused on a pin
-//                    _okToRecenterMap = YES;
-
                     VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:date PinImageFile:imageString PinImage:useThisPin];
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
@@ -1339,6 +1324,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 }
 
+//SCXTT this whole method can go
 -(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
 
     BOOL whoFound = NO;
@@ -1347,7 +1333,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
     if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]) {
 
         NSString *who = [dict valueForKey:@"who"];
-        //Prod remove this toast scxtt
 //        NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
 //        [self toastMsg:toast];
         NSLog(@"who=%@",who);
@@ -1371,7 +1356,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
         
 //        for (id<MKAnnotation> ann in _mapView.annotations)
         for (VBAnnotation *ann in _mapView.annotations){
-            NSLog(@"moving points checking ann.title is %@",ann.title);
+            //SCXTT RELEASE
+//            NSLog(@"moving points checking ann.title is %@",ann.title);
             
             // reset the span to include each and every pin as you go thru the list
             //ignore the 0,0 uninitialize annotations
@@ -1502,12 +1488,12 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)  interfaceOrientation duration:(NSTimeInterval)duration
 {
-    NSLog(@"SCxTT rotating now");
+    NSLog(@"rotating now");
 //    update the table view now
 }
 
 -(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    NSLog(@"SCxTT did rotate");
+    NSLog(@"did rotate");
     [self.tableView reloadData];
     [self scrollToNewestMessage];
 }

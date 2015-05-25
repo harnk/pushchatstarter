@@ -107,7 +107,7 @@ static UIColor* color = nil;
         
 //        point.x = myrect.size.width  - message.bubbleSize.width;
         point.x = self.bounds.size.width - message.bubbleSize.width;
-//        NSLog(@"SCXTT myrect.size.width: %f",myrect.size.width);
+//        NSLog(@"myrect.size.width: %f",myrect.size.width);
         
         _label.textAlignment = NSTextAlignmentRight;
 //        _label.textAlignment = NSTextAlignmentLeft;
@@ -131,7 +131,6 @@ static UIColor* color = nil;
 	[formatter setDateStyle:NSDateFormatterShortStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
 	[formatter setDoesRelativeDateFormatting:YES];
-//    right here is where to fix the dates being off by 6 hours scxtt utc
     
 	NSString* dateString = [formatter stringFromDate:message.date];
     

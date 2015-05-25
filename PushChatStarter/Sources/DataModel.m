@@ -62,11 +62,8 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 
 - (void)loadMessages:(NSString*)myLoc
 {
-    
-//    scxtt this NEEDS to change from getting from defaults to instead use getRoomMessages but only after being logged into a room
-    
-	NSString* path = [self messagesPath];
-    NSLog(@"loadMessages - messagesPath: %@", path);
+    NSString* path = [self messagesPath];
+//    NSLog(@"loadMessages - messagesPath: %@", path);
     NSString *checkStartingLoc = [[SingletonClass singleObject] myLocStr];
     if (nil == checkStartingLoc) {
         CLLocation *startingPoint = [[CLLocation alloc] initWithLatitude:40.689124 longitude:-74.044611];
@@ -74,36 +71,11 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
         CLLocation *newLoc = startingPoint;
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     }
-    NSLog(@"myLoc: %@", [[SingletonClass singleObject] myLocStr]);
+//    NSLog(@"myLoc: %@", [[SingletonClass singleObject] myLocStr]);
     
     _myLoc = myLoc;
-	
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:path])
-//	{
-//		// We store the messages in a plist file inside the app's Documents
-//		// directory. The Message object conforms to the NSCoding protocol,
-//		// which means that it can "freeze" itself into a data structure that
-//		// can be saved into a plist file. So can the NSMutableArray that holds
-//		// these Message objects. When we load the plist back in, the array and
-//		// its Messages "unfreeze" and are restored to their old state.
-//
-//		NSData* data = [[NSData alloc] initWithContentsOfFile:path];
-//		NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-//		self.messages = [unarchiver decodeObjectForKey:@"Messages"];
-//        
-//        
-//
-////      scxtt lets look at what messages are stored on the device
-//        for (Message *msg in self.messages) {
-//            NSLog(@"msg.senderName:%@ text:%@ date:%@ location:%@ ", msg.senderName, msg.text, msg.date, msg.location);
-//        }
-//        
-//        [unarchiver finishDecoding];
-//	}
-//	else
-//	{
-		self.messages = [NSMutableArray arrayWithCapacity:20];
-//	}
+    
+    self.messages = [NSMutableArray arrayWithCapacity:20];
 }
 
 - (void)saveMessages

@@ -42,7 +42,6 @@ void ShowErrorAlert(NSString* text)
     // Handle my location
     //    CLLocation *locA = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
     CLLocation *locA = [[SingletonClass singleObject] myNewLocation];
-    NSLog(@"SCXTT locA is:%@", locA);
     
     // Handle the location of the remote device
     NSArray *strings = [message.location componentsSeparatedByString:@","];
@@ -51,8 +50,6 @@ void ShowErrorAlert(NSString* text)
     //    NSLog(@"locB is:%@", locB);
     
     CLLocationDistance distance = [locA distanceFromLocation:locB];
-    NSLog(@"SCXTT The distance from me to it is:%f meters", distance);
-    
     message.distanceFromMeInMeters = distance;
     
     NSString *alertValue = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
@@ -91,7 +88,7 @@ void ShowErrorAlert(NSString* text)
         [self postImhere:asker];
     } else {
         if ([extra isEqualToString:@"imhere"]) {
-            NSLog(@"Found someone - dont put into the message bubble but do a toast that receiving updates is working");
+//            NSLog(@"Found someone - dont put into the message bubble but do a toast that receiving updates is working");
             [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedLocationUpdate" object:nil userInfo:userInfo];
         } else {
             //Prod doing away with the next line because API calls should get the new message
@@ -145,7 +142,7 @@ void ShowErrorAlert(NSString* text)
     //-- Set Notification
     if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
     {
-        NSLog(@"SCXTT responds to isRegistered...");
+//        NSLog(@"Responds to isRegistered...");
         // iOS 8 Notifications
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
         
@@ -153,7 +150,7 @@ void ShowErrorAlert(NSString* text)
     }
     else
     {
-        NSLog(@"SCXTT DOES NOT respond to to isRegistered...");
+//        NSLog(@"DOES NOT respond to to isRegistered...");
         // iOS < 8 Notifications
         [application registerForRemoteNotificationTypes:
          (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
@@ -287,7 +284,6 @@ void ShowErrorAlert(NSString* text)
     application.applicationIconBadgeNumber = 0;
     //Start the getRoomTimer going again
     [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
-    //This next line crashes SCXTT n start up, only do for real APNS notifications
     [backgroundTimer invalidate];
     backgroundTimer = nil;
     
@@ -323,7 +319,7 @@ void ShowErrorAlert(NSString* text)
 
 -(void)postImhere:(NSString *)asker
 {
-    NSLog(@"Respond to WhereRU with Im Here back to asker");
+//    NSLog(@"Respond to WhereRU with Im Here back to asker");
     NSLog(@"postImhere %@", [[SingletonClass singleObject] myLocStr]);
     NSString *text = @"Im Here";
     
@@ -349,8 +345,10 @@ void ShowErrorAlert(NSString* text)
 
 -(void)postLiveUpdate
 {
-    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
-    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
+//    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
+    
+    //SCXTT RELEASE
+//    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
@@ -364,8 +362,9 @@ void ShowErrorAlert(NSString* text)
      parameters:params
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-         NSLog(@"responseString: %@", responseString);
-         NSLog(@"operation: %@", operation);
+         //SCXTT RELEASE
+//         NSLog(@"responseString: %@", responseString);
+//         NSLog(@"operation: %@", operation);
 
          [NSTimer scheduledTimerWithTimeInterval: 5
                                           target: self
@@ -384,20 +383,20 @@ void ShowErrorAlert(NSString* text)
 
 -(void) postMyLoc {
     if ([[SingletonClass singleObject] imInARoom]) {
-        NSLog(@"imInARoom is true");
+//        NSLog(@"imInARoom is true");
         if (!_isUpdating) {
-            NSLog(@"were not _isUpdating");
+//            NSLog(@"were not _isUpdating");
             if (_deviceHasMoved) {
                 _isUpdating = YES;
-                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+//                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
                 [self postLiveUpdate];
                 _deviceHasMoved = NO;
             }
         } else {
-            NSLog(@"no API call since _isUpdating is already YES = Busy");
+//            NSLog(@"no API call since _isUpdating is already YES = Busy");
         }
     } else {
-        NSLog(@"imInARoom is false - no update");
+//        NSLog(@"imInARoom is false - no update");
     }
 }
 
@@ -418,9 +417,9 @@ void ShowErrorAlert(NSString* text)
     } else {
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
-//        NSLog(@"didUpdateLocations Move to: %@", [locations lastObject]);
-        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
-        // If moved farther than 20 yards do an API call scxtt
+        //SCXTT RELEASE
+//        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+        // If moved farther than 20 yards do an API call SCXTT - add logic
         _deviceHasMoved = YES;
         [self postMyLoc];
     }
@@ -468,7 +467,7 @@ void ShowErrorAlert(NSString* text)
     newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSLog(@"My token is: %@", newToken);
     
-    NSLog(@"SCXTT got a token so notificationsAreDisabled to NO");
+//    NSLog(@"Got a token so notificationsAreDisabled to NO");
     [[SingletonClass singleObject] setNotificationsAreDisabled:NO];
     
     //Tell the app the good news
