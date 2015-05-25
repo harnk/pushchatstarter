@@ -538,10 +538,10 @@
     _value2TextField.text = [dictionary objectForKey:@"value2"];
     
     //SCXTT RELEASE
-//    NSLog(@"requestReturnedData: %@",dictionary);
-//    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
-//    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
-//    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
+    NSLog(@"requestReturnedData: %@",dictionary);
+    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
+    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
+    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
 }
 
 
@@ -805,12 +805,12 @@
              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
          } else {
              //SCXTT RELEASE
-//             NSLog(@"getAPI cmd request sent");
+             NSLog(@"getAPI cmd request sent");
              NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
              
              //SCXTT RELEASE
-//             NSLog(@"responseString: %@", responseString);
-//             NSLog(@"operation: %@", operation);
+             NSLog(@"responseString: %@", responseString);
+             NSLog(@"operation: %@", operation);
              
              NSError *e = nil;
              NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -951,9 +951,9 @@
         NSString *secret_code = [_dataModel secretCode];
         
         //SCXTT RELEASE
-//        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
-//        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
-//        NSLog(@"user_id is: %@", [_dataModel userId]);
+        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
+        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"user_id is: %@", [_dataModel userId]);
         
          //SCXTT swipe up then run again is crashing here - its either location or user_id is not set yet
         
@@ -963,7 +963,7 @@
                                  @"secret_code":secret_code};
         
         //SCXTT RELEASE
-//        NSLog(@"params set, now do the API call with params: %@", params);
+        NSLog(@"params set, now do the API call with params: %@", params);
 
         
         [_client
@@ -981,7 +981,7 @@
                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
                  
                  //SCXTT RELEASE
-//                 NSLog(@"getroommessages responseString: %@", responseString);
+                 NSLog(@"getroommessages responseString: %@", responseString);
                  
                  NSError *e = nil;
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -1181,8 +1181,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
     northEast = southWest;
 
     //SCXTT RELEASE
-//    NSLog(@"updatePointsOnMapWithAPIData");
-//    NSLog(@"My loc:%@", mLoc);
+    NSLog(@"updatePointsOnMapWithAPIData");
+    NSLog(@"My loc:%@", mLoc);
 
     
     // Loop thru all _roomArray[Room objects]
@@ -1229,7 +1229,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 if ([ann.title isEqualToString:who])
                 {
                     //SCXTT RELEASE
-//                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
+                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
@@ -1278,7 +1278,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
                 //SCXTT RELEASE
-//                NSLog(@"Adding new who %@ with pin %@", who, imageString);
+                NSLog(@"Adding new who %@ with pin %@", who, imageString);
 
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
@@ -1357,7 +1357,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 //        for (id<MKAnnotation> ann in _mapView.annotations)
         for (VBAnnotation *ann in _mapView.annotations){
             //SCXTT RELEASE
-//            NSLog(@"moving points checking ann.title is %@",ann.title);
+            NSLog(@"moving points checking ann.title is %@",ann.title);
             
             // reset the span to include each and every pin as you go thru the list
             //ignore the 0,0 uninitialize annotations

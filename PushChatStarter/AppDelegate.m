@@ -348,7 +348,7 @@ void ShowErrorAlert(NSString* text)
 //    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
     
     //SCXTT RELEASE
-//    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
@@ -363,8 +363,8 @@ void ShowErrorAlert(NSString* text)
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
          //SCXTT RELEASE
-//         NSLog(@"responseString: %@", responseString);
-//         NSLog(@"operation: %@", operation);
+         NSLog(@"responseString: %@", responseString);
+         NSLog(@"operation: %@", operation);
 
          [NSTimer scheduledTimerWithTimeInterval: 5
                                           target: self
@@ -418,7 +418,7 @@ void ShowErrorAlert(NSString* text)
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
         //SCXTT RELEASE
-//        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
         // If moved farther than 20 yards do an API call SCXTT - add logic
         _deviceHasMoved = YES;
         [self postMyLoc];

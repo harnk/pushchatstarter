@@ -454,8 +454,8 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
             
             NSData *myDebugData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:&error];
             //SCXTT RELEASE
-//            NSLog(@"method: %@, path: %@, parameters: %@", method, path, parameters);
-//            NSLog(@"API - JSON Sent: %@", [[NSString alloc] initWithData:myDebugData encoding:NSUTF8StringEncoding]);
+            NSLog(@"method: %@, path: %@, parameters: %@", method, path, parameters);
+            NSLog(@"API - JSON Sent: %@", [[NSString alloc] initWithData:myDebugData encoding:NSUTF8StringEncoding]);
             
             switch (self.parameterEncoding) {
                 case AFFormURLParameterEncoding:;

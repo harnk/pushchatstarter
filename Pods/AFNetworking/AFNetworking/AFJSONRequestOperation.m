@@ -79,7 +79,7 @@ static dispatch_queue_t json_request_operation_processing_queue() {
 
             self.responseJSON = [NSJSONSerialization JSONObjectWithData:JSONData options:self.JSONReadingOptions error:&error];
             //SCXTT RELEASE
-//            NSLog(@"API - JSON Returned: %@", _responseJSON);
+            NSLog(@"API - JSON Returned: %@", _responseJSON);
         }
 
         self.JSONError = error;
