@@ -1278,7 +1278,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
                 //SCXTT RELEASE
-                NSLog(@"Adding new who %@ with pin %@", who, imageString);
+//                NSLog(@"Adding new who %@ with pin %@", who, imageString);
 
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
@@ -1293,35 +1293,36 @@ didAddAnnotationViews:(NSArray *)annotationViews
         }
     } // end for (Room *item in _roomArray)
     // Recenter map
-
+    
     if (_okToRecenterMap) {
-        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-        
-        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-        CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-        
-        
-        [self reCenterMap:region meters:meters];
-    } else if ([self getThisGuysRow:_centerOnThisGuy] >= 0) {
-        CLLocationCoordinate2D location;
-        MKCoordinateRegion region;
-        
-        NSArray *strings = [[[_roomArray objectAtIndex:[self getThisGuysRow:_centerOnThisGuy]] memberLocation] componentsSeparatedByString:@","];
-        location.latitude = [strings[0] doubleValue];
-        location.longitude = [strings[1] doubleValue];
-        
-        _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
-        _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
-        
-        // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-        //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-        CLLocationDistance meters = 1000;
-        
-        [self reCenterMap:region meters:meters];
-        
+        if (([self getThisGuysRow:_centerOnThisGuy] >= 0)) {
+            CLLocationCoordinate2D location;
+            MKCoordinateRegion region;
+            
+            NSArray *strings = [[[_roomArray objectAtIndex:[self getThisGuysRow:_centerOnThisGuy]] memberLocation] componentsSeparatedByString:@","];
+            location.latitude = [strings[0] doubleValue];
+            location.longitude = [strings[1] doubleValue];
+            
+            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+            
+            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+            //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+            CLLocationDistance meters = 1000;
+            
+            [self reCenterMap:region meters:meters];
+        } else {
+            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
+            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
+            
+            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
+            CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
+            
+            
+            [self reCenterMap:region meters:meters];
+            
+        }
     }
-
 }
 
 //SCXTT this whole method can go
@@ -1357,7 +1358,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 //        for (id<MKAnnotation> ann in _mapView.annotations)
         for (VBAnnotation *ann in _mapView.annotations){
             //SCXTT RELEASE
-            NSLog(@"moving points checking ann.title is %@",ann.title);
+//            NSLog(@"moving points checking ann.title is %@",ann.title);
             
             // reset the span to include each and every pin as you go thru the list
             //ignore the 0,0 uninitialize annotations
