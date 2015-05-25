@@ -627,6 +627,7 @@
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     _centerOnThisGuy = [[_roomArray objectAtIndex:row] memberNickName];
+    _okToRecenterMap = YES;
 //    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
     
     self.title = [[_roomArray objectAtIndex:row] memberNickName];
@@ -690,7 +691,7 @@
         _pickerIsUp = YES;
         [self setUpPickerView];
         //scxtt remove next line??
-        _okToRecenterMap = NO;
+//        _okToRecenterMap = NO;
     }
     
 }
