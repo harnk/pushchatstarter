@@ -67,6 +67,7 @@
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
+		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
 		9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */; };
 		D6FAA1E61AD7482300A68B6A /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E41AD7482300A68B6A /* blue.png */; };
 		D6FAA1E71AD7482300A68B6A /* bluemenuitem.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */; };
@@ -153,6 +154,7 @@
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
+		9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button-pressed.jpg"; sourceTree = "<group>"; };
 		9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyangray.png; sourceTree = "<group>"; };
 		A18058E202D844758047AD1F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA74DB54E5F2B5D84B2548E0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 		61489EBA17041CB20049C6F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */,
 				9E09A6671AF9BCAA00E09331 /* back-button.jpg */,
 				9E4408EE1AD8B3870079A4CA /* pickerimages */,
 				D6FAA1E41AD7482300A68B6A /* blue.png */,
@@ -431,6 +434,7 @@
 				9E4408FE1AD8B3F70079A4CA /* pkorange.png in Resources */,
 				9E4409021AD8B3F70079A4CA /* pkyellow.png in Resources */,
 				61489ECE17041F0D0049C6F9 /* iTunesArtwork in Resources */,
+				9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

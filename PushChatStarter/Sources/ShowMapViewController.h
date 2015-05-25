@@ -58,6 +58,5 @@
 
 @property (nonatomic, strong) NSMutableArray * roomArray; // Current locations of all in the room
 @property (nonatomic, strong) NSMutableArray * roomMessagesArray; // Current messages in the room
-@property(assign) NSInteger centerOnThisRoomArrayRow;
-
+@property (nonatomic, strong) NSString *centerOnThisGuy;
 @end

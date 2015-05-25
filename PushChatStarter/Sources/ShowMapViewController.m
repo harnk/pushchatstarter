@@ -37,7 +37,6 @@
     NSTimer *getRoomTimer;
     NSTimer *getMessagesTimer;
     UIPickerView *myPickerView;
-//    NSInteger *centerOnThisRoomArrayRow;
 }
 
 @end
@@ -176,6 +175,7 @@
 }
 
 -(void) returnToAllWithMessage:(NSString *)toastMsg {
+    _centerOnThisGuy = @"";
     if (toastMsg.length > 0) {
 //        [self multiLineToastMsg:[_dataModel secretCode] detailText:@"returning to view of entire map group"];
         [self multiLineToastMsg:[_dataModel secretCode] detailText:toastMsg];
@@ -248,7 +248,7 @@
     
     _textView.delegate = self;
     myPickerView.delegate = self;
-    _centerOnThisRoomArrayRow = -1;
+    _centerOnThisGuy = @"";
 
     // Add this to detect user dragging map
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
@@ -320,7 +320,7 @@
     NSLog(@"scXtt stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
-        NSLog(@"scXtt [_getRoomTimer invalidate]");
+        NSLog(@"scXtt [getRoomTimer invalidate]");
         [getRoomTimer invalidate];
         getRoomTimer = nil;
     } else {
@@ -330,7 +330,7 @@
     
     if(getMessagesTimer)
     {
-        NSLog(@"scXtt [_getRoomTimer invalidate]");
+        NSLog(@"scXtt [getMessagesTimer invalidate]");
         [getMessagesTimer invalidate];
         getMessagesTimer = nil;
     } else {
@@ -350,6 +350,7 @@
                                                    userInfo: nil
                                                     repeats: YES];
     
+    NSLog(@"scXtt starting GetMessagesTimer WHY ISNT THIS WORKING?!?!?!?!?");
     getMessagesTimer  = [NSTimer scheduledTimerWithTimeInterval: 60
                                                      target: self
                                                    selector: @selector(postGetRoomMessages)
@@ -648,10 +649,13 @@
     [self multiLineToastMsg:@"Locating" detailText:[[_roomArray objectAtIndex:row] memberNickName]];
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
-    _centerOnThisRoomArrayRow = row;
+    _centerOnThisGuy = [[_roomArray objectAtIndex:row] memberNickName];
+    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
+    
     self.title = [[_roomArray objectAtIndex:row] memberNickName];
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"back-button-pressed.jpg"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(returnToAll)forControlEvents:UIControlEventTouchUpInside];
     [button setFrame:CGRectMake(0, 0, 42, 22)];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
@@ -1054,14 +1058,6 @@
     }
 }
 
-- (void)pollForNewMessage
-{
-    // NEED TO ADD CHECH FOR NOTIFICATIONS DISABLED and only do this if they are
-    
-    [self postGetRoomMessages];
-    NSLog(@"newMessage polling");
-}
-
 - (void)checkForNewMessage
 {
     
@@ -1095,6 +1091,21 @@
 {
     [_mapView deselectAnnotation:annotation animated:YES];
 }
+
+- (NSInteger) getThisGuysRow:(NSString *)thisGuy {
+    
+    NSInteger i = 0;
+    
+    for (Room *item in _roomArray) {
+        if ([thisGuy isEqualToString:item.memberNickName]) {
+//            NSLog(@"SCXTT Centering on %@ at row %ld",thisGuy,i);
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}
+
 
 -(BOOL)annTitleHasLeftRoom:(NSString *)nickname {
 //    NSLog(@"Has %@ left yet?", nickname);
@@ -1165,7 +1176,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"YOU DRAGGGGGED ME YOU DRAGGGGGGGED ME drag ended");
-        _centerOnThisRoomArrayRow = -1;
         _okToRecenterMap = NO;
     }
 }
@@ -1190,7 +1200,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
     NSLog(@"updatePointsOnMapWithAPIData");
     NSLog(@"My loc:%@", mLoc);
-    NSLog(@"We will center on this if its not -1 centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
@@ -1220,7 +1229,9 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 //First see if this ann still has a _roomArray match
                 //or if the person has left the room kill this ann
                 if ([self annTitleHasLeftRoom:ann.title]) {
-                    _centerOnThisRoomArrayRow = -1;
+                    if ([ann.title isEqualToString:_centerOnThisGuy]){
+                        [self returnToAllWithMessage:@""];
+                    }
                     [self multiLineToastMsg:ann.title detailText:@"has left the map group"];
                     [self.mapView removeAnnotation:ann];
                 }
@@ -1243,12 +1254,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
                         
 //                        ann.subtitle = dateString; // i dont think this line works either
                         ann.subtitle = @"date and distance from me"; // i dont think this line works either
-                        
-                        
-                        
-                        
-                        
-                        
                         
                         //Format the location to read distance from me now
                         //get location from message.location
@@ -1278,15 +1283,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
                             ann.subtitle = [NSString stringWithFormat:@"%@, %.1f y", dateString, distanceInYards];
                         }
                         
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                         
                         ann.loctime = date; // this prob isnt working either
                         [ann setCoordinate:location];
@@ -1312,6 +1308,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
         }
     } // end for (Room *item in _roomArray)
     // Recenter map
+
     if (_okToRecenterMap) {
         _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
         _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
@@ -1321,13 +1318,11 @@ didAddAnnotationViews:(NSArray *)annotationViews
         
         
         [self reCenterMap:region meters:meters];
-    } else if ((_centerOnThisRoomArrayRow >= 0) && ([_roomArray count] >_centerOnThisRoomArrayRow)) {
-        //                NSLog(@"SCXTT we have selected a pin to center on so do it centerOnThisRoomArrayRow:%ld", _centerOnThisRoomArrayRow);
+    } else if ([self getThisGuysRow:_centerOnThisGuy] >= 0) {
         CLLocationCoordinate2D location;
         MKCoordinateRegion region;
         
-        
-        NSArray *strings = [[[_roomArray objectAtIndex:_centerOnThisRoomArrayRow] memberLocation] componentsSeparatedByString:@","];
+        NSArray *strings = [[[_roomArray objectAtIndex:[self getThisGuysRow:_centerOnThisGuy]] memberLocation] componentsSeparatedByString:@","];
         location.latitude = [strings[0] doubleValue];
         location.longitude = [strings[1] doubleValue];
         

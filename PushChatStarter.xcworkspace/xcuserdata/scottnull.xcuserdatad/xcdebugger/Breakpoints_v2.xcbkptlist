@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "452656289.923915"
+            timestampString = "453867462.394803"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "884"
-            endingLineNumber = "884"
+            startingLineNumber = "903"
+            endingLineNumber = "903"
             landmarkName = "-postGetRoom"
             landmarkType = "5">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "452831950.425948"
+            timestampString = "453867462.394803"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "797"
-            endingLineNumber = "797"
+            startingLineNumber = "816"
+            endingLineNumber = "816"
             landmarkName = "-setPinImageBasedOnNickName"
             landmarkType = "5">
          </BreakpointContent>
