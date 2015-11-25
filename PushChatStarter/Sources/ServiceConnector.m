@@ -46,7 +46,7 @@
     NSData *data = [[dictionary copy] JSONValue];
     
     [request setHTTPBody:data]; //set the data as the post body
-    [request addValue:[NSString stringWithFormat:@"%d",data.length] forHTTPHeaderField:@"Content-Length"];
+    [request addValue:[NSString stringWithFormat:@"%lu",(unsigned long)data.length] forHTTPHeaderField:@"Content-Length"];
     
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if(!connection){
@@ -77,7 +77,7 @@
 //    _output.text = dictionary.JSONString; // set the textview to the raw string value of the data recieved
     
 
-    NSLog(@"Request Complete, recieved %d bytes of data: %@",receivedData.length, dictionary.JSONString);
+    NSLog(@"Request Complete, recieved %lu bytes of data: %@",(unsigned long)receivedData.length, dictionary.JSONString);
     
     [self.delegate requestReturnedData:receivedData];//send the data to the delegate
 }

@@ -630,7 +630,11 @@
     _okToRecenterMap = YES;
 //    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
     
-    self.title = [[_roomArray objectAtIndex:row] memberNickName];
+//    self.title = [[_roomArray objectAtIndex:row] memberNickName];
+    
+    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[_roomArray objectAtIndex:row] memberNickName]];
+    
+    
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"back-button-pressed.jpg"] forState:UIControlStateHighlighted];
@@ -1023,7 +1027,7 @@
                          message.text = [item objectForKey:@"message"];
 //                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
-//                         NSLog(@"Message added at index:%d" ,index);
+                         NSLog(@"Message added at index:%d" ,index);
                      }
 //                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
 //                     NSLog(@"Reload table data");
