@@ -144,7 +144,7 @@
 
 - (void)setUpButtonBarItems {
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
 }
@@ -159,7 +159,7 @@
         _okToRecenterMap = YES;
     }
     self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStyleBordered target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
 }
 
@@ -335,57 +335,18 @@
 }
 
 -(void) areNotificationsEnabled {
-    BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
-    NSLog(@"[[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
-//    NSLog(@"Move the ALERT HERE for Notifs being off");
-    
-    NSLog(@"Setting notificationsAreDisabled to YES by default");
-    [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
+
     // Check if notifications are enabled because this app won't work if they aren't
-    //    _notificationsAreDisabled = false;
-    BOOL isdisabled = true;
-    
-    if (IS_OS_8_OR_LATER) {
-        if ([[UIApplication sharedApplication] respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-        {
-            NSLog(@"IS_OS_8_OR_LATER is YES");
-            isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
-            NSLog(@"isdisabled value: %d",isdisabled);
-        }
-        
-    } else {
-        NSLog(@"IS_OS_8_OR_LATER is NO");
-        
-        
-        UIRemoteNotificationType notifTypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-        //        if (notifTypes & UIRemoteNotificationTypeAlert)
-        if (notifTypes != 12)
-        {
-            isdisabled = false;
-            NSLog(@"isdisabled value: %d",isdisabled);
-            //            NSLog(@"UIRemoteNotificationType notifTypes: %lu", notifTypes);
-        }
-    }
-    
-    
+    BOOL isdisabled =  ![[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
     [[SingletonClass singleObject] setNotificationsAreDisabled:isdisabled];
-    //    _notificationsAreDisabled = isdisabled;
     
     //Pop an aler to let the user go to settings and change notifications setting for this app
     if (isdisabled) {
-        if (IS_OS_8_OR_LATER){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-            alert.tag = kAlertViewNotifications;
-            [alert show];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications in Settings - Notification Center." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil, nil];
-            alert.tag = kAlertViewNotifications;
-            [alert show];
-        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+        alert.tag = kAlertViewNotifications;
+        [alert show];
     }
-    
 }
-
 
 
 #pragma mark -
@@ -466,13 +427,16 @@
     [cell setMessage:message];
     
     //Do orientation specific stuff here
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-        //Make labels smaller
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if ((orientation == UIInterfaceOrientationLandscapeLeft)
+        ||  (orientation == UIInterfaceOrientationLandscapeRight) )
+    {
+        //Landscape so make labels bigger
     }
-    else {
-        //Make them bigger
+    else
+    {
+        //Portrait so make labels smaller
     }
-    
     
     return cell;
 }
@@ -1482,14 +1446,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 #pragma mark - Managing Orientation
 
-- (BOOL)shouldAutorotate
-{
-    //returns true to allow orientation change in IOS 8 devices
-    if (IS_OS_8_OR_LATER) {
+- (BOOL)shouldAutorotate {
         return YES;
-    } else {
-        return NO;
-    }
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)  interfaceOrientation duration:(NSTimeInterval)duration

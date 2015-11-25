@@ -46,28 +46,28 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 	}
 }
 
++(CGSize)frameForText:(NSString*)text sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode  {
+    
+    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraphStyle.lineBreakMode = lineBreakMode;
+    
+    NSDictionary * attributes = @{NSFontAttributeName:font,
+                                  NSParagraphStyleAttributeName:paragraphStyle
+                                  };
+    
+    
+    CGRect textRect = [text boundingRectWithSize:size
+                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                      attributes:attributes
+                                         context:nil];
+    
+    //Contains both width & height ... Needed: The height
+    return textRect.size;
+}
+
 + (CGSize)sizeForText:(NSString*)text
 {
-//    CGSize textSize = [string sizeWithFont:font
-//                         constrainedToSize:constrainSize
-//                             lineBreakMode:NSLineBreakByWordWrapping];
-//    
-//    CGRect textRect = [text boundingRectWithSize:textSize
-//                                         options:NSStringDrawingUsesLineFragmentOrigin
-//                                      attributes:@{NSFontAttributeName:FONT}
-//                                         context:nil];
-//    WARNING FIX HERE http://stackoverflow.com/questions/18903304/replacement-for-deprecated-sizewithfontconstrainedtosizelinebreakmode-in-ios
-
-    CGSize textSize = [text sizeWithFont:font
-                       constrainedToSize:CGSizeMake(WrapWidth, 9999)
-                           lineBreakMode:NSLineBreakByWordWrapping];
-
-//SCXTT this beow gets rid of warning but messes up chat bubble
-//    CGSize textSize = [text boundingRectWithSize:CGSizeMake(WrapWidth, 9999)
-//                                         options:NSStringDrawingUsesLineFragmentOrigin
-//                                      attributes:@{NSFontAttributeName: font}
-//                                         context:nil].size;
-
+    CGSize textSize = [self frameForText:text sizeWithFont:font constrainedToSize:CGSizeMake(WrapWidth, 9999) lineBreakMode:NSLineBreakByWordWrapping];
 
 	CGSize bubbleSize;
 	bubbleSize.width = textSize.width + TextLeftMargin + TextRightMargin;
@@ -110,24 +110,16 @@ const CGFloat WrapWidth = 200;       // maximum width of text in the bubble
 		textRect.origin.x = bubbleRect.origin.x + TextRightMargin;
 	}
 
-//    [[UIColor blackColor] set];
     [[UIColor whiteColor] set];
-
-//	deprecated
-    [_text drawInRect:textRect withFont:font lineBreakMode:NSLineBreakByWordWrapping];
-
-//    SCXTT this beow gets rid of warning but messes up chat bubble
-//    /// Make a copy of the default paragraph style
-//    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//    /// Set line break mode
-//    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-//    /// Set text alignment
-//    paragraphStyle.alignment = NSTextAlignmentRight;
-//    
-//    NSDictionary *attributes = @{ NSFontAttributeName: font,
-//                                  NSParagraphStyleAttributeName: paragraphStyle };
-//    
-//    [_text drawInRect:rect withAttributes:attributes];
+    NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    textStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    textStyle.alignment = NSTextAlignmentLeft;
+    
+    NSDictionary *attributes = @{ NSFontAttributeName: font,
+                                  NSForegroundColorAttributeName: [UIColor whiteColor],
+                                  NSParagraphStyleAttributeName: textStyle };
+    
+    [_text drawInRect:textRect withAttributes:attributes];
     
 }
 

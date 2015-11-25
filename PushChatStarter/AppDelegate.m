@@ -139,23 +139,6 @@ void ShowErrorAlert(NSString* text)
     
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
-    //-- Set Notification
-    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-    {
-//        NSLog(@"Responds to isRegistered...");
-        // iOS 8 Notifications
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        
-        [application registerForRemoteNotifications];
-    }
-    else
-    {
-//        NSLog(@"DOES NOT respond to to isRegistered...");
-        // iOS < 8 Notifications
-        [application registerForRemoteNotificationTypes:
-         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
-    }
-    
     // HARPY BEGIN
     // Check to see if a newer version of this app is available
     // Present Window before calling Harpy
@@ -203,23 +186,18 @@ void ShowErrorAlert(NSString* text)
     
     //SCXTT Need to review this and see if it is still necesary
     [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+
     // register for types of remote notifications
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeNewsstandContentAvailability|
-      UIRemoteNotificationTypeBadge |
-      UIRemoteNotificationTypeSound |
-      UIRemoteNotificationTypeAlert)];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
     
     // Start updating my own location
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     _deviceHasMoved = YES;
 
-    if(IS_OS_8_OR_LATER) {
-        // Use one or the other, not both. Depending on what you put in info.plist
-        //        [self.locationManager requestWhenInUseAuthorization];
-        [self.locationManager requestAlwaysAuthorization];
-    }
+    [self.locationManager requestAlwaysAuthorization];
+
 //    self.locationManager.pausesLocationUpdatesAutomatically = YES;
 //    [self.locationManager startMonitoringSignificantLocationChanges];
 
