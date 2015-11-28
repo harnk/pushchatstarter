@@ -62,7 +62,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 
 - (void)loadMessages:(NSString*)myLoc
 {
-//    NSString* path = [self messagesPath];
+    NSString* path = [self messagesPath];
 //    NSLog(@"loadMessages - messagesPath: %@", path);
     NSString *checkStartingLoc = [[SingletonClass singleObject] myLocStr];
     if (nil == checkStartingLoc) {

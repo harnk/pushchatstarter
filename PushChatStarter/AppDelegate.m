@@ -341,9 +341,38 @@ void ShowErrorAlert(NSString* text)
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
          //SCXTT RELEASE
-         NSLog(@"responseString: %@", responseString);
-         NSLog(@"operation: %@", operation);
+         NSLog(@"SCXTT responseString: %@", responseString);
+         NSLog(@"SCXTT operation: %@", operation);
+         NSLog(@"SCXTT need to check repsonse to see if looking is 1 yet for anyone");
 
+         
+         
+         
+         // Loop thru the response and check key "looking"
+         NSError *e = nil;
+         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+         if (!jsonArray) {
+             NSLog(@"Error parsing JSON: %@", e);
+         } else {
+             BOOL foundALooker = NO;
+             for(NSDictionary *item in jsonArray) {
+                 NSString *mLooking = [item objectForKey:@"looking"];
+                 if ([mLooking isEqual:@"1"]) {
+                     NSString *mNickName = [item objectForKey:@"nickname"];
+                     NSLog(@"SCXTT %@ is looking", mNickName );
+                     foundALooker = YES;
+                     NSLog(@"SCXTT Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                 }
+             }
+             NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+         }
+         
+         
+         
+         
+         
+
+         
          [NSTimer scheduledTimerWithTimeInterval: 5
                                           target: self
                                         selector: @selector(resetIsUpdating)
@@ -369,6 +398,9 @@ void ShowErrorAlert(NSString* text)
 //                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
                 [self postLiveUpdate];
                 _deviceHasMoved = NO;
+
+                // Need to check response for anyone still looking and set _isAnyoneStillLooking
+                
             }
         } else {
 //            NSLog(@"no API call since _isUpdating is already YES = Busy");
@@ -391,7 +423,7 @@ void ShowErrorAlert(NSString* text)
 // If the stored loc string is the same as this new one do not print to the console
     if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
         //do nothing
-//        NSLog(@"same");
+        NSLog(@"same");
     } else {
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];

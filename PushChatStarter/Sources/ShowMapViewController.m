@@ -595,8 +595,9 @@
 //    NSLog(@"Centering on this guy: %@", _centerOnThisGuy);
     
 //    self.title = [[_roomArray objectAtIndex:row] memberNickName];
-    
-    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[_roomArray objectAtIndex:row] memberNickName]];
+// SCXTT TO BE ADDED
+//    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[_roomArray objectAtIndex:row] memberNickName]];
+    self.title = [NSString stringWithFormat:@"%@", [[_roomArray objectAtIndex:row] memberNickName]];
     
     
     UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
@@ -913,88 +914,52 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-//        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
-//        [self toastMsg:toast];
         NSLog(@"Getting map group messages");
 
         NSString *secret_code = [_dataModel secretCode];
-        
-        //SCXTT RELEASE
-        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
-        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
-        NSLog(@"user_id is: %@", [_dataModel userId]);
-        
-         //SCXTT swipe up then run again is crashing here - its either location or user_id is not set yet
-        
         NSDictionary *params = @{@"cmd":@"getroommessages",
                                  @"user_id":[_dataModel userId],
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"secret_code":secret_code};
-        
-        //SCXTT RELEASE
-        NSLog(@"params set, now do the API call with params: %@", params);
-
-        
         [_client
          postPath:ServerPostPathURL
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             
              NSLog(@"in callback - success");
-
              _isUpdating = NO;
              if (operation.response.statusCode != 200) {
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
              } else {
                  NSLog(@"SMVC Get all messages for this room");
                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                 
-                 //SCXTT RELEASE
-                 NSLog(@"getroommessages responseString: %@", responseString);
-                 
                  NSError *e = nil;
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
                  if (!jsonArray) {
                      NSLog(@"Error parsing JSON: %@", e);
                      [self.dataModel.messages removeAllObjects];
-                     // SCXTT these next three lines dont do what I wanted, I want one table cell to say No one is here
-//                     Message *message = [[Message alloc] init];
-//                     message.text = @"No one is here";
-//                     int index = [self.dataModel addMessage:message];
                  } else {
-                     
-                     //                   Blank out and reload _roomArray
                      if (!_roomMessagesArray) {
                          _roomMessagesArray = [[NSMutableArray alloc] init];
                      } else {
-                         NSLog(@"reset roomMessagesArray");
                          [_roomMessagesArray removeAllObjects];
                      }
                      [self.dataModel.messages removeAllObjects];
                      
-                     // Process all messages from JSON array ///////////////////////////////////////////////////////////////////////////////////////
+                     // Process all messages from JSON array //////////////////////////////////////////
                      for(NSDictionary *item in jsonArray) {
                          Message *message = [[Message alloc] init];
-                         
-                         //If message user_id == my userID then senderName = nil
-//                         NSLog(@"[_dataModel userId] == [item objectForKey:@user_id]: %@ == %@",[_dataModel userId], [item objectForKey:@"user_id"]);
-                         
                          if ([[_dataModel userId] isEqualToString:[item objectForKey:@"user_id"]]) {
                              message.senderName = nil;
                          } else {
                              message.senderName = [item objectForKey:@"nickname"];
                          }
-                         
                          message.date = [self dateFromUTCDateStr:[item objectForKey:@"time_posted"]];
                          message.location = [item objectForKey:@"location"];
                          message.text = [item objectForKey:@"message"];
-//                         NSLog(@"addMessage message_id:%@, nickname: %@, message: %@", [item objectForKey:@"message_id"], [item objectForKey:@"nickname"], [item objectForKey:@"message"]);
                          int index = [self.dataModel addMessage:message];
                          NSLog(@"Message added at index:%d" ,index);
                      }
-//                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
-//                     NSLog(@"Reload table data");
                      [self.tableView reloadData];
                      [self scrollToNewestMessage];
                      // We got it so reset below
