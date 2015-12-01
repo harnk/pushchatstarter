@@ -253,6 +253,7 @@
         [self postGetRoomMessages];
         [self postGetRoom];
         [self.tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
     }
     
 }
@@ -318,7 +319,7 @@
 
 -(void)startGetRoomTimer {
     [self stopGetRoomTimer];
-//    NSLog(@"startGetRoomTimer");
+    NSLog(@"startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                      target: self
@@ -845,7 +846,7 @@
 
 - (void)postGetRoom
 {
-
+    NSLog(@"SCXTT postGetRoom should happene every 5 secs");
     if ([_dataModel joinedChat]) {
         if (_isFromNotification) {
             [self postGetRoomMessages];
@@ -858,7 +859,7 @@
                     //    [_messageTextView resignFirstResponder];
                     //    NSString *text = self.messageTextView.text;
                     NSString *text = @"Hey WhereRU?";
-                    
+                    NSLog(@"SCXTT getting room cmd:getroom");
                     NSDictionary *params = @{@"cmd":@"getroom",
                                              @"user_id":[_dataModel userId],
                                              @"location":[[SingletonClass singleObject] myLocStr],

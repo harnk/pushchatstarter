@@ -348,7 +348,7 @@ void ShowErrorAlert(NSString* text)
          
          
          
-         // Loop thru the response and check key "looking"
+         // SCXTT WIP Loop thru the response and check key "looking"
          NSError *e = nil;
          NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
          if (!jsonArray) {
