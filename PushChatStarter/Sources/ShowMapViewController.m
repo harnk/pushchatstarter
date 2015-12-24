@@ -710,7 +710,7 @@
 - (IBAction)exitAction
 {
     // SCXTT make this next part coexist with the alertview that launches the app settings TBD
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out of This Map Group" message:@"Are you sure you wish to sign out of this map group? You friends here will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out of This Map Group" message:@"Are you sure your wish to sign out of this map group? You friends here will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
     alert.tag = kAlertViewSignOut;
     [alert show];
 
@@ -1207,13 +1207,13 @@ didAddAnnotationViews:(NSArray *)annotationViews
                         
                         ann.loctime = date; // this prob isnt working either
                         [ann setCoordinate:location];
-                    }
-                }
-            }
+                    } // 0.000, 0.000
+                } // ann title = who
+            } // for marker in markers
             // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
                 //SCXTT RELEASE
-//                NSLog(@"Adding new who %@ with pin %@", who, imageString);
+                NSLog(@"Adding new who %@ with pin %@", who, imageString);
 
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];
@@ -1223,9 +1223,9 @@ didAddAnnotationViews:(NSArray *)annotationViews
                     [annNew setCoordinate:location];
 
                     [self.mapView addAnnotation:annNew];
-                }
-            }
-        }
+                } //0,0
+            } // !whoFound
+        } // 0.000, 0.000
     } // end for (Room *item in _roomArray)
     // Recenter map
     
