@@ -83,6 +83,21 @@ void ShowErrorAlert(NSString* text)
         NSString *asker = [userInfo valueForKey:@"asker"];
 //        [self.locationManager startMonitoringSignificantLocationChanges];
         self.locationManager.pausesLocationUpdatesAutomatically = NO;
+        
+        // If battery is above 90 percent do a CLActivityTypeFitness else do CLActivityTypeAutomotiveNavigation
+        
+        [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+        float batteryLevel = [[UIDevice currentDevice] batteryLevel];
+        
+        //This will give you the battery between 0.0 (empty) and 1.0 (100% charged)
+        //If you want it as a percentage, you can do this:
+        
+        batteryLevel *= 100;
+        NSLog(@"SCXTT batteryLevel is %f", batteryLevel);
+        
+        
+        
+        
         self.locationManager.activityType = CLActivityTypeFitness;
         [self.locationManager startUpdatingLocation];
         [self postImhere:asker];
@@ -415,6 +430,12 @@ void ShowErrorAlert(NSString* text)
 //
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray *)locations {
+    // This is the battery burner right here ... must optimize this
+    
+    CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
+    CLLocation * newLocation = [locations lastObject];
+    CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
+    NSLog(@"SCXTT device moved %f yards", distanceMoved);
     
     [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
     
