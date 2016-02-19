@@ -88,10 +88,6 @@ void ShowErrorAlert(NSString* text)
         
         [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
         float batteryLevel = [[UIDevice currentDevice] batteryLevel];
-        
-        //This will give you the battery between 0.0 (empty) and 1.0 (100% charged)
-        //If you want it as a percentage, you can do this:
-        
         batteryLevel *= 100;
         NSLog(@"SCXTT batteryLevel is %f", batteryLevel);
         
@@ -446,6 +442,7 @@ void ShowErrorAlert(NSString* text)
         //do nothing
         NSLog(@"same");
     } else {
+        
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
         //SCXTT RELEASE
