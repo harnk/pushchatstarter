@@ -388,7 +388,7 @@ int retryCounter = 0;
                  if (retryCounter > 3) {
                      NSLog(@"IM DONE IN BackgroundLocationService so STOPPING");
                      retryCounter = 0;
-                     NSLog(@"SCXTT NEED TO STOP LOCATIONSERVICES HERE");
+                     NSLog(@"SCXTT NEED TO STOP LOCATIONMANAGER HERE");
                  }
              }
          }
