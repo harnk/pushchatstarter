@@ -28,6 +28,9 @@ void ShowErrorAlert(NSString* text)
 
 @implementation AppDelegate
 
+int retryCounter = 0;
+
+
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
@@ -376,6 +379,18 @@ void ShowErrorAlert(NSString* text)
                  }
              }
              NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+             if (foundALooker) {
+                 NSLog(@"since someoneIsLooking keep updating my loc in the background");
+                 retryCounter = 0;
+             } else {
+                 retryCounter += 1;
+                 NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
+                 if (retryCounter > 3) {
+                     NSLog(@"IM DONE IN BackgroundLocationService so STOPPING");
+                     retryCounter = 0;
+                     NSLog(@"SCXTT NEED TO STOP LOCATIONSERVICES HERE");
+                 }
+             }
          }
          
          
