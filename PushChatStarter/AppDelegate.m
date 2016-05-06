@@ -386,7 +386,7 @@ int retryCounter = 0;
                  retryCounter += 1;
                  NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
                  if (retryCounter > 3) {
-                     NSLog(@"IM DONE IN BackgroundLocationService so STOPPING");
+                     NSLog(@"IM DONE with AppDelegate LocationManager so STOPPING");
                      retryCounter = 0;
                      NSLog(@"SCXTT NEED TO STOP LOCATIONMANAGER HERE");
                  }
