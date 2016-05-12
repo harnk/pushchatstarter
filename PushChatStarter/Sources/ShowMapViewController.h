@@ -12,6 +12,7 @@
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "ServiceConnector.h"
+@import GoogleMobileAds;
 
 @class ShowMapViewController;
 @class DataModel;
@@ -21,6 +22,7 @@
     CLLocation* locationObject;
 }
 
+@property (weak, nonatomic) IBOutlet GADBannerView *bannerView;
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;

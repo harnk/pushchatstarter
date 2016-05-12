@@ -66,6 +66,7 @@
 		9E7CE78B1AAAA88500C7364D /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CE78A1AAAA88500C7364D /* Room.m */; };
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
+		9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
 		9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */; };
@@ -153,6 +154,7 @@
 		9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
+		9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
 		9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button-pressed.jpg"; sourceTree = "<group>"; };
 		9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyangray.png; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
 				2E2CC9B7F125471AAE90FAF5 /* libPods.a in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
+				9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */,
 				9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,6 +194,7 @@
 		61489E8B17041C660049C6F9 = {
 			isa = PBXGroup;
 			children = (
+				9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */,
 				61489E9D17041C660049C6F9 /* PushChatStarter */,
 				61489E9617041C660049C6F9 /* Frameworks */,
 				61489E9517041C660049C6F9 /* Products */,
@@ -569,6 +573,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushChatStarter/PushChatStarter-Prefix.pch";
 				INFOPLIST_FILE = "PushChatStarter/PushChatStarter-Info.plist";
@@ -595,6 +603,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushChatStarter/PushChatStarter-Prefix.pch";
 				INFOPLIST_FILE = "PushChatStarter/PushChatStarter-Info.plist";

@@ -202,6 +202,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"SCXTT Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
+    //test ad
+    // self.bannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
+    // real adUnitId
+    self.bannerView.adUnitID = @"ca-app-pub-2521098318893673/7870628745";
+    self.bannerView.rootViewController = self;
+    [self.bannerView loadRequest:[GADRequest request]];
+    
     _okToRecenterMap = YES;
     _pickerIsUp = NO;
     _isFromNotification = NO;

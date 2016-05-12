@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ydS-Ef-i8J">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -176,9 +176,18 @@
                                     </mask>
                                 </variation>
                             </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ASS-b8-Q3d" customClass="GADBannerView">
+                                <rect key="frame" x="140" y="314" width="320" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="SVG-Ou-XBj"/>
+                                    <constraint firstAttribute="height" constant="50" id="soG-jn-Rhx"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="ASS-b8-Q3d" firstAttribute="centerX" secondItem="D5z-zi-4jS" secondAttribute="centerX" id="0kL-bo-eXk"/>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="0xZ-Nc-lQE"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" constant="240" id="59S-DX-R8Q"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
@@ -187,6 +196,7 @@
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr">
                                 <variation key="heightClass=regular-widthClass=regular" constant="240"/>
                             </constraint>
+                            <constraint firstItem="K66-ty-hky" firstAttribute="top" secondItem="ASS-b8-Q3d" secondAttribute="bottom" constant="192" id="Ezh-nb-096"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="L9K-jj-oMr"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="LYw-rd-pob"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="S80-aW-BTx"/>
@@ -199,6 +209,7 @@
                             <constraint firstItem="Tog-1q-ick" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="bcn-2e-XFE"/>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dbT-U3-nN0"/>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="dic-XN-DA9"/>
+                            <constraint firstAttribute="trailing" secondItem="ASS-b8-Q3d" secondAttribute="trailing" constant="20" id="eq4-4o-N3T"/>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="ewG-qS-xwe"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv">
                                 <variation key="heightClass=regular-widthClass=regular" constant="-560"/>
@@ -215,6 +226,7 @@
                                 <variation key="heightClass=compact" constant="44"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="44"/>
                             </constraint>
+                            <constraint firstItem="ASS-b8-Q3d" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" constant="20" id="rrO-f9-XRh"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="s1A-af-RNr"/>
                             <constraint firstItem="K66-ty-hky" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="ta6-Qb-uEo"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="voI-xZ-pOm"/>
@@ -232,6 +244,8 @@
                                 <exclude reference="ewG-qS-xwe"/>
                                 <exclude reference="s1A-af-RNr"/>
                                 <exclude reference="ygM-JQ-rxk"/>
+                                <exclude reference="eq4-4o-N3T"/>
+                                <exclude reference="rrO-f9-XRh"/>
                                 <exclude reference="S80-aW-BTx"/>
                                 <exclude reference="Zq0-tL-qsX"/>
                                 <exclude reference="bcn-2e-XFE"/>
@@ -278,6 +292,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
+                        <outlet property="bannerView" destination="ASS-b8-Q3d" id="fYD-93-G2a"/>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
                         <outlet property="pinPickerButton" destination="Az7-a3-cc8" id="cm5-Hd-9RL"/>
                         <outlet property="satMapButton" destination="twj-gq-7Ha" id="9mO-dC-Kgp"/>
