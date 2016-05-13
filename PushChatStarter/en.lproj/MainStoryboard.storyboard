@@ -227,6 +227,7 @@
                             <constraint firstItem="ASS-b8-Q3d" firstAttribute="bottom" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="-10" id="pkr-nF-mTF">
                                 <variation key="heightClass=compact" constant="-60"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="-60"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="-60"/>
                             </constraint>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="s1A-af-RNr"/>
                             <constraint firstItem="K66-ty-hky" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="ta6-Qb-uEo"/>
