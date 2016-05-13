@@ -208,6 +208,7 @@
     // real adUnitId
     self.bannerView.adUnitID = @"ca-app-pub-2521098318893673/7870628745";
     self.bannerView.rootViewController = self;
+//    _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeLargeBanner];
     [self.bannerView loadRequest:[GADRequest request]];
     
     _okToRecenterMap = YES;
