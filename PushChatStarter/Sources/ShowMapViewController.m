@@ -492,6 +492,7 @@
 
 #pragma mark - 
 #pragma mark ServiceConnector stuff
+
 - (IBAction)getDown:(id)sender { //perform get request
     ServiceConnector *serviceConnector = [[ServiceConnector alloc] init];
     serviceConnector.delegate = self;
@@ -641,6 +642,10 @@
 
 #pragma mark -
 #pragma mark Actions
+
+- (IBAction)removeAds:(id)sender {
+    NSLog(@"Remove Ads pressed");
+}
 
 - (void) showLoginViewController {
     LoginViewController* loginController = (LoginViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"LoginViewController"];
