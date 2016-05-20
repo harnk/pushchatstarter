@@ -389,6 +389,8 @@ int retryCounter = 0;
                      NSLog(@"IM DONE with AppDelegate LocationManager so STOPPING");
                      retryCounter = 0;
                      NSLog(@"SCXTT NEED TO STOP LOCATIONMANAGER HERE");
+                     [self.locationManager stopUpdatingLocation];
+                     
                  }
              }
          }
