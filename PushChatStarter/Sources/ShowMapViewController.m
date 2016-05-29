@@ -202,6 +202,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(applicationWillResign)
+     name:UIApplicationWillResignActiveNotification
+     object:nil];
+    
     NSLog(@"SCXTT Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
     //test ad
     // self.bannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
@@ -296,7 +303,24 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-//    NSLog(@"viewWillDisappear");
+    NSLog(@"viewWillDisappear");
+    [self postDoneLookingLiveUpdate];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    NSLog(@"viewDidDisappear");
+    [self postDoneLookingLiveUpdate];
+}
+
+- (void)viewDidUnload:(BOOL)animated {
+    NSLog(@"viewDidUnload");
+    [self postDoneLookingLiveUpdate];
+}
+
+- (void) applicationWillResign{
+    NSLog(@"SCXTT DETECTED THAT About to lose focus so stopGetRoomTimer");
+//    [self stopGetRoomTimer];
+//    NSLog(@"SCXTT We have stopped timers in ShowMap but we need them to start in AppDelegate");
 }
 
 - (void)stopGetRoomTimer {
@@ -306,22 +330,22 @@
 //    NSLog(@"stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
-//        NSLog(@"[getRoomTimer invalidate]");
+        NSLog(@"[getRoomTimer invalidate]");
         [getRoomTimer invalidate];
         getRoomTimer = nil;
     } else {
         
-//        NSLog(@"did nothing");
+        NSLog(@"did nothing");
     }
     
     if(getMessagesTimer)
     {
-//        NSLog(@"[getMessagesTimer invalidate]");
+        NSLog(@"[getMessagesTimer invalidate]");
         [getMessagesTimer invalidate];
         getMessagesTimer = nil;
     } else {
         
-//        NSLog(@"did nothing");
+        NSLog(@"did nothing");
     }
     
 }
@@ -890,6 +914,54 @@
     }
 }
 
+- (void)postDoneLookingLiveUpdate {
+    //    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
+    
+    //SCXTT RELEASE
+    NSLog(@"postDoneLookingLiveUpdate cmd:liveupdate set looking = 0");
+    
+    NSDictionary *params = @{@"cmd":@"liveupdate",
+                             @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
+                             @"location":[[SingletonClass singleObject] myLocStr]};
+    
+    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    [client
+     postPath:ServerPostPathURL
+     parameters:params
+     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+         //SCXTT RELEASE
+         NSLog(@"SCXTT responseString: %@", responseString);
+         NSLog(@"SCXTT operation: %@", operation);
+         
+         // SCXTT WIP Loop thru the response and check key "looking"
+         NSError *e = nil;
+         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+         if (!jsonArray) {
+             NSLog(@"Error parsing JSON: %@", e);
+         } else {
+             BOOL foundALooker = NO;
+             for(NSDictionary *item in jsonArray) {
+                 NSString *mLooking = [item objectForKey:@"looking"];
+                 if ([mLooking isEqual:@"1"]) {
+                     NSString *mNickName = [item objectForKey:@"nickname"];
+                     NSLog(@"SCXTT ShowMapViewController %@ is looking", mNickName );
+                     foundALooker = YES;
+                     NSLog(@"SCXTT ShowMapViewController Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                 }
+             }
+             NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+             if (foundALooker) {
+                 NSLog(@"ShowMapVC since someoneIsLooking keep updating my loc in the background");
+             } else {
+                 NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!?");
+             }
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+     }];
+    
+}
 
 - (void)postFindRequest
 {

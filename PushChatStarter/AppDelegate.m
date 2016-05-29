@@ -373,14 +373,14 @@ int retryCounter = 0;
                  NSString *mLooking = [item objectForKey:@"looking"];
                  if ([mLooking isEqual:@"1"]) {
                      NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSLog(@"SCXTT %@ is looking", mNickName );
+                     NSLog(@"SCXTT AppDelegate  %@ is looking", mNickName );
                      foundALooker = YES;
-                     NSLog(@"SCXTT Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                     NSLog(@"SCXTT AppDelegate Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
                  }
              }
              NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
              if (foundALooker) {
-                 NSLog(@"since someoneIsLooking keep updating my loc in the background");
+                 NSLog(@"AppDelegate since someoneIsLooking keep updating my loc in the background");
                  retryCounter = 0;
              } else {
                  retryCounter += 1;
@@ -394,11 +394,6 @@ int retryCounter = 0;
                  }
              }
          }
-         
-         
-         
-         
-         
 
          
          [NSTimer scheduledTimerWithTimeInterval: 5
@@ -418,12 +413,12 @@ int retryCounter = 0;
 
 -(void) postMyLoc {
     if ([[SingletonClass singleObject] imInARoom]) {
-//        NSLog(@"imInARoom is true");
+        NSLog(@"imInARoom is true");
         if (!_isUpdating) {
-//            NSLog(@"were not _isUpdating");
+            NSLog(@"were not _isUpdating");
             if (_deviceHasMoved) {
                 _isUpdating = YES;
-//                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
                 [self postLiveUpdate];
                 _deviceHasMoved = NO;
 
@@ -431,10 +426,10 @@ int retryCounter = 0;
                 
             }
         } else {
-//            NSLog(@"no API call since _isUpdating is already YES = Busy");
+            NSLog(@"no API call since _isUpdating is already YES = Busy");
         }
     } else {
-//        NSLog(@"imInARoom is false - no update");
+        NSLog(@"imInARoom is false - no update");
     }
 }
 
@@ -448,7 +443,7 @@ int retryCounter = 0;
     CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
     CLLocation * newLocation = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
-    NSLog(@"SCXTT device moved %f yards", distanceMoved);
+    NSLog(@"SCXTT AppDelegate didUpdateLocation device moved %f yards", distanceMoved);
     
     [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
     
