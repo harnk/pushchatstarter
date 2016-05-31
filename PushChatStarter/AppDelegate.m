@@ -83,21 +83,21 @@ int retryCounter = 0;
 
     if([extra isEqualToString:@"whereru"]) {
         NSLog(@"whereru - in ^completionHandlerSilent push received");
+        NSLog(@"SCXTT NEED TO WAKE UP LOCATIONMANAGER HERE");
         NSString *asker = [userInfo valueForKey:@"asker"];
 //        [self.locationManager startMonitoringSignificantLocationChanges];
-        self.locationManager.pausesLocationUpdatesAutomatically = NO;
         
-        // If battery is above 90 percent do a CLActivityTypeFitness else do CLActivityTypeAutomotiveNavigation
+        // If battery is above 90 percent do a CLActivityTypeFitness else do CLActivityTypeAutomotiveNavigation?? maybe later
         
         [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
         float batteryLevel = [[UIDevice currentDevice] batteryLevel];
         batteryLevel *= 100;
         NSLog(@"SCXTT batteryLevel is %f", batteryLevel);
         
-        
-        
-        
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
         self.locationManager.activityType = CLActivityTypeFitness;
+        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
         [self.locationManager startUpdatingLocation];
         [self postImhere:asker];
     } else {
@@ -386,10 +386,16 @@ int retryCounter = 0;
                  retryCounter += 1;
                  NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
                  if (retryCounter > 3) {
-                     NSLog(@"IM DONE with AppDelegate LocationManager so STOPPING");
+                     NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
                      retryCounter = 0;
-                     NSLog(@"SCXTT NEED TO STOP LOCATIONMANAGER HERE");
-                     [self.locationManager stopUpdatingLocation];
+                     NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
+                     // cant stop this in background because you cant start it back up in background DONT DO NEXT LINE
+                     // [self.locationManager stopUpdatingLocation];
+                     self.locationManager.pausesLocationUpdatesAutomatically = YES;
+                     self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
+                     [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
+                     [self.locationManager setDistanceFilter:99999];
+
                      
                  }
              }
@@ -450,11 +456,11 @@ int retryCounter = 0;
     CLLocation *newLoc = [locations lastObject];
     
 // If the stored loc string is the same as this new one do not print to the console
-    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
-        //do nothing
-        NSLog(@"same");
-    } else {
-        
+//    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
+//        //do nothing
+//        NSLog(@"same");
+//    } else {
+    
         //log it, save it
         [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
         //SCXTT RELEASE
@@ -462,7 +468,7 @@ int retryCounter = 0;
         // If moved farther than 20 yards do an API call SCXTT - add logic
         _deviceHasMoved = YES;
         [self postMyLoc];
-    }
+//    }
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
