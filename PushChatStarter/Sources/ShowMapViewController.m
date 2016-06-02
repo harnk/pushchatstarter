@@ -266,6 +266,10 @@
         //Reset pins on map
 //        [self.mapView removeAnnotations:_mapView.annotations];
         //    [self postFindRequest];
+        
+        // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
+        self.isUpdating = NO;
+        [self findAction];
         [self postGetRoomMessages];
         [self postGetRoom];
         [self.tableView reloadData];

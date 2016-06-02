@@ -98,7 +98,7 @@ int retryCounter = 0;
         self.locationManager.activityType = CLActivityTypeFitness;
         [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
         [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
-        [self.locationManager startUpdatingLocation];
+//        [self.locationManager startUpdatingLocation];
         [self postImhere:asker];
     } else {
         if ([extra isEqualToString:@"imhere"]) {
