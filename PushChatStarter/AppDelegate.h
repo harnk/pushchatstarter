@@ -8,12 +8,13 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import "SingletonClass.h"
+#import <StoreKit/StoreKit.h>
 
 #define ApplicationDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
 @class DataModel;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, SKProductsRequestDelegate>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
     NSTimer *backgroundTimer;
@@ -26,5 +27,10 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL deviceHasMoved;
+
+//In-App purchase stuff
+@property (strong, nonatomic) SKProductsRequest* request;
+@property (strong, nonatomic) NSArray *products;
+
 
 @end

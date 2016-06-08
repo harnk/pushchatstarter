@@ -39,6 +39,7 @@
 		9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E1CE5831AD9E9660052B768 /* pkcyangray.png */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
 		9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */; };
+		9E2346551D07C7CF00E7825B /* iap_product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2346541D07C7CF00E7825B /* iap_product_ids.plist */; };
 		9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
 		9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
 		9E4408F91AD8B3F70079A4CA /* pkblue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408EF1AD8B3F70079A4CA /* pkblue.png */; };
@@ -122,6 +123,7 @@
 		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
 		9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowMapViewController.h; sourceTree = "<group>"; };
 		9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowMapViewController.m; sourceTree = "<group>"; };
+		9E2346541D07C7CF00E7825B /* iap_product_ids.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iap_product_ids.plist; sourceTree = "<group>"; };
 		9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9E4408EF1AD8B3F70079A4CA /* pkblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkblue.png; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 		61489E8B17041C660049C6F9 = {
 			isa = PBXGroup;
 			children = (
+				9E2346541D07C7CF00E7825B /* iap_product_ids.plist */,
 				9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */,
 				61489E9D17041C660049C6F9 /* PushChatStarter */,
 				61489E9617041C660049C6F9 /* Frameworks */,
@@ -436,6 +439,7 @@
 				9E7AC7E71AB2834E004996B6 /* orange.png in Resources */,
 				61489ECD17041F0D0049C6F9 /* Icon@2x.png in Resources */,
 				9E4408FE1AD8B3F70079A4CA /* pkorange.png in Resources */,
+				9E2346551D07C7CF00E7825B /* iap_product_ids.plist in Resources */,
 				9E4409021AD8B3F70079A4CA /* pkyellow.png in Resources */,
 				61489ECE17041F0D0049C6F9 /* iTunesArtwork in Resources */,
 				9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */,
