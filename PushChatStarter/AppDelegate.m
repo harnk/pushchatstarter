@@ -30,6 +30,13 @@ void ShowErrorAlert(NSString* text)
 
 int retryCounter = 0;
 
+-(NSArray *)getProductIdentifiersFromMainBundle{
+    NSArray *identifiers;
+    // do the following swift equivalent
+    // if let url =  NSBundle.mainBundle().URLForResource("iap_product_ids", withExtension: "plist") { identifiers = NSArray(contentsOfURL: url)! }
+    return identifiers;
+    
+}
 
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
