@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/AppDelegate.m"
-            timestampString = "452399972.632069"
+            timestampString = "487133552.808873"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
             landmarkName = "-addMessageFromRemoteNotification:updateUI:"
             landmarkType = "5">
          </BreakpointContent>
@@ -45,7 +45,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "995"
             endingLineNumber = "995"
-            landmarkName = "-getRoomMessageViaTimer"
+            landmarkName = "-postFindRequest"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

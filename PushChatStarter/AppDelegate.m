@@ -13,7 +13,6 @@
 #import "Message.h"
 #import "Harpy.h"
 
-
 void ShowErrorAlert(NSString* text)
 {
 	UIAlertView* alertView = [[UIAlertView alloc]
@@ -30,13 +29,51 @@ void ShowErrorAlert(NSString* text)
 
 int retryCounter = 0;
 
+#pragma mark - 
+#pragma mark In-App Purchase Stuff
+
 -(NSArray *)getProductIdentifiersFromMainBundle{
     NSArray *identifiers;
     // do the following swift equivalent
     // if let url =  NSBundle.mainBundle().URLForResource("iap_product_ids", withExtension: "plist") { identifiers = NSArray(contentsOfURL: url)! }
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"iap_product_ids"
+                                         withExtension:@"plist"];
+    identifiers = [NSArray arrayWithContentsOfURL:url];
+
     return identifiers;
     
 }
+
+- (void)validateProductIdentifiers:(NSArray *)productIdentifiers
+{
+    NSLog(@"SCXTT validateProductIdentifiers");
+    SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
+                                          initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
+    
+    // Keep a strong reference to the request.
+    self.request = productsRequest;
+    productsRequest.delegate = self;
+    [productsRequest start];
+}
+
+// SKProductsRequestDelegate protocol method
+- (void)productsRequest:(SKProductsRequest *)request
+     didReceiveResponse:(SKProductsResponse *)response
+{
+    self.products = response.products;
+    NSLog(@"SCXTT productsRequest:didReceiveResponse Delegate fired with response: %@", response.products[0].localizedDescription);
+
+    
+    for (NSString *invalidIdentifier in response.invalidProductIdentifiers) {
+        // Handle any invalid product identifiers.
+    }
+    
+//    [self displayStoreUI]; // Custom method
+}
+
+
+#pragma mark -
+#pragma mark Notifications
 
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
@@ -225,6 +262,10 @@ int retryCounter = 0;
     self.locationManager.pausesLocationUpdatesAutomatically = NO;
     self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
+    
+    NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
+    NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
+    [self validateProductIdentifiers:productsArray];
     
     return YES;
 }
