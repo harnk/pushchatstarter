@@ -671,8 +671,17 @@
 #pragma mark -
 #pragma mark Actions
 
+- (void) createPaymentRequestForProduct:(SKProduct *) product {
+    SKMutablePayment * payment = [SKMutablePayment paymentWithProduct:product];
+    payment.quantity = 1;
+    [[SKPaymentQueue defaultQueue]addPayment:payment];
+    
+    
+}
+
 - (IBAction)removeAds:(id)sender {
     NSLog(@"Remove Ads pressed");
+    
 }
 
 - (void) showLoginViewController {

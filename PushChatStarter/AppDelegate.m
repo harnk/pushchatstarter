@@ -62,10 +62,13 @@ int retryCounter = 0;
 {
     self.products = response.products;
     NSLog(@"SCXTT productsRequest:didReceiveResponse Delegate fired with response: %@", response.products[0].localizedDescription);
-
+    NSLog(@"SCXTT now put these into the singleton NOW");
+    
+    
     
     for (NSString *invalidIdentifier in response.invalidProductIdentifiers) {
         // Handle any invalid product identifiers.
+        
     }
     
 //    [self displayStoreUI]; // Custom method
@@ -263,9 +266,14 @@ int retryCounter = 0;
     self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
     
-    NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
-    NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
-    [self validateProductIdentifiers:productsArray];
+    // Deal with In-App purchase
+    _canPurchase = NO;
+    if ([SKPaymentQueue canMakePayments]) {
+        NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
+        NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
+        [self validateProductIdentifiers:productsArray];
+        _canPurchase = YES;
+    }
     
     return YES;
 }

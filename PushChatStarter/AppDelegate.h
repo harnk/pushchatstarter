@@ -31,6 +31,7 @@
 //In-App purchase stuff
 @property (strong, nonatomic) SKProductsRequest* request;
 @property (strong, nonatomic) NSArray *products;
-
+@property (nonatomic) BOOL canPurchase;
+@property (strong, nonatomic) SKMutablePayment *payment;
 
 @end
