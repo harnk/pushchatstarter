@@ -675,12 +675,12 @@
     SKMutablePayment * payment = [SKMutablePayment paymentWithProduct:product];
     payment.quantity = 1;
     [[SKPaymentQueue defaultQueue]addPayment:payment];
-    
-    
 }
 
 - (IBAction)removeAds:(id)sender {
     NSLog(@"Remove Ads pressed");
+    SKProduct *thisProduct = (SKProduct *)[[SingletonClass singleObject] myProducts][0];
+    [self createPaymentRequestForProduct:thisProduct];
     
 }
 

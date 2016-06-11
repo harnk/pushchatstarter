@@ -63,8 +63,7 @@ int retryCounter = 0;
     self.products = response.products;
     NSLog(@"SCXTT productsRequest:didReceiveResponse Delegate fired with response: %@", response.products[0].localizedDescription);
     NSLog(@"SCXTT now put these into the singleton NOW");
-    
-    
+    [[SingletonClass singleObject] setMyProducts:self.products];
     
     for (NSString *invalidIdentifier in response.invalidProductIdentifiers) {
         // Handle any invalid product identifiers.

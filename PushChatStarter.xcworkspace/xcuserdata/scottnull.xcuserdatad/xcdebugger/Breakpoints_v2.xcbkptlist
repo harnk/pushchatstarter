@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/AppDelegate.m"
-            timestampString = "487133552.808873"
+            timestampString = "487305904.607261"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "-addMessageFromRemoteNotification:updateUI:"
             landmarkType = "5">
          </BreakpointContent>
@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "485752133.164576"
+            timestampString = "487305904.607261"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "995"
-            endingLineNumber = "995"
+            startingLineNumber = "1004"
+            endingLineNumber = "1004"
             landmarkName = "-postFindRequest"
             landmarkType = "5">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "485752133.164576"
+            timestampString = "487305904.607261"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "860"
-            endingLineNumber = "860"
+            startingLineNumber = "869"
+            endingLineNumber = "869"
             landmarkName = "-getAPI:"
             landmarkType = "5">
          </BreakpointContent>
