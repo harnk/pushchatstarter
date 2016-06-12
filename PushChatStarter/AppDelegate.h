@@ -14,7 +14,7 @@
 
 @class DataModel;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, SKProductsRequestDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
     NSTimer *backgroundTimer;
@@ -33,5 +33,6 @@
 @property (strong, nonatomic) NSArray *products;
 @property (nonatomic) BOOL canPurchase;
 @property (strong, nonatomic) SKMutablePayment *payment;
+@property BOOL purchased;
 
 @end

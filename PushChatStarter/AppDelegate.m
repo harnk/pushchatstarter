@@ -67,10 +67,63 @@ int retryCounter = 0;
     
     for (NSString *invalidIdentifier in response.invalidProductIdentifiers) {
         // Handle any invalid product identifiers.
-        
+        NSLog(@"invalidIdentifier %@", invalidIdentifier);
     }
     
 //    [self displayStoreUI]; // Custom method
+}
+
+-(void) paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions {
+    //flesh this out
+    NSLog(@"SCXTT paymentQueue:updatedTransactions delegate");
+    for (SKPaymentTransaction *transaction in transactions) {
+        
+        switch (transaction.transactionState) {
+                
+            case SKPaymentTransactionStatePurchasing:
+                
+//                [self initPurchase];
+                NSLog(@"PURCH 1");
+                
+                break;
+                
+            case SKPaymentTransactionStatePurchased:
+                
+                // this is successfully purchased!
+                _purchased = YES;
+                NSLog(@"PURCH 2");
+//                [self isPurchased];
+                
+                NSLog(@"purchased %s", _purchased? "true" : "false");
+                
+                //  and return the transaction data
+                
+//                if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
+//                    [delegate successfulPurchase:self restored:NO identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+                
+                // and more code bla bla bla
+                
+                break;
+                
+            case SKPaymentTransactionStateRestored:
+                
+                // and more code bla bla bla
+                
+//                [self restorePurchase];
+                NSLog(@"PURCH 3");
+                
+                break;
+                
+            case SKPaymentTransactionStateFailed:
+                
+                // and more code bla bla bla
+                
+//                [self failedNotification];
+                NSLog(@"PURCH 4");
+                
+                break;
+        }
+    }
 }
 
 
@@ -196,7 +249,7 @@ int retryCounter = 0;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    
+    _purchased = NO;
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
     // HARPY BEGIN
@@ -272,6 +325,8 @@ int retryCounter = 0;
         NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
         [self validateProductIdentifiers:productsArray];
         _canPurchase = YES;
+        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+        
     }
     
     return YES;
