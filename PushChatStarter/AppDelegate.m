@@ -109,8 +109,17 @@ int retryCounter = 0;
                 
                 // and more code bla bla bla
                 
-//                [self restorePurchase];
+                //                [self restorePurchase];
                 NSLog(@"PURCH 3");
+                
+                break;
+                
+            case SKPaymentTransactionStateDeferred:
+                
+                // and more code bla bla bla
+                
+                //                [self ??];
+                NSLog(@"PURCH 4");
                 
                 break;
                 
@@ -119,7 +128,7 @@ int retryCounter = 0;
                 // and more code bla bla bla
                 
 //                [self failedNotification];
-                NSLog(@"PURCH 4");
+                NSLog(@"PURCH 5");
                 
                 break;
         }
