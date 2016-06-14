@@ -185,11 +185,13 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ke-Mh-Kud">
                                 <rect key="frame" x="0.0" y="330" width="600" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.99860789459999999" blue="0.96532256559999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="dUk-OL-dFV">
                                         <variation key="widthClass=compact" constant="15"/>
                                     </constraint>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Remove Ads"/>
                                 <connections>
                                     <action selector="removeAds:" destination="jkb-oK-o03" eventType="touchUpInside" id="nwQ-EF-bqA"/>
