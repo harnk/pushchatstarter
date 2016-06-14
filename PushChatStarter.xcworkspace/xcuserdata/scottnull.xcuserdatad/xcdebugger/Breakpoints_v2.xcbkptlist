@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/AppDelegate.m"
-            timestampString = "487305904.607261"
+            timestampString = "487565252.106328"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "-addMessageFromRemoteNotification:updateUI:"
             landmarkType = "5">
          </BreakpointContent>

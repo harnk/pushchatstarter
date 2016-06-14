@@ -83,15 +83,15 @@ int retryCounter = 0;
             case SKPaymentTransactionStatePurchasing:
                 
 //                [self initPurchase];
-                NSLog(@"PURCH 1");
-                
+                NSLog(@"PURCH 1 Purchasing");
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
                 break;
                 
             case SKPaymentTransactionStatePurchased:
                 
                 // this is successfully purchased!
                 _purchased = YES;
-                NSLog(@"PURCH 2");
+                NSLog(@"PURCH 2 Purchased");
 //                [self isPurchased];
                 
                 NSLog(@"purchased %s", _purchased? "true" : "false");
@@ -110,7 +110,7 @@ int retryCounter = 0;
                 // and more code bla bla bla
                 
                 //                [self restorePurchase];
-                NSLog(@"PURCH 3");
+                NSLog(@"PURCH 3 Restored");
                 
                 break;
                 
@@ -119,7 +119,8 @@ int retryCounter = 0;
                 // and more code bla bla bla
                 
                 //                [self ??];
-                NSLog(@"PURCH 4");
+                NSLog(@"PURCH 4 Deferred");
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 
                 break;
                 
@@ -128,7 +129,8 @@ int retryCounter = 0;
                 // and more code bla bla bla
                 
 //                [self failedNotification];
-                NSLog(@"PURCH 5");
+                NSLog(@"PURCH 5 Failed: %@", [[transaction error] localizedDescription]);
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 
                 break;
         }
