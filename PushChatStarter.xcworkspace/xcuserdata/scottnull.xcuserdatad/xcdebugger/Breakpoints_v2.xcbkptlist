@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "487305904.607261"
+            timestampString = "487566766.135953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1004"
-            endingLineNumber = "1004"
+            startingLineNumber = "1017"
+            endingLineNumber = "1017"
             landmarkName = "-postFindRequest"
             landmarkType = "5">
          </BreakpointContent>
@@ -56,12 +56,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "487305904.607261"
+            timestampString = "487566766.135953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "869"
-            endingLineNumber = "869"
+            startingLineNumber = "882"
+            endingLineNumber = "882"
             landmarkName = "-getAPI:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PushChatStarter/Sources/ShowMapViewController.m"
+            timestampString = "487566766.135953"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
+            landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

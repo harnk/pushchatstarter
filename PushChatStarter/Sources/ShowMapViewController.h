@@ -23,6 +23,7 @@
 }
 
 @property (weak, nonatomic) IBOutlet GADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIButton *removeAdsButton;
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;

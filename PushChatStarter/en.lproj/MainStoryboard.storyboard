@@ -324,6 +324,7 @@
                         <outlet property="bannerView" destination="ASS-b8-Q3d" id="fYD-93-G2a"/>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
                         <outlet property="pinPickerButton" destination="Az7-a3-cc8" id="cm5-Hd-9RL"/>
+                        <outlet property="removeAdsButton" destination="8ke-Mh-Kud" id="qBO-y2-3wZ"/>
                         <outlet property="satMapButton" destination="twj-gq-7Ha" id="9mO-dC-Kgp"/>
                         <outlet property="tableView" destination="Tog-1q-ick" id="IkC-BC-ZYC"/>
                     </connections>
