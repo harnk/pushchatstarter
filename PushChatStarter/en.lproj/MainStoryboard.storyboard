@@ -185,13 +185,15 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ke-Mh-Kud">
                                 <rect key="frame" x="0.0" y="330" width="600" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.99860789459999999" blue="0.96532256559999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="dUk-OL-dFV">
-                                        <variation key="widthClass=compact" constant="15"/>
+                                        <variation key="widthClass=compact" constant="30"/>
+                                        <variation key="heightClass=compact-widthClass=compact" constant="30"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="30"/>
                                     </constraint>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Remove Ads"/>
                                 <connections>
                                     <action selector="removeAds:" destination="jkb-oK-o03" eventType="touchUpInside" id="nwQ-EF-bqA"/>
@@ -225,12 +227,12 @@
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="dbT-U3-nN0"/>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="dic-XN-DA9"/>
                             <constraint firstItem="8ke-Mh-Kud" firstAttribute="bottom" secondItem="Cxp-Po-E0T" secondAttribute="bottom" id="eX3-dD-K1C">
-                                <variation key="heightClass=compact" constant="-40"/>
+                                <variation key="heightClass=compact" constant="-45"/>
                                 <variation key="widthClass=compact" constant="-2"/>
-                                <variation key="heightClass=compact-widthClass=compact" constant="-47"/>
+                                <variation key="heightClass=compact-widthClass=compact" constant="-45"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="-45"/>
-                                <variation key="heightClass=regular-widthClass=compact" constant="-5"/>
-                                <variation key="heightClass=regular-widthClass=regular" constant="-40"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="-43"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="ewG-qS-xwe"/>
                             <constraint firstItem="Tog-1q-ick" firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="gLH-4Z-9Pv">
@@ -251,12 +253,12 @@
                                 <variation key="heightClass=compact-widthClass=regular" constant="44"/>
                             </constraint>
                             <constraint firstItem="ASS-b8-Q3d" firstAttribute="bottom" secondItem="Cxp-Po-E0T" secondAttribute="bottom" constant="-30" id="pkr-nF-mTF">
-                                <variation key="heightClass=compact" constant="-65"/>
-                                <variation key="widthClass=compact" constant="-20"/>
-                                <variation key="heightClass=compact-widthClass=compact" constant="-65"/>
+                                <variation key="heightClass=compact" constant="-75"/>
+                                <variation key="widthClass=compact" constant="-32"/>
+                                <variation key="heightClass=compact-widthClass=compact" constant="-75"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="-75"/>
-                                <variation key="heightClass=regular-widthClass=compact" constant="-25"/>
-                                <variation key="heightClass=regular-widthClass=regular" constant="-65"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="-32"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="-73"/>
                             </constraint>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="s1A-af-RNr"/>
                             <constraint firstItem="K66-ty-hky" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" id="ta6-Qb-uEo"/>

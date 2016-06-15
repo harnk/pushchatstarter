@@ -200,12 +200,6 @@
                                views:NSDictionaryOfVariableBindings(myPickerView)]];
 }
 
-- (void)hideAds {
-    // Hide the banner and removeAds button since they have paid
-    _bannerView.hidden = YES;
-    _removeAdsButton.hidden = YES;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -258,12 +252,8 @@
     
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {
-        [self toastMsg:@"Remove Ads is ENABLED"];
-        [self hideAds];
-    } else {
-        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];
-    }
+    [self checkAdStatus];
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -398,6 +388,24 @@
     }
 }
 
+
+#pragma mark -
+#pragma mark In-App Purchases Methods
+
+- (void)hideAds {
+    // Hide the banner and removeAds button since they have paid
+    _bannerView.hidden = YES;
+    _removeAdsButton.hidden = YES;
+}
+
+-(void) checkAdStatus {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {
+        [self toastMsg:@"Remove Ads is ENABLED"];
+        [self hideAds];
+    } else {
+        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];
+    }
+}
 
 #pragma mark -
 #pragma mark Date String Methods

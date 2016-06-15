@@ -92,10 +92,12 @@ int retryCounter = 0;
                 // this is successfully purchased!
                 _purchased = YES;
                 NSLog(@"PURCH 2 Purchased");
-//                [self isPurchased];
-                
-                NSLog(@"purchased %s", _purchased? "true" : "false");
-                
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"com.harnk.whereru.removeads"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                // finish the transaction
+                [queue finishTransaction:transaction];
+
                 //  and return the transaction data
                 
 //                if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
