@@ -130,6 +130,11 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideAds)
+                                                 name:@"removeThoseAds"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(stopGetRoomTimer)
                                                  name:@"killGetRoomTimer"
                                                object:nil];

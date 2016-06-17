@@ -35,6 +35,7 @@
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
 		9E084B2F1A9AA9BE004439FA /* ServiceConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */; };
 		9E09A6681AF9BCAA00E09331 /* back-button.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9E09A6671AF9BCAA00E09331 /* back-button.jpg */; };
+		9E0E57041D139AC700A57D92 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0E57031D139AC700A57D92 /* StoreKit.framework */; };
 		9E15E2541AE86CE00031A6D7 /* pkall.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E15E2531AE86CE00031A6D7 /* pkall.png */; };
 		9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E1CE5831AD9E9660052B768 /* pkcyangray.png */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
@@ -118,6 +119,7 @@
 		9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceConnector.m; sourceTree = "<group>"; };
 		9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONDictionaryExtensions.h; sourceTree = "<group>"; };
 		9E09A6671AF9BCAA00E09331 /* back-button.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button.jpg"; sourceTree = "<group>"; };
+		9E0E57031D139AC700A57D92 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9E15E2531AE86CE00031A6D7 /* pkall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkall.png; sourceTree = "<group>"; };
 		9E1CE5831AD9E9660052B768 /* pkcyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkcyangray.png; sourceTree = "<group>"; };
 		9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				61489E9817041C660049C6F9 /* UIKit.framework in Frameworks */,
 				61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */,
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
+				9E0E57041D139AC700A57D92 /* StoreKit.framework in Frameworks */,
 				2E2CC9B7F125471AAE90FAF5 /* libPods.a in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
 				9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */,
@@ -216,6 +219,7 @@
 		61489E9617041C660049C6F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E0E57031D139AC700A57D92 /* StoreKit.framework */,
 				9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */,
 				9E2A75271A2D130C002B2A03 /* MapKit.framework */,
 				61489E9717041C660049C6F9 /* UIKit.framework */,
@@ -374,6 +378,11 @@
 				TargetAttributes = {
 					61489E9317041C660049C6F9 = {
 						DevelopmentTeam = 64S84F3VVR;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

@@ -97,6 +97,7 @@ int retryCounter = 0;
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 // finish the transaction
                 [queue finishTransaction:transaction];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeThoseAds" object:nil userInfo:nil];
 
                 //  and return the transaction data
                 
