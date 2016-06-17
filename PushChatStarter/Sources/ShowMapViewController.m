@@ -405,10 +405,10 @@
 
 -(void) checkAdStatus {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {
-        [self toastMsg:@"Remove Ads is ENABLED"];
+        [self toastMsg:@"Remove Ads is enabled - Thank You for your support!"];
         [self hideAds];
     } else {
-        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];
+//        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];
     }
 }
 
