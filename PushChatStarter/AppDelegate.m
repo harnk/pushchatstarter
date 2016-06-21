@@ -319,15 +319,12 @@ int retryCounter = 0;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
     // Start updating my own location
+    _deviceHasMoved = YES;
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    _deviceHasMoved = YES;
-
     [self.locationManager requestAlwaysAuthorization];
-
 //    self.locationManager.pausesLocationUpdatesAutomatically = YES;
-//    [self.locationManager startMonitoringSignificantLocationChanges];
-
+    [self.locationManager startMonitoringSignificantLocationChanges];
     self.locationManager.pausesLocationUpdatesAutomatically = NO;
     self.locationManager.activityType = CLActivityTypeFitness;
     [self.locationManager startUpdatingLocation];
@@ -364,6 +361,15 @@ int retryCounter = 0;
      NSLog(@"applicationWillResignActive");
     //stop looking here
     [self postLiveUpdate];
+    _isBackgroundMode = YES;
+    
+    [_locationManager stopUpdatingLocation];
+    [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    [_locationManager setDistanceFilter:kCLDistanceFilterNone];
+    _locationManager.pausesLocationUpdatesAutomatically = NO;
+    _locationManager.activityType = CLActivityTypeFitness;
+    [_locationManager startUpdatingLocation];
+
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -372,17 +378,19 @@ int retryCounter = 0;
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"applicationDidEnterBackground");
 //    [self.locationManager startMonitoringSignificantLocationChanges];
-    self.locationManager.pausesLocationUpdatesAutomatically = NO;
-    self.locationManager.activityType = CLActivityTypeFitness;
-    [self.locationManager startUpdatingLocation];
-    
-    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 60
-                                               target: self
-                                             selector: @selector(postMyLoc)
-                                             userInfo: nil
-                                              repeats: YES];
+//    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+//    self.locationManager.activityType = CLActivityTypeFitness;
+//    [self.locationManager startUpdatingLocation];
+
     //Kill the getRoomTimer
     [[NSNotificationCenter defaultCenter] postNotificationName:@"killGetRoomTimer" object:nil userInfo:nil];
+    
+    //REMOVE this next bit later
+    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 120
+                                               target: self
+                                             selector: @selector(fakeMove)
+                                             userInfo: nil
+                                              repeats: YES];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -564,45 +572,6 @@ int retryCounter = 0;
 }
 
 
-//Ref: http://stackoverflow.com/questions/12602463/didupdatelocations-instead-of-didupdatetolocation
-//
-- (void)locationManager:(CLLocationManager *)manager
-     didUpdateLocations:(NSArray *)locations {
-    // This is the battery burner right here ... must optimize this
-    
-    CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
-    CLLocation * newLocation = [locations lastObject];
-    CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
-    NSLog(@"SCXTT AppDelegate didUpdateLocation device moved %f yards", distanceMoved);
-    
-    [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
-    
-    CLLocation *newLoc = [locations lastObject];
-    
-// If the stored loc string is the same as this new one do not print to the console
-//    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
-//        //do nothing
-//        NSLog(@"same");
-//    } else {
-    
-        //log it, save it
-        [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
-        //SCXTT RELEASE
-        NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
-        // If moved farther than 20 yards do an API call SCXTT - add logic
-        _deviceHasMoved = YES;
-        [self postMyLoc];
-//    }
-}
-
-- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-    NSLog(@"pausing location updates");
-}
-
-- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
-    NSLog(@"resuming location updates");
-}
-
 - (void)postUpdateRequest
 {
     //The update cmd will update the user's device token on the server because sometimes these change
@@ -655,5 +624,56 @@ int retryCounter = 0;
 {
     NSLog(@"Failed to get token, error: %@", error);
 }
+
+#pragma mark - locationManager delegate methods
+
+//Ref: http://stackoverflow.com/questions/12602463/didupdatelocations-instead-of-didupdatetolocation
+//
+
+-(void) fakeMove {
+    
+    NSLog(@"SCXTT FAKE MOVE - TAKE OUT LATER - calling postMyLoc");
+    _deviceHasMoved = YES;
+    [self postMyLoc];
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations {
+    // This is the battery burner right here ... must optimize this
+    
+    CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
+    CLLocation * newLocation = [locations lastObject];
+    CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
+    NSLog(@"SCXTT AppDelegate background delegate device moved %f yards - DIDUPDATELOCATIONS", distanceMoved);
+    
+    [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
+    
+    CLLocation *newLoc = [locations lastObject];
+    
+    // If the stored loc string is the same as this new one do not print to the console
+    //    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
+    //        //do nothing
+    //        NSLog(@"same");
+    //    } else {
+    
+    //log it, save it
+    [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
+    //SCXTT RELEASE
+    NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+    // If moved farther than 20 yards do an API call SCXTT - add logic
+    _deviceHasMoved = YES;
+    [self postMyLoc];
+    //    }
+}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"pausing location updates");
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
+    NSLog(@"resuming location updates");
+}
+
 
 @end

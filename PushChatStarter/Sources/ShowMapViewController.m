@@ -857,6 +857,9 @@
              
              //SCXTT RELEASE
              NSLog(@"responseString: %@", responseString);
+             
+             // if responseString is null then go back to the login screen - your user may have been deleted
+             
              NSLog(@"operation: %@", operation);
              
              NSError *e = nil;
@@ -1288,7 +1291,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 if ([ann.title isEqualToString:who])
                 {
                     //SCXTT RELEASE
-                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
+//                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];

@@ -49,6 +49,10 @@
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>You must allow this in order for WhereRU to work correctly</string>
+	<key>NSLocationWhenInUseDescription</key>
+	<string>You must allow this in order for WhereRU to work correctly</string>
+	<key>privacy - location usage description</key>
+	<string>You must allow this in order for WhereRU to work correctly</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

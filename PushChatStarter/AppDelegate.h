@@ -23,7 +23,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, readonly) UIStoryboard *storyBoard;
-@property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL deviceHasMoved;
@@ -33,6 +33,6 @@
 @property (strong, nonatomic) NSArray *products;
 @property (nonatomic) BOOL canPurchase;
 @property (strong, nonatomic) SKMutablePayment *payment;
-@property BOOL purchased;
+@property BOOL purchased, isBackgroundMode;
 
 @end
