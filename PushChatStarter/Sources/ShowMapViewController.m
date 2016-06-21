@@ -74,7 +74,7 @@
 - (void)scrollToNewestMessage
 {
     // The newest message is at the bottom of the table
-    if (!self.dataModel.messages.count == 0) {
+    if (!(self.dataModel.messages.count == 0)) {
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:(self.dataModel.messages.count - 1) inSection:0];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
@@ -687,7 +687,7 @@
 //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
     CLLocationDistance meters = 1000;
     
-    
+    region = self.mapView.region;
     [self reCenterMap:region meters:meters];
 }
 
@@ -1059,7 +1059,7 @@
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
              } else {
                  NSLog(@"SMVC Get all messages for this room");
-                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+//                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
                  NSError *e = nil;
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
@@ -1371,7 +1371,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
             //    CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
             CLLocationDistance meters = 1000;
-            
+            region = self.mapView.region;
             [self reCenterMap:region meters:meters];
         } else {
             _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
@@ -1380,7 +1380,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
             CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
             
-            
+            region = self.mapView.region;
             [self reCenterMap:region meters:meters];
             
         }
@@ -1464,7 +1464,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
             CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
             
-            
+            region = self.mapView.region;
             [self reCenterMap:region meters:meters];
         }
     }
