@@ -340,6 +340,13 @@ int retryCounter = 0;
         
     }
     
+    //REMOVE this next bit later - its for testing while sitting in one place
+    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
+                                                       target: self
+                                                     selector: @selector(fakeMove)
+                                                     userInfo: nil
+                                                      repeats: YES];
+
     return YES;
 }
 
@@ -385,12 +392,6 @@ int retryCounter = 0;
     //Kill the getRoomTimer
     [[NSNotificationCenter defaultCenter] postNotificationName:@"killGetRoomTimer" object:nil userInfo:nil];
     
-    //REMOVE this next bit later
-    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 120
-                                               target: self
-                                             selector: @selector(fakeMove)
-                                             userInfo: nil
-                                              repeats: YES];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -408,8 +409,8 @@ int retryCounter = 0;
     application.applicationIconBadgeNumber = 0;
     //Start the getRoomTimer going again
     [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
-    [backgroundTimer invalidate];
-    backgroundTimer = nil;
+//    [backgroundTimer invalidate];
+//    backgroundTimer = nil;
     
 }
 
@@ -632,7 +633,7 @@ int retryCounter = 0;
 
 -(void) fakeMove {
     
-    NSLog(@"SCXTT FAKE MOVE - TAKE OUT LATER - calling postMyLoc");
+    NSLog(@"SCXTT FAKEMOVE - TAKE OUT LATER - calling postMyLoc");
     _deviceHasMoved = YES;
     [self postMyLoc];
     
