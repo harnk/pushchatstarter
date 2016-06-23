@@ -341,11 +341,11 @@ int retryCounter = 0;
     }
     
     //REMOVE this next bit later - its for testing while sitting in one place
-    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
-                                                       target: self
-                                                     selector: @selector(fakeMove)
-                                                     userInfo: nil
-                                                      repeats: YES];
+//    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
+//                                                       target: self
+//                                                     selector: @selector(fakeMove)
+//                                                     userInfo: nil
+//                                                      repeats: YES];
 
     return YES;
 }
@@ -491,9 +491,11 @@ int retryCounter = 0;
          NSLog(@"SCXTT responseString: %@", responseString);
          NSLog(@"SCXTT operation: %@", operation);
          NSLog(@"SCXTT need to check repsonse to see if looking is 1 yet for anyone");
-
-         
-         
+         if (responseString.length == 0) {
+             // kill timers
+             [[SingletonClass singleObject] setImInARoom:NO];
+             return;
+         }
          
          // SCXTT WIP Loop thru the response and check key "looking"
          NSError *e = nil;
@@ -631,13 +633,13 @@ int retryCounter = 0;
 //Ref: http://stackoverflow.com/questions/12602463/didupdatelocations-instead-of-didupdatetolocation
 //
 
--(void) fakeMove {
-    
-    NSLog(@"SCXTT FAKEMOVE - TAKE OUT LATER - calling postMyLoc");
-    _deviceHasMoved = YES;
-    [self postMyLoc];
-    
-}
+//-(void) fakeMove {
+//    
+//    NSLog(@"SCXTT FAKEMOVE - TAKE OUT LATER - calling postMyLoc");
+//    _deviceHasMoved = YES;
+//    [self postMyLoc];
+//    
+//}
 
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray *)locations {

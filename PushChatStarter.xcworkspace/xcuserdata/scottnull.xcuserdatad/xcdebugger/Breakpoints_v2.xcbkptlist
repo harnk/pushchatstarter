@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "488166143.312885"
+            timestampString = "488260130.099424"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1032"
-            endingLineNumber = "1032"
+            startingLineNumber = "1041"
+            endingLineNumber = "1041"
             landmarkName = "-postFindRequest"
             landmarkType = "5">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "488166143.312885"
+            timestampString = "488260130.099424"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "897"
-            endingLineNumber = "897"
+            startingLineNumber = "906"
+            endingLineNumber = "906"
             landmarkName = "-getAPI:"
             landmarkType = "5">
          </BreakpointContent>

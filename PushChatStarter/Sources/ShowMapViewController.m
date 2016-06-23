@@ -856,9 +856,17 @@
              NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
              
              //SCXTT RELEASE
-             NSLog(@"responseString: %@", responseString);
+             NSLog(@"responseString: %@ length equals %lu", responseString, (unsigned long)responseString.length);
              
              // if responseString is null then go back to the login screen - your user may have been deleted
+
+             if (responseString.length == 0) {
+                 // kill timers
+                 [[SingletonClass singleObject] setImInARoom:NO];
+                 [self stopGetRoomTimer];
+                 [self showLoginViewController];
+                 return;
+             }
              
              NSLog(@"operation: %@", operation);
              
@@ -867,6 +875,7 @@
              
              if (!jsonArray) {
                  NSLog(@"Error parsing JSON: %@", e);
+                 [[SingletonClass singleObject] setImInARoom:NO];
              } else {
                  
                  //                     Blank out and reload _roomArray
