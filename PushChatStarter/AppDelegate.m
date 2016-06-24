@@ -197,6 +197,7 @@ int retryCounter = 0;
     if([extra isEqualToString:@"whereru"]) {
         NSLog(@"whereru - in ^completionHandlerSilent push received");
         NSLog(@"SCXTT NEED TO WAKE UP LOCATIONMANAGER HERE");
+        retryCounter = 0;
         NSString *asker = [userInfo valueForKey:@"asker"];
 //        [self.locationManager startMonitoringSignificantLocationChanges];
         
@@ -252,6 +253,21 @@ int retryCounter = 0;
         completionHandler(UIBackgroundFetchResultNewData);
         
     }
+}
+
+- (void)startMyLocationUpdates
+{
+    NSLog(@"Fire Up The GPS: self.locationManager startUpdatingLocation");
+    // Start updating my own location
+    _deviceHasMoved = YES;
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    [self.locationManager requestAlwaysAuthorization];
+    //    self.locationManager.pausesLocationUpdatesAutomatically = YES;
+    [self.locationManager startMonitoringSignificantLocationChanges];
+    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    self.locationManager.activityType = CLActivityTypeFitness;
+    [self.locationManager startUpdatingLocation];
 }
 
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
@@ -318,16 +334,8 @@ int retryCounter = 0;
     [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
-    // Start updating my own location
-    _deviceHasMoved = YES;
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    [self.locationManager requestAlwaysAuthorization];
-//    self.locationManager.pausesLocationUpdatesAutomatically = YES;
-    [self.locationManager startMonitoringSignificantLocationChanges];
-    self.locationManager.pausesLocationUpdatesAutomatically = NO;
-    self.locationManager.activityType = CLActivityTypeFitness;
-    [self.locationManager startUpdatingLocation];
+//    we should only do this next line if we are already imInARoom and also move this to start updating when we are notified of leave ShowMapViewController and not right here
+//    [self startMyLocationUpdates];
     
     // Deal with In-App purchase
     _canPurchase = NO;
@@ -340,6 +348,12 @@ int retryCounter = 0;
         
     }
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(startMyLocationUpdates)
+                                                 name:@"fireUpTheGPS"
+                                               object:nil];
+    
+
     //REMOVE this next bit later - its for testing while sitting in one place
 //    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
 //                                                       target: self
@@ -370,13 +384,10 @@ int retryCounter = 0;
     [self postLiveUpdate];
     _isBackgroundMode = YES;
     
-    [_locationManager stopUpdatingLocation];
-    [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [_locationManager setDistanceFilter:kCLDistanceFilterNone];
-    _locationManager.pausesLocationUpdatesAutomatically = NO;
-    _locationManager.activityType = CLActivityTypeFitness;
-    [_locationManager startUpdatingLocation];
-
+//    we should only do this next line if we are already imInARoom and also move this to start updating when we are notified of leave ShowMapViewController and not right here
+    if ([[SingletonClass singleObject] imInARoom]) {
+        [self startMyLocationUpdates];
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -409,6 +420,7 @@ int retryCounter = 0;
     application.applicationIconBadgeNumber = 0;
     //Start the getRoomTimer going again
     [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+    retryCounter = 0;
 //    [backgroundTimer invalidate];
 //    backgroundTimer = nil;
     
@@ -491,8 +503,7 @@ int retryCounter = 0;
          NSLog(@"SCXTT responseString: %@", responseString);
          NSLog(@"SCXTT operation: %@", operation);
          NSLog(@"SCXTT need to check repsonse to see if looking is 1 yet for anyone");
-         if (responseString.length == 0) {
-             // kill timers
+         if (responseString.length == 0 && retryCounter > 3) {
              [[SingletonClass singleObject] setImInARoom:NO];
              return;
          }
@@ -518,20 +529,19 @@ int retryCounter = 0;
                  NSLog(@"AppDelegate since someoneIsLooking keep updating my loc in the background");
                  retryCounter = 0;
              } else {
-                 retryCounter += 1;
-                 NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
-                 if (retryCounter > 3) {
-                     NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
-                     retryCounter = 0;
-                     NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
-                     // cant stop this in background because you cant start it back up in background DONT DO NEXT LINE
-                     // [self.locationManager stopUpdatingLocation];
-                     self.locationManager.pausesLocationUpdatesAutomatically = YES;
-                     self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
-                     [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
-                     [self.locationManager setDistanceFilter:99999];
-
-                     
+                 if (_isBackgroundMode){
+                     retryCounter += 1;
+                     NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
+                     if (retryCounter > 10) {
+                         NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
+                         NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
+                         // cant stop this in background because you cant start it back up in background DONT DO NEXT LINE
+                         // [self.locationManager stopUpdatingLocation];
+                         self.locationManager.pausesLocationUpdatesAutomatically = YES;
+                         self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
+                         [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
+                         [self.locationManager setDistanceFilter:99999];
+                     }
                  }
              }
          }

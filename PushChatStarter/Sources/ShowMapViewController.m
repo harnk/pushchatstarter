@@ -46,6 +46,8 @@
 
 @implementation UINavigationController (RotationIn_IOS6)
 
+//int badResponseRetry = 0;
+
 -(BOOL)shouldAutorotate
 {
     return [[self.viewControllers lastObject] shouldAutorotate];
@@ -270,9 +272,7 @@
         [self showLoginViewController];
     } else {
         [[SingletonClass singleObject] setImInARoom:YES];
-        //Reset pins on map
-//        [self.mapView removeAnnotations:_mapView.annotations];
-        //    [self postFindRequest];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fireUpTheGPS" object:nil userInfo:nil];
         
         // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
         self.isUpdating = NO;
@@ -288,6 +288,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.badResponseRetry = 0;
     if (_centerOnThisGuy.length == 0) {
         self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
     }
@@ -315,7 +316,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     NSLog(@"viewWillDisappear");
-    [self postDoneLookingLiveUpdate];
+//    [self postDoneLookingLiveUpdate];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -325,7 +326,7 @@
 
 - (void)viewDidUnload:(BOOL)animated {
     NSLog(@"viewDidUnload");
-    [self postDoneLookingLiveUpdate];
+//    [self postDoneLookingLiveUpdate];
 }
 
 - (void) applicationWillResign{
@@ -859,66 +860,72 @@
              NSLog(@"responseString: %@ length equals %lu", responseString, (unsigned long)responseString.length);
              
              // if responseString is null then go back to the login screen - your user may have been deleted
-
+             
              if (responseString.length == 0) {
-                 // kill timers
-                 [[SingletonClass singleObject] setImInARoom:NO];
-                 [self stopGetRoomTimer];
-                 [self showLoginViewController];
-                 return;
-             }
-             
-             NSLog(@"operation: %@", operation);
-             
-             NSError *e = nil;
-             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-             
-             if (!jsonArray) {
-                 NSLog(@"Error parsing JSON: %@", e);
-                 [[SingletonClass singleObject] setImInARoom:NO];
+                 self.badResponseRetry = self.badResponseRetry + 1;
+                 NSString *toastStr = [NSString stringWithFormat:@"BRR:%d", self.badResponseRetry];
+                 [self toastMsg:toastStr];
+                 if (self.badResponseRetry > 3) {
+                     // kill timers
+                     [[SingletonClass singleObject] setImInARoom:NO];
+                     [self stopGetRoomTimer];
+                     [self showLoginViewController];
+                     return;
+                 }
              } else {
+                 self.badResponseRetry = 0;
+                 NSLog(@"operation: %@", operation);
                  
-                 //                     Blank out and reload _roomArray
-                 if (!_roomArray) {
-                     _roomArray = [[NSMutableArray alloc] init];
+                 NSError *e = nil;
+                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+                 
+                 if (!jsonArray) {
+                     NSLog(@"Error parsing JSON: %@", e);
+                     [[SingletonClass singleObject] setImInARoom:NO];
                  } else {
-                     [_roomArray removeAllObjects];
-                 }
-                 NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
-                     @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
-                     @"cyangray.png"};
-                 
-                 int i = 0;
-                 UIImage *mPinImage;
-                 // Add Return to All first then the room
-                 
-                 for(NSDictionary *item in jsonArray) {
-                     if (i > 10) {
-                         i = 0;
-                     }
-                     NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSString *mLocation = [item objectForKey:@"location"];
-                     NSString *gmtDateStr = [item objectForKey:@"loc_time"];
-                     NSInteger minutesBetweenDates;
-                     minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
-                     mPinImage = [UIImage imageNamed:myPinImages[i]];
                      
-                     if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                         Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
-                         if (!_roomArray) {
-                             _roomArray = [[NSMutableArray alloc] init];
+                     //                     Blank out and reload _roomArray
+                     if (!_roomArray) {
+                         _roomArray = [[NSMutableArray alloc] init];
+                     } else {
+                         [_roomArray removeAllObjects];
+                     }
+                     NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
+                         @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
+                         @"cyangray.png"};
+                     
+                     int i = 0;
+                     UIImage *mPinImage;
+                     // Add Return to All first then the room
+                     
+                     for(NSDictionary *item in jsonArray) {
+                         if (i > 10) {
+                             i = 0;
                          }
-                         [_roomArray addObject:roomObj];
+                         NSString *mNickName = [item objectForKey:@"nickname"];
+                         NSString *mLocation = [item objectForKey:@"location"];
+                         NSString *gmtDateStr = [item objectForKey:@"loc_time"];
+                         NSInteger minutesBetweenDates;
+                         minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
+                         mPinImage = [UIImage imageNamed:myPinImages[i]];
+                         
+                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
+                             if (!_roomArray) {
+                                 _roomArray = [[NSMutableArray alloc] init];
+                             }
+                             [_roomArray addObject:roomObj];
+                         }
+                         i++;
+                         
                      }
-                     i++;
-                     
+                     //                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                     //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
+                     if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
+                         [self returnToAllWithMessage:@"Eveyone has left the map group"];
+                     }
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
                  }
-//                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
-                 //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
-                 if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
-                     [self returnToAllWithMessage:@"Eveyone has left the map group"];
-                 }
-                 [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
              }
          }
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -965,7 +972,7 @@
 }
 
 - (void)postDoneLookingLiveUpdate {
-    //    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
+    //    NSLog(@"This is called whenever we leave the ShowMapVC");
     
     //SCXTT RELEASE
     NSLog(@"postDoneLookingLiveUpdate cmd:liveupdate set looking = 0");

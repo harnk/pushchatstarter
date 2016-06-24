@@ -43,6 +43,8 @@
 @property (nonatomic, strong, readonly) DataModel* dataModel;
 @property (nonatomic, strong) AFHTTPClient *client;
 @property (nonatomic) BOOL isUpdating;
+@property (nonatomic) int badResponseRetry;
+
 @property (nonatomic) BOOL isFromNotification;
 @property (nonatomic) BOOL pickerIsUp;
 @property (nonatomic) BOOL okToRecenterMap;
