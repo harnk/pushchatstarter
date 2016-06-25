@@ -279,6 +279,7 @@ int retryCounter = 0;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    _currentState = @"AD_DFLWO";
     _purchased = NO;
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
@@ -311,7 +312,7 @@ int retryCounter = 0;
     if (nil == checkStartingLoc) {
         CLLocation *startingPoint = [[CLLocation alloc] initWithLatitude:40.689124 longitude:-74.044611];
         [[SingletonClass singleObject] setMyNewLocation:startingPoint];
-        NSLog(@"AppDelegate myLoc: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"%@ AppDelegate myLoc: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     }
     
     if (launchOptions != nil)
@@ -319,7 +320,7 @@ int retryCounter = 0;
         NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         if (dictionary != nil)
         {
-            NSLog(@"Launched from push notification: %@", dictionary);
+            NSLog(@"%@ Launched from push notification: %@", _currentState, dictionary);
             [self addMessageFromRemoteNotification:dictionary updateUI:NO];
         }
     }
@@ -367,7 +368,7 @@ int retryCounter = 0;
 // This is a delegate method that should get called in the background
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    NSLog(@"########### Received Background Fetch ###########");
+    NSLog(@"%@ ########### Received Background Fetch ###########", _currentState);
     //Download  the Content .
     [self postMyLoc];
     //Cleanup
@@ -379,7 +380,9 @@ int retryCounter = 0;
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     NSLog(@"applicationWillResignActive");
+    _currentState = @"AD_RESIGN";
+    NSLog(@"%@ applicationWillResignActive", _currentState);
+
     //stop looking here
     [self postLiveUpdate];
     _isBackgroundMode = YES;
@@ -394,7 +397,8 @@ int retryCounter = 0;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    NSLog(@"applicationDidEnterBackground");
+    _currentState = @"AD_BKGND";
+    NSLog(@"%@ applicationDidEnterBackground", _currentState);
 //    [self.locationManager startMonitoringSignificantLocationChanges];
 //    self.locationManager.pausesLocationUpdatesAutomatically = NO;
 //    self.locationManager.activityType = CLActivityTypeFitness;
@@ -408,7 +412,8 @@ int retryCounter = 0;
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    NSLog(@"applicationWillEnterForeground");
+    _currentState = @"AD_FOREGROUND";
+    NSLog(@"%@ applicationWillEnterForeground", _currentState);
     [[Harpy sharedInstance] checkVersion];
     
 }
@@ -416,7 +421,8 @@ int retryCounter = 0;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    NSLog(@"applicationDidBecomeActive");
+    _currentState = @"AD_ACTIVE";
+    NSLog(@"%@ applicationDidBecomeActive", _currentState);
     application.applicationIconBadgeNumber = 0;
     //Start the getRoomTimer going again
     [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
@@ -429,16 +435,17 @@ int retryCounter = 0;
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        NSLog(@"applicationWillTerminate");
+    _currentState = @"AD_TERMINATE";
+    NSLog(@"%@ applicationWillTerminate", _currentState);
 }
 
 -(void)application:(UIApplication *)application didRegisterUserNotificationSettings:   (UIUserNotificationSettings *)notificationSettings
 {
     if (notificationSettings.types) {
-        NSLog(@"user allowed notifications");
+        NSLog(@"%@ user allowed notifications", _currentState);
 //        [[UIApplication sharedApplication] registerForRemoteNotifications];
     }else{
-        NSLog(@"user did not allow notifications");
+        NSLog(@"%@ user did not allow notifications", _currentState);
         // show alert here
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
         [alert show];
@@ -457,7 +464,7 @@ int retryCounter = 0;
 -(void)postImhere:(NSString *)asker
 {
 //    NSLog(@"Respond to WhereRU with Im Here back to asker");
-    NSLog(@"postImhere %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"%@ postImhere %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     NSString *text = @"Im Here";
     
     NSDictionary *params = @{@"cmd":@"imhere",
@@ -485,7 +492,7 @@ int retryCounter = 0;
 //    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
     
     //SCXTT RELEASE
-    NSLog(@"postLiveUpdate %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"%@ postLiveUpdate %@", _currentState, [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
@@ -500,9 +507,9 @@ int retryCounter = 0;
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
          //SCXTT RELEASE
-         NSLog(@"SCXTT responseString: %@", responseString);
-         NSLog(@"SCXTT operation: %@", operation);
-         NSLog(@"SCXTT need to check repsonse to see if looking is 1 yet for anyone");
+         NSLog(@"%@ responseString: %@", _currentState, responseString);
+         NSLog(@"%@ operation: %@", _currentState, operation);
+         NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
          if (responseString.length == 0 && retryCounter > 3) {
              [[SingletonClass singleObject] setImInARoom:NO];
              return;
@@ -519,14 +526,14 @@ int retryCounter = 0;
                  NSString *mLooking = [item objectForKey:@"looking"];
                  if ([mLooking isEqual:@"1"]) {
                      NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSLog(@"SCXTT AppDelegate  %@ is looking", mNickName );
+                     NSLog(@"%@  %@ is looking", _currentState, mNickName);
                      foundALooker = YES;
-                     NSLog(@"SCXTT AppDelegate Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                     NSLog(@"%@ Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop", _currentState);
                  }
              }
-             NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+             NSLog(@"%@ set singleton someoneIsLooking = foundALooker which equals %d", _currentState, foundALooker);
              if (foundALooker) {
-                 NSLog(@"AppDelegate since someoneIsLooking keep updating my loc in the background");
+                 NSLog(@"%@ since someoneIsLooking keep updating my loc in the background", _currentState);
                  retryCounter = 0;
              } else {
                  if (_isBackgroundMode){
@@ -564,12 +571,12 @@ int retryCounter = 0;
 
 -(void) postMyLoc {
     if ([[SingletonClass singleObject] imInARoom]) {
-        NSLog(@"imInARoom is true");
+        NSLog(@"%@ imInARoom is true", _currentState);
         if (!_isUpdating) {
-            NSLog(@"were not _isUpdating");
+            NSLog(@"%@ were not _isUpdating", _currentState);
             if (_deviceHasMoved) {
                 _isUpdating = YES;
-                NSLog(@" bkgnd posting my loc %@", [[SingletonClass singleObject] myLocStr]);
+                NSLog(@"%@ POSTLIVEUPDATE %@", _currentState, [[SingletonClass singleObject] myLocStr]);
                 [self postLiveUpdate];
                 _deviceHasMoved = NO;
 
@@ -577,10 +584,10 @@ int retryCounter = 0;
                 
             }
         } else {
-            NSLog(@"no API call since _isUpdating is already YES = Busy");
+            NSLog(@"%@ no API call since _isUpdating is already YES = Busy", _currentState);
         }
     } else {
-        NSLog(@"imInARoom is false - no update");
+        NSLog(@"%@ imInARoom is false - no update", _currentState);
     }
 }
 
@@ -602,7 +609,7 @@ int retryCounter = 0;
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     
-    NSLog(@"My location is: %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"%@ My location is: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
     
@@ -658,7 +665,7 @@ int retryCounter = 0;
     CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
     CLLocation * newLocation = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
-    NSLog(@"SCXTT AppDelegate background delegate device moved %f yards - DIDUPDATELOCATIONS", distanceMoved);
+    NSLog(@"%@ AppDelegate background delegate device moved %f yards - DIDUPDATELOCATIONS", _currentState, distanceMoved);
     
     [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
     
@@ -673,7 +680,7 @@ int retryCounter = 0;
     //log it, save it
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     //SCXTT RELEASE
-    NSLog(@"API postMyLoc didUpdateLocations I moved to: %@", [[SingletonClass singleObject] myLocStr]);
+    NSLog(@"%@ API postMyLoc didUpdateLocations I moved to: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
     [self postMyLoc];
@@ -681,11 +688,11 @@ int retryCounter = 0;
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-    NSLog(@"pausing location updates");
+    NSLog(@"%@ pausing location updates", _currentState);
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager {
-    NSLog(@"resuming location updates");
+    NSLog(@"%@ resuming location updates", _currentState);
 }
 
 

@@ -941,7 +941,7 @@
 
 - (void)postGetRoom
 {
-    NSLog(@"SCXTT postGetRoom should happene every 5 secs");
+    NSLog(@"SMVC postGetRoom should happene every 5 secs");
     if ([_dataModel joinedChat]) {
         if (_isFromNotification) {
             [self postGetRoomMessages];
@@ -954,7 +954,7 @@
                     //    [_messageTextView resignFirstResponder];
                     //    NSString *text = self.messageTextView.text;
                     NSString *text = @"Hey WhereRU?";
-                    NSLog(@"SCXTT getting room cmd:getroom");
+                    NSLog(@"SMVC getting room cmd:getroom");
                     NSDictionary *params = @{@"cmd":@"getroom",
                                              @"user_id":[_dataModel userId],
                                              @"location":[[SingletonClass singleObject] myLocStr],
@@ -963,7 +963,7 @@
                     [self getAPI:params];
                     
                 } else {
-                    NSLog(@"busy, skipping getroom");
+                    NSLog(@"SMVC busy, skipping getroom");
                     _isUpdating = NO;
                 }
             }
@@ -975,7 +975,7 @@
     //    NSLog(@"This is called whenever we leave the ShowMapVC");
     
     //SCXTT RELEASE
-    NSLog(@"postDoneLookingLiveUpdate cmd:liveupdate set looking = 0");
+    NSLog(@"SMVC postDoneLookingLiveUpdate cmd:liveupdate set looking = 0");
     
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
@@ -988,8 +988,8 @@
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
          //SCXTT RELEASE
-         NSLog(@"SCXTT responseString: %@", responseString);
-         NSLog(@"SCXTT operation: %@", operation);
+         NSLog(@"SMVC responseString: %@", responseString);
+         NSLog(@"SMVC operation: %@", operation);
          
          // SCXTT WIP Loop thru the response and check key "looking"
          NSError *e = nil;
@@ -1002,16 +1002,16 @@
                  NSString *mLooking = [item objectForKey:@"looking"];
                  if ([mLooking isEqual:@"1"]) {
                      NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSLog(@"SCXTT ShowMapViewController %@ is looking", mNickName );
+                     NSLog(@"SMVC ShowMapViewController %@ is looking", mNickName );
                      foundALooker = YES;
-                     NSLog(@"SCXTT ShowMapViewController Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                     NSLog(@"SMVC ShowMapViewController Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
                  }
              }
-             NSLog(@"SCXTT set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+             NSLog(@"SMVC set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
              if (foundALooker) {
-                 NSLog(@"ShowMapVC since someoneIsLooking keep updating my loc in the background");
+                 NSLog(@"SMVC since someoneIsLooking keep updating my loc in the background");
              } else {
-                 NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!?");
+                 NSLog(@"SMVC NO ONE is looking so why am I wasting my battery with these background API calls?!?");
              }
          }
          
@@ -1042,13 +1042,13 @@
         
         [self getAPI:params];
     } else {
-        NSLog(@"busy, skipping find");
+        NSLog(@"SMVC busy, skipping find");
         _isUpdating = NO;
     }
 }
 
 -(void)getRoomMessageViaTimer {
-    NSLog(@"getRoomMessageViaTimer");
+    NSLog(@"SMVC getRoomMessageViaTimer");
     [self postGetRoomMessages];
 }
 
@@ -1058,7 +1058,7 @@
     if (!_isUpdating)
     {
         _isUpdating = YES;
-        NSLog(@"Getting map group messages");
+        NSLog(@"SMVC Getting map group messages");
 
         NSString *secret_code = [_dataModel secretCode];
         NSDictionary *params = @{@"cmd":@"getroommessages",
@@ -1069,7 +1069,7 @@
          postPath:ServerPostPathURL
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             NSLog(@"in callback - success");
+             NSLog(@"SMVC in callback - success");
              _isUpdating = NO;
              if (operation.response.statusCode != 200) {
                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
@@ -1102,7 +1102,7 @@
                          message.location = [item objectForKey:@"location"];
                          message.text = [item objectForKey:@"message"];
                          int index = [self.dataModel addMessage:message];
-                         NSLog(@"Message added at index:%d" ,index);
+                         NSLog(@"SMVC Message added at index:%d" ,index);
                      }
                      [self.tableView reloadData];
                      [self scrollToNewestMessage];
@@ -1119,7 +1119,7 @@
              }
          }];
     } else {
-        NSLog(@"busy, skipping getting room messages");
+        NSLog(@"SMVC busy, skipping getting room messages");
 //        _isUpdating = NO;
     }
 }
@@ -1259,8 +1259,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
     northEast = southWest;
 
     //SCXTT RELEASE
-    NSLog(@"updatePointsOnMapWithAPIData");
-    NSLog(@"My loc:%@", mLoc);
+    NSLog(@"SMVC updatePointsOnMapWithAPIData");
+    NSLog(@"SMVC My loc:%@", mLoc);
 
     
     // Loop thru all _roomArray[Room objects]
@@ -1356,7 +1356,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
             // new who so add addAnnotation and set coordinate and location time and recenter the map
             if (!whoFound) {
                 //SCXTT RELEASE
-                NSLog(@"Adding new who %@ with pin %@", who, imageString);
+                NSLog(@"SMVC Adding new who %@ with pin %@", who, imageString);
 
                 if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]){
                     [self multiLineToastMsg:who detailText:@"is in the map group"];

@@ -27,6 +27,7 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL deviceHasMoved;
+@property (nonatomic, strong) NSString *currentState;
 
 //In-App purchase stuff
 @property (strong, nonatomic) SKProductsRequest* request;
