@@ -26,5 +26,6 @@
 @property (nonatomic, assign) DataModel* dataModel;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL deviceHasMoved;
+@property (nonatomic, strong) NSString *currentState;
 
 @end

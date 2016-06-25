@@ -240,7 +240,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    NSLog(@"viewDidAppear");
+    NSLog(@"SMVC viewDidAppear");
     if (![_dataModel joinedChat])
     {
         [[SingletonClass singleObject] setImInARoom:NO];
@@ -264,7 +264,7 @@
         self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
     }
 
-//    NSLog(@"viewWillAppear");
+    NSLog(@"SMVC viewWillAppear");
     // Show a label in the table's footer if there are no messages
     if (self.dataModel.messages.count == 0)
     {
@@ -286,27 +286,27 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-//    NSLog(@"viewWillDisappear");
+    NSLog(@"SMVC viewWillDisappear");
 }
 
 - (void)stopGetRoomTimer {
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
-//    NSLog(@"stopGetRoomTimer and GetRoomMessagesTimer");
+    NSLog(@"SMVC stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
-//        NSLog(@"[getRoomTimer invalidate]");
+        NSLog(@"SMVC [getRoomTimer invalidate]");
         [getRoomTimer invalidate];
         getRoomTimer = nil;
     } else {
         
-//        NSLog(@"did nothing");
+        NSLog(@"SMVC did nothing");
     }
     
     if(getMessagesTimer)
     {
-//        NSLog(@"[getMessagesTimer invalidate]");
+        NSLog(@"SMVC [getMessagesTimer invalidate]");
         [getMessagesTimer invalidate];
         getMessagesTimer = nil;
     } else {
@@ -318,7 +318,7 @@
 
 -(void)startGetRoomTimer {
     [self stopGetRoomTimer];
-//    NSLog(@"startGetRoomTimer");
+    NSLog(@"SMVC startGetRoomTimer");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                      target: self
@@ -336,10 +336,10 @@
 
 -(void) areNotificationsEnabled {
     BOOL notifsDisabled = [[SingletonClass singleObject] notificationsAreDisabled];
-    NSLog(@"[[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
+    NSLog(@"SMVC [[SingletonClass singleObject] notificationsAreDisabled] value: %d",notifsDisabled);
 //    NSLog(@"Move the ALERT HERE for Notifs being off");
     
-    NSLog(@"Setting notificationsAreDisabled to YES by default");
+    NSLog(@"SMVC Setting notificationsAreDisabled to YES by default");
     [[SingletonClass singleObject] setNotificationsAreDisabled:YES];
     // Check if notifications are enabled because this app won't work if they aren't
     //    _notificationsAreDisabled = false;
@@ -538,10 +538,10 @@
     _value2TextField.text = [dictionary objectForKey:@"value2"];
     
     //SCXTT RELEASE
-    NSLog(@"requestReturnedData: %@",dictionary);
-    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
-    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
-    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
+    NSLog(@"SMVC requestReturnedData: %@",dictionary);
+    NSLog(@"SMVC _output.text JSON RECEIVED: %@", _output.text);
+    NSLog(@"SMVC _value1TextField.text: %@", _value1TextField.text);
+    NSLog(@"SMVC _value2TextField.text: %@", _value2TextField.text);
 }
 
 
@@ -775,7 +775,7 @@
 }
 
 - (void)findAction {
-    NSLog(@"findAction");
+    NSLog(@"SMVC findAction");
     if ([_dataModel joinedChat]) {
 //        [self returnToAllWithMessage:@"refresh request sent"];
         [self returnToAllWithMessage:@""];
@@ -805,18 +805,18 @@
              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
          } else {
              //SCXTT RELEASE
-             NSLog(@"getAPI cmd request sent");
+             NSLog(@"SMVC getAPI cmd request sent");
              NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
              
              //SCXTT RELEASE
-             NSLog(@"responseString: %@", responseString);
-             NSLog(@"operation: %@", operation);
+             NSLog(@"SMVC responseString: %@", responseString);
+             NSLog(@"SMVC operation: %@", operation);
              
              NSError *e = nil;
              NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
              
              if (!jsonArray) {
-                 NSLog(@"Error parsing JSON: %@", e);
+                 NSLog(@"SMVC Error parsing JSON: %@", e);
              } else {
                  
                  //                     Blank out and reload _roomArray
@@ -875,7 +875,7 @@
 
 - (void)postGetRoom
 {
-
+    NSLog(@"SMVC postGetRoom should happen every 5 secs");
     if ([_dataModel joinedChat]) {
         if (_isFromNotification) {
             [self postGetRoomMessages];
@@ -897,7 +897,7 @@
                     [self getAPI:params];
                     
                 } else {
-                    NSLog(@"busy, skipping getroom");
+                    NSLog(@"SMVC busy, skipping getroom");
                     _isUpdating = NO;
                 }
             }
@@ -908,6 +908,7 @@
 
 - (void)postFindRequest
 {
+    NSLog(@"SMVC postFindRequest");
     if (!_isUpdating)
     {
         _isUpdating = YES;
@@ -928,32 +929,32 @@
         
         [self getAPI:params];
     } else {
-        NSLog(@"busy, skipping find");
+        NSLog(@"SMVC busy, skipping postFindRequest");
         _isUpdating = NO;
     }
 }
 
 -(void)getRoomMessageViaTimer {
-    NSLog(@"getRoomMessageViaTimer");
+    NSLog(@"SMVC getRoomMessageViaTimer");
     [self postGetRoomMessages];
 }
 
 - (void)postGetRoomMessages
 {
-   
+    NSLog(@"SMVC postGetRoomMessages");
     if (!_isUpdating)
     {
         _isUpdating = YES;
 //        NSString *toast = [NSString stringWithFormat:@"Getting map group messages"];
 //        [self toastMsg:toast];
-        NSLog(@"Getting map group messages");
+        NSLog(@"SMVC Getting map group messages");
 
         NSString *secret_code = [_dataModel secretCode];
         
         //SCXTT RELEASE
-        NSLog(@"secret_code is: %@ now seeting up params", secret_code);
-        NSLog(@"location is: %@", [[SingletonClass singleObject] myLocStr]);
-        NSLog(@"user_id is: %@", [_dataModel userId]);
+        NSLog(@"SMVC secret_code is: %@ now seeting up params", secret_code);
+        NSLog(@"SMVC location is: %@", [[SingletonClass singleObject] myLocStr]);
+        NSLog(@"SMVC user_id is: %@", [_dataModel userId]);
         
          //SCXTT swipe up then run again is crashing here - its either location or user_id is not set yet
         
@@ -971,7 +972,7 @@
          parameters:params
          success:^(AFHTTPRequestOperation *operation, id responseObject) {
              
-             NSLog(@"in callback - success");
+             NSLog(@"SMVC in callback - success");
 
              _isUpdating = NO;
              if (operation.response.statusCode != 200) {
@@ -981,7 +982,7 @@
                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
                  
                  //SCXTT RELEASE
-                 NSLog(@"getroommessages responseString: %@", responseString);
+                 NSLog(@"SMVC getroommessages responseString: %@", responseString);
                  
                  NSError *e = nil;
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -999,7 +1000,7 @@
                      if (!_roomMessagesArray) {
                          _roomMessagesArray = [[NSMutableArray alloc] init];
                      } else {
-                         NSLog(@"reset roomMessagesArray");
+                         NSLog(@"SMVC reset roomMessagesArray");
                          [_roomMessagesArray removeAllObjects];
                      }
                      [self.dataModel.messages removeAllObjects];
@@ -1041,7 +1042,7 @@
              }
          }];
     } else {
-        NSLog(@"busy, skipping getting room messages");
+        NSLog(@"SMVC busy, skipping getting room messages");
 //        _isUpdating = NO;
     }
 }
@@ -1181,8 +1182,8 @@ didAddAnnotationViews:(NSArray *)annotationViews
     northEast = southWest;
 
     //SCXTT RELEASE
-    NSLog(@"updatePointsOnMapWithAPIData");
-    NSLog(@"My loc:%@", mLoc);
+    NSLog(@"SMVC updatePointsOnMapWithAPIData");
+    NSLog(@"SMVC My loc:%@", mLoc);
 
     
     // Loop thru all _roomArray[Room objects]
@@ -1229,7 +1230,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 if ([ann.title isEqualToString:who])
                 {
                     //SCXTT RELEASE
-                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
+//                    NSLog(@"SMVC grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
                     location.latitude = [strings[0] doubleValue];
                     location.longitude = [strings[1] doubleValue];
