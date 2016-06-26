@@ -28,6 +28,7 @@ void ShowErrorAlert(NSString* text)
 @implementation AppDelegate
 
 int retryCounter = 0;
+int badResponseCounter = 0;
 
 #pragma mark - 
 #pragma mark In-App Purchase Stuff
@@ -262,11 +263,21 @@ int retryCounter = 0;
     _deviceHasMoved = YES;
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    
     [self.locationManager requestAlwaysAuthorization];
-    //    self.locationManager.pausesLocationUpdatesAutomatically = YES;
-    [self.locationManager startMonitoringSignificantLocationChanges];
+    //  self.locationManager.pausesLocationUpdatesAutomatically = YES;
+    // [self.locationManager startMonitoringSignificantLocationChanges];
     self.locationManager.pausesLocationUpdatesAutomatically = NO;
-    self.locationManager.activityType = CLActivityTypeFitness;
+
+    // iOS 9 now requires that you ALSO set allowsBackgroundLocationUpdates = YES
+    [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        [_locationManager requestAlwaysAuthorization];
+    }
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
+        _locationManager.allowsBackgroundLocationUpdates = YES;
+    }
+    
     [self.locationManager startUpdatingLocation];
 }
 
@@ -510,9 +521,15 @@ int retryCounter = 0;
          NSLog(@"%@ responseString: %@", _currentState, responseString);
          NSLog(@"%@ operation: %@", _currentState, operation);
          NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
-         if (responseString.length == 0 && retryCounter > 3) {
-             [[SingletonClass singleObject] setImInARoom:NO];
-             return;
+         
+         // Deal with me if I have been deleted from the active_users table in the DB
+         if (responseString.length == 0) {
+             badResponseCounter += 1;
+             if (badResponseCounter > 5) {
+                 [[SingletonClass singleObject] setImInARoom:NO];
+             }
+         } else {
+             badResponseCounter = 0;
          }
          
          // SCXTT WIP Loop thru the response and check key "looking"
@@ -542,12 +559,16 @@ int retryCounter = 0;
                      if (retryCounter > 10) {
                          NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
                          NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
-                         // cant stop this in background because you cant start it back up in background DONT DO NEXT LINE
-                         // [self.locationManager stopUpdatingLocation];
+
+                         
                          self.locationManager.pausesLocationUpdatesAutomatically = YES;
                          self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
                          [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
                          [self.locationManager setDistanceFilter:99999];
+                         
+                         
+                         
+                         
                      }
                  }
              }

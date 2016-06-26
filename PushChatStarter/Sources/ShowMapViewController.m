@@ -339,10 +339,10 @@
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
-//    NSLog(@"stopGetRoomTimer and GetRoomMessagesTimer");
+    NSLog(@"SMVC stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
-        NSLog(@"[getRoomTimer invalidate]");
+        NSLog(@"SMVC [getRoomTimer invalidate]");
         [getRoomTimer invalidate];
         getRoomTimer = nil;
     } else {
@@ -352,19 +352,19 @@
     
     if(getMessagesTimer)
     {
-        NSLog(@"[getMessagesTimer invalidate]");
+        NSLog(@"SMVC [getMessagesTimer invalidate]");
         [getMessagesTimer invalidate];
         getMessagesTimer = nil;
     } else {
         
-        NSLog(@"did nothing");
+        NSLog(@"SMVC did nothing");
     }
     
 }
 
 -(void)startGetRoomTimer {
     [self stopGetRoomTimer];
-    NSLog(@"startGetRoomTimer should kickoff postGetRoom every 5s");
+    NSLog(@"SMVC startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                      target: self
@@ -881,7 +881,7 @@
                  
                  if (!jsonArray) {
                      NSLog(@"Error parsing JSON: %@", e);
-                     [[SingletonClass singleObject] setImInARoom:NO];
+//                     [[SingletonClass singleObject] setImInARoom:NO];
                  } else {
                      
                      //                     Blank out and reload _roomArray
