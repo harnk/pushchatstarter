@@ -216,7 +216,7 @@
      name:UIApplicationWillResignActiveNotification
      object:nil];
     
-    NSLog(@"SCXTT Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
+    NSLog(@"SMVC viewDidLoad Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
     //test ad
     // self.bannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
     // real adUnitId
@@ -265,7 +265,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    NSLog(@"viewDidAppear");
+    NSLog(@"SMVC viewDidAppear");
     if (![_dataModel joinedChat])
     {
         [[SingletonClass singleObject] setImInARoom:NO];
@@ -276,7 +276,8 @@
         
         // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
         self.isUpdating = NO;
-        [self findAction];
+        [self toastMsg:@"Updating locations"];
+//        [self findAction];
         [self postGetRoomMessages];
         [self postGetRoom];
         [self.tableView reloadData];
@@ -288,6 +289,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    NSLog(@"SMVC viewWillAppear");
     self.badResponseRetry = 0;
     if (_centerOnThisGuy.length == 0) {
         self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
@@ -315,22 +317,22 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"viewWillDisappear");
+    NSLog(@"SMVC viewWillDisappear");
 //    [self postDoneLookingLiveUpdate];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    NSLog(@"viewDidDisappear");
+    NSLog(@"SMVC viewDidDisappear");
     [self postDoneLookingLiveUpdate];
 }
 
 - (void)viewDidUnload:(BOOL)animated {
-    NSLog(@"viewDidUnload");
+    NSLog(@"SMVC viewDidUnload");
 //    [self postDoneLookingLiveUpdate];
 }
 
 - (void) applicationWillResign{
-    NSLog(@"SCXTT DETECTED THAT About to lose focus so stopGetRoomTimer");
+    NSLog(@"SMVC applicationWillResign About to lose focus so stopGetRoomTimer COMMENTED OUT FOR NOW");
 //    [self stopGetRoomTimer];
 //    NSLog(@"SCXTT We have stopped timers in ShowMap but we need them to start in AppDelegate");
 }
@@ -364,7 +366,10 @@
 
 -(void)startGetRoomTimer {
     [self stopGetRoomTimer];
-    NSLog(@"SMVC startGetRoomTimer should kickoff postGetRoom every 5s");
+    // Also need to wake up other devices in the room now
+    [self findAction];
+
+    NSLog(@"SMVC findAction WAKE UP DEVICES & startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
                                                      target: self
