@@ -341,6 +341,10 @@
     //BEFORE DOING SO CHECK THAT TIMER MUST NOT BE ALREADY INVALIDATED
     //Always nil your timer after invalidating so that
     //it does not cause crash due to duplicate invalidate
+    
+    //Tell AD to stop postMyLoc
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"allowBackgroundUpdates" object:nil userInfo:nil];
+    
     NSLog(@"SMVC stopGetRoomTimer and GetRoomMessagesTimer");
     if(getRoomTimer)
     {
@@ -368,6 +372,9 @@
     [self stopGetRoomTimer];
     // Also need to wake up other devices in the room now
     [self findAction];
+    
+    //Tell AD to stop postMyLoc
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"haltBackgroundUpdates" object:nil userInfo:nil];
 
     NSLog(@"SMVC findAction WAKE UP DEVICES & startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
@@ -836,10 +843,6 @@
     }
 }
 
-- (void)getRoomAction {
-//    [self postFindRequest];
-    [self postGetRoom];
-}
 
 -(NSString *)setPinImageBasedOnNickName {
     

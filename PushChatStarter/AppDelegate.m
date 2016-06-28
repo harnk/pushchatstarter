@@ -365,6 +365,16 @@ int badResponseCounter = 0;
                                                  name:@"fireUpTheGPS"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(smvcIsActive)
+                                                 name:@"haltBackgroundUpdates"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(smvcIsInactive)
+                                                 name:@"allowBackgroundUpdates"
+                                               object:nil];
+    
 
     //REMOVE this next bit later - its for testing while sitting in one place
 //    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
@@ -376,12 +386,23 @@ int badResponseCounter = 0;
     return YES;
 }
 
+-(void) smvcIsActive {
+    _isBackgroundMode = NO;
+}
+
+-(void) smvcIsInactive {
+    _isBackgroundMode = YES;
+}
+
 // This is a delegate method that should get called in the background
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     NSLog(@"%@ ########### Received Background Fetch ###########", _currentState);
     //Download  the Content .
-    [self postMyLoc];
+    // Do NOT do this next line if SMVC is still active and looking
+    if (_isBackgroundMode) {
+        [self postMyLoc];
+    }
     //Cleanup
     completionHandler(UIBackgroundFetchResultNewData);
     
@@ -704,7 +725,11 @@ int badResponseCounter = 0;
     NSLog(@"%@ API postMyLoc didUpdateLocations I moved to: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
-    [self postMyLoc];
+    
+    // Do NOT do this next line if SMVC is still active and looking
+    if (_isBackgroundMode) {
+        [self postMyLoc];
+    }
     //    }
 }
 

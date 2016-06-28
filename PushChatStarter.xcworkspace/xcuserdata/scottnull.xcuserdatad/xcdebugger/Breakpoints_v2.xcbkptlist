@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushChatStarter/Sources/ShowMapViewController.m"
-            timestampString = "488427092.643475"
+            timestampString = "488775011.607983"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1048"
-            endingLineNumber = "1048"
+            startingLineNumber = "1044"
+            endingLineNumber = "1044"
             landmarkName = "-postFindRequest"
             landmarkType = "5">
          </BreakpointContent>
