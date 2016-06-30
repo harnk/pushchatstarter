@@ -128,11 +128,26 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 
 - (NSString*)userId
 {
-    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:UserId];
+//    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:UserId];
+    NSString *userId = [_keychain objectForKey:(__bridge id)(kSecAttrAccount)];
+    NSLog(@"GETTING userId from keychain:%@", userId);
+    
     if (userId == nil || userId.length == 0) {
+        NSLog(@"USERID IS NULL userId from keychain:%@", userId);
+
         userId = [[[NSUUID UUID] UUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        [[NSUserDefaults standardUserDefaults] setObject:userId forKey:UserId];
+        NSLog(@"USERID IS NEW userId:%@", userId);
+        
+        // LETS STORE THIS IN THE KEYCHAIN INSTEAD OF NSUserDefaults
+        _keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"TestUDID" accessGroup:nil];
+        [_keychain setObject:userId forKey:(__bridge id)(kSecAttrAccount)];
+        NSLog(@"USERID IS STORED in _keychain:%@", userId);
+        userId = [_keychain objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSLog(@"USERID READBACK from Keychain:%@", userId);
+        
+//        [[NSUserDefaults standardUserDefaults] setObject:userId forKey:UserId];
     }
     return userId;
 }
+
 @end

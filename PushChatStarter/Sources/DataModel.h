@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Ray Wenderlich. All rights reserved.
 //
 
+#import "KeychainItemWrapper.h"
+
 @class Message;
 
 // The main data model object
@@ -16,6 +18,7 @@
 
 @property (nonatomic, strong) NSMutableArray* messages;
 @property (nonatomic, strong) NSString* myLoc;
+@property (nonatomic, strong) KeychainItemWrapper *keychain;
 
 // Loads the list of messages from a file.
 - (void)loadMessages:(NSString*)myLoc;

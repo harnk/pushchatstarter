@@ -68,6 +68,7 @@
 		9E7CE78B1AAAA88500C7364D /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CE78A1AAAA88500C7364D /* Room.m */; };
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
+		9EBA33161D24BA9A00569451 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBA33151D24BA9A00569451 /* KeychainItemWrapper.m */; };
 		9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
@@ -158,6 +159,8 @@
 		9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
+		9EBA33141D24BA9A00569451 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		9EBA33151D24BA9A00569451 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
 		9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button-pressed.jpg"; sourceTree = "<group>"; };
@@ -315,6 +318,8 @@
 				9E7CE78A1AAAA88500C7364D /* Room.m */,
 				61489ED0170422A20049C6F9 /* DataModel.h */,
 				61489ED1170422A20049C6F9 /* DataModel.m */,
+				9EBA33141D24BA9A00569451 /* KeychainItemWrapper.h */,
+				9EBA33151D24BA9A00569451 /* KeychainItemWrapper.m */,
 				61489ED2170422A20049C6F9 /* Message.h */,
 				61489ED3170422A20049C6F9 /* Message.m */,
 				9E7453671A85C6D900522BCA /* SingletonClass.h */,
@@ -491,6 +496,7 @@
 				61489ED9170424080049C6F9 /* SpeechBubbleView.m in Sources */,
 				61489EDC170424CB0049C6F9 /* MessageTableViewCell.m in Sources */,
 				9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */,
+				9EBA33161D24BA9A00569451 /* KeychainItemWrapper.m in Sources */,
 				9E7453691A85C6D900522BCA /* SingletonClass.m in Sources */,
 				61489EDF170425EB0049C6F9 /* ComposeViewController.m in Sources */,
 				61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */,
