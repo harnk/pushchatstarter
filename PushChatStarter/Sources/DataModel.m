@@ -165,10 +165,17 @@ static NSString *serviceName = @"com.harnk.whereru.myAppServiceName";
     
     CFDataRef *passwordData = [self searchKeychainCopyMatching:@"Password"];
     if (passwordData) {
-        NSData *myData = (__bridge_transfer NSData *)passwordData;
-        NSString *password = [[NSString alloc] initWithData:passwordData
+        
+        CFDataRef myCFData = *passwordData; // Declare variable
+        // Code to fill in myCFData
+        NSData * myNSData = (__bridge NSData *) myCFData;
+        
+//        myNSData = passwordData;
+        
+        NSData *myData = (__bridge_transfer NSData *)myCFData;
+        NSString *password = [[NSString alloc] initWithData:myData
                                                    encoding:NSUTF8StringEncoding];
-        [passwordData release];
+//        [passwordData release];
     }
     
     
