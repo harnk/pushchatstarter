@@ -67,6 +67,7 @@
 		9E7AC7EB1AB2834E004996B6 /* yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7E11AB2834E004996B6 /* yellow.png */; };
 		9E7CE78B1AAAA88500C7364D /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CE78A1AAAA88500C7364D /* Room.m */; };
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
+		9E885C021D2612AE007F1516 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E885C011D2612AE007F1516 /* Security.framework */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
 		9EBA33161D24BA9A00569451 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBA33151D24BA9A00569451 /* KeychainItemWrapper.m */; };
 		9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */; };
@@ -156,6 +157,7 @@
 		9E7CE78A1AAAA88500C7364D /* Room.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Room.m; sourceTree = "<group>"; };
 		9E81F9FB1A5CD8A000310C40 /* VBAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBAnnotation.h; sourceTree = "<group>"; };
 		9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBAnnotation.m; sourceTree = "<group>"; };
+		9E885C011D2612AE007F1516 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E885C021D2612AE007F1516 /* Security.framework in Frameworks */,
 				61489E9817041C660049C6F9 /* UIKit.framework in Frameworks */,
 				61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */,
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
@@ -222,6 +225,7 @@
 		61489E9617041C660049C6F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E885C011D2612AE007F1516 /* Security.framework */,
 				9E0E57031D139AC700A57D92 /* StoreKit.framework */,
 				9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */,
 				9E2A75271A2D130C002B2A03 /* MapKit.framework */,
@@ -599,7 +603,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushChatStarter/PushChatStarter-Prefix.pch";
 				INFOPLIST_FILE = "PushChatStarter/PushChatStarter-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.harnk.WhereRU;
@@ -629,7 +633,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushChatStarter/PushChatStarter-Prefix.pch";
 				INFOPLIST_FILE = "PushChatStarter/PushChatStarter-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.harnk.WhereRU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
