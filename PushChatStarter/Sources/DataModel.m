@@ -8,7 +8,6 @@
 
 #import "DataModel.h"
 #import "Message.h"
-#import <Security/Security.h>
 
 // We store our settings in the NSUserDefaults dictionary using these keys
 static NSString* const NicknameKey = @"Nickname";
@@ -127,60 +126,11 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 	[[NSUserDefaults standardUserDefaults] setBool:value forKey:JoinedChatKey];
 }
 
-// for these next two methods reference this http://useyourloaf.com/blog/simple-iphone-keychain-access/
-
-static NSString *serviceName = @"com.harnk.whereru.myAppServiceName";
-
-- (NSMutableDictionary *)newSearchDictionary:(NSString *)identifier {
-    NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
-    
-    [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-    
-    NSData *encodedIdentifier = [identifier dataUsingEncoding:NSUTF8StringEncoding];
-    [searchDictionary setObject:encodedIdentifier forKey:(id)kSecAttrGeneric];
-    [searchDictionary setObject:encodedIdentifier forKey:(id)kSecAttrAccount];
-    [searchDictionary setObject:serviceName forKey:(id)kSecAttrService];
-    
-    return searchDictionary;
-}
-
-- (CFDataRef *)searchKeychainCopyMatching:(NSString *)identifier {
-    NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
-    
-    // Add search attributes
-    [searchDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-    
-    // Add search return types
-    [searchDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    
-    CFDataRef *result = nil;
-    OSStatus status = SecItemCopyMatching((CFDictionaryRef)searchDictionary, (CFTypeRef *)&result);
-    
-//    [searchDictionary release];
-    return result;
-}
+#pragma mark - userID and Keychain stuff
 
 - (NSString*)userId
 {
-    
-    CFDataRef *passwordData = [self searchKeychainCopyMatching:@"Password"];
-    if (passwordData) {
-        
-        CFDataRef myCFData = *passwordData; // Declare variable
-        // Code to fill in myCFData
-        NSData * myNSData = (__bridge NSData *) myCFData;
-        
-//        myNSData = passwordData;
-        
-        NSData *myData = (__bridge_transfer NSData *)myCFData;
-        NSString *password = [[NSString alloc] initWithData:myData
-                                                   encoding:NSUTF8StringEncoding];
-//        [passwordData release];
-    }
-    
-    
-//    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:UserId];
-    NSString *userId = [_keychain objectForKey:(__bridge id)(kSecAttrAccount)];
+    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:UserId];
     NSLog(@"GETTING userId from keychain:%@", userId);
     
     if (userId == nil || userId.length == 0) {
@@ -189,14 +139,7 @@ static NSString *serviceName = @"com.harnk.whereru.myAppServiceName";
         userId = [[[NSUUID UUID] UUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
         NSLog(@"USERID IS NEW userId:%@", userId);
         
-        // LETS STORE THIS IN THE KEYCHAIN INSTEAD OF NSUserDefaults
-        _keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"WhereRU" accessGroup:nil];
-        [_keychain setObject:userId forKey:(__bridge id)(kSecAttrAccount)];
-        NSLog(@"USERID IS STORED in _keychain:%@", userId);
-        userId = [_keychain objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSLog(@"USERID READBACK from Keychain:%@", userId);
-        
-//        [[NSUserDefaults standardUserDefaults] setObject:userId forKey:UserId];
+        [[NSUserDefaults standardUserDefaults] setObject:userId forKey:UserId];
     }
     return userId;
 }
