@@ -127,6 +127,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 }
 
 #pragma mark - userID and Keychain stuff
+// Need to save User ID to the keychain in order to persist it between app deletions
 
 - (NSString*)userId
 {
