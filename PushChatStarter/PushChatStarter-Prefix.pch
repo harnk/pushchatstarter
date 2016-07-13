@@ -15,5 +15,6 @@
     #import "AppDelegate.h"
     #import "AFNetworking.h"
     #import "MBProgressHUD.h"
+    #import "UICKeyChainStore.h"
     #import <Security/Security.h>
 #endif

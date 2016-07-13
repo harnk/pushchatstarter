@@ -316,7 +316,18 @@ int badResponseCounter = 0;
     [[Harpy sharedInstance] checkVersion];
 
     
-    //--- your custom code
+    // Check the keychain for the userID
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU"];
+    
+    NSString *token = [keychain stringForKey:@"mysaveduserid"];
+    NSLog(@"SCXTT READ KEYCHAIN BEFORE: %@", token);
+    
+    keychain[@"mysaveduserid"] = @"01234567-89ab-cdef-0123-456789abcdef";
+    [keychain setString:@"00000000-abcd-ffff-5555-888888888888" forKey:@"mysaveduserid"];
+
+    token = [keychain stringForKey:@"mysaveduserid"];
+    NSLog(@"SCXTT READ KEYCHAIN AFTER: %@", token);
+    
     // Init my location since it may not have gotten a read on me yet
     // All points start at the statue of liberty: 40.689124, -74.044611
     NSString *checkStartingLoc = [[SingletonClass singleObject] myLocStr];
