@@ -131,16 +131,12 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 
 - (NSString*)userId
 {
-    NSString *userId = [[NSUserDefaults standardUserDefaults] stringForKey:UserId];
-    NSLog(@"GETTING userId from keychain:%@", userId);
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU.storedid"];
+    NSString *userId = [keychain stringForKey:@"mysaveduserid"];
+    NSLog(@"GETTING userId from UICKeyChainStore:%@", userId);
     
     if (userId == nil || userId.length == 0) {
-        NSLog(@"USERID IS NULL userId from keychain:%@", userId);
-
-        userId = [[[NSUUID UUID] UUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        NSLog(@"USERID IS NEW userId:%@", userId);
-        
-        [[NSUserDefaults standardUserDefaults] setObject:userId forKey:UserId];
+        NSLog(@"USERID IS NULL userId from NSUserDefaults:%@", userId);
     }
     return userId;
 }

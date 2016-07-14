@@ -145,6 +145,46 @@ int badResponseCounter = 0;
 #pragma mark -
 #pragma mark Notifications
 
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    
+    NSLog(@"%@ My location is: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
+    
+    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
+    
+    //    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
+    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
+    
+    //    DataModel *dataModel = chatViewController.dataModel;
+    DataModel *dataModel = showMapViewController.dataModel;
+    
+    NSString *oldToken = [dataModel deviceToken];
+    
+    NSString *newToken = [deviceToken description];
+    newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"My token is: %@", newToken);
+    
+    //    NSLog(@"Got a token so notificationsAreDisabled to NO");
+    [[SingletonClass singleObject] setNotificationsAreDisabled:NO];
+    
+    //Tell the app the good news
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];
+    
+    [dataModel setDeviceToken:newToken];
+    
+    if ([dataModel joinedChat] && ![newToken isEqualToString:oldToken])
+    {
+        [self postUpdateRequest];
+    }
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+    NSLog(@"Failed to get token, error: %@", error);
+}
+
+
 - (void)addMessageFromRemoteNotification:(NSDictionary*)userInfo updateUI:(BOOL)updateUI
 {
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
@@ -256,30 +296,21 @@ int badResponseCounter = 0;
     }
 }
 
-- (void)startMyLocationUpdates
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:   (UIUserNotificationSettings *)notificationSettings
 {
-    NSLog(@"Fire Up The GPS: self.locationManager startUpdatingLocation");
-    // Start updating my own location
-    _deviceHasMoved = YES;
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    
-    [self.locationManager requestAlwaysAuthorization];
-    //  self.locationManager.pausesLocationUpdatesAutomatically = YES;
-    // [self.locationManager startMonitoringSignificantLocationChanges];
-    self.locationManager.pausesLocationUpdatesAutomatically = NO;
-
-    // iOS 9 now requires that you ALSO set allowsBackgroundLocationUpdates = YES
-    [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        [_locationManager requestAlwaysAuthorization];
+    if (notificationSettings.types) {
+        NSLog(@"%@ user allowed notifications", _currentState);
+        //        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }else{
+        NSLog(@"%@ user did not allow notifications", _currentState);
+        // show alert here
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+        [alert show];
     }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
-        _locationManager.allowsBackgroundLocationUpdates = YES;
-    }
-    
-    [self.locationManager startUpdatingLocation];
 }
+
+#pragma mark -
+#pragma mark AppDelegate methods
 
 //- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 //{
@@ -317,16 +348,19 @@ int badResponseCounter = 0;
 
     
     // Check the keychain for the userID
-    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU"];
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU.storedid"];
+    NSString *userId = [keychain stringForKey:@"mysaveduserid"];
+    NSLog(@"SCXTT READ KEYCHAIN BEFORE: %@", userId);
     
-    NSString *token = [keychain stringForKey:@"mysaveduserid"];
-    NSLog(@"SCXTT READ KEYCHAIN BEFORE: %@", token);
-    
-    keychain[@"mysaveduserid"] = @"01234567-89ab-cdef-0123-456789abcdef";
-    [keychain setString:@"00000000-abcd-ffff-5555-888888888888" forKey:@"mysaveduserid"];
+    if (!userId) {
+        NSLog(@"SCXTT USERID FALSE: %@", userId);
+        userId = [[[NSUUID UUID] UUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        keychain[@"mysaveduserid"] = userId;
+        [keychain setString:userId forKey:@"mysaveduserid"];
+    }
 
-    token = [keychain stringForKey:@"mysaveduserid"];
-    NSLog(@"SCXTT READ KEYCHAIN AFTER: %@", token);
+    userId = [keychain stringForKey:@"mysaveduserid"];
+    NSLog(@"SCXTT READ KEYCHAIN AFTER: %@", userId);
     
     // Init my location since it may not have gotten a read on me yet
     // All points start at the statue of liberty: 40.689124, -74.044611
@@ -395,14 +429,6 @@ int badResponseCounter = 0;
 //                                                      repeats: YES];
 
     return YES;
-}
-
--(void) smvcIsActive {
-    _isBackgroundMode = NO;
-}
-
--(void) smvcIsInactive {
-    _isBackgroundMode = YES;
 }
 
 // This is a delegate method that should get called in the background
@@ -482,18 +508,17 @@ int badResponseCounter = 0;
     NSLog(@"%@ applicationWillTerminate", _currentState);
 }
 
--(void)application:(UIApplication *)application didRegisterUserNotificationSettings:   (UIUserNotificationSettings *)notificationSettings
-{
-    if (notificationSettings.types) {
-        NSLog(@"%@ user allowed notifications", _currentState);
-//        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }else{
-        NSLog(@"%@ user did not allow notifications", _currentState);
-        // show alert here
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-        [alert show];
-    }
+#pragma mark -
+#pragma mark custom methods
+
+-(void) smvcIsActive {
+    _isBackgroundMode = NO;
 }
+
+-(void) smvcIsInactive {
+    _isBackgroundMode = YES;
+}
+
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -502,6 +527,31 @@ int badResponseCounter = 0;
         NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
         [[UIApplication sharedApplication] openURL:url];
     }
+}
+
+- (void)startMyLocationUpdates
+{
+    NSLog(@"Fire Up The GPS: self.locationManager startUpdatingLocation");
+    // Start updating my own location
+    _deviceHasMoved = YES;
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
+    [self.locationManager requestAlwaysAuthorization];
+    //  self.locationManager.pausesLocationUpdatesAutomatically = YES;
+    // [self.locationManager startMonitoringSignificantLocationChanges];
+    self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    
+    // iOS 9 now requires that you ALSO set allowsBackgroundLocationUpdates = YES
+    [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        [_locationManager requestAlwaysAuthorization];
+    }
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9) {
+        _locationManager.allowsBackgroundLocationUpdates = YES;
+    }
+    
+    [self.locationManager startUpdatingLocation];
 }
 
 -(void)postImhere:(NSString *)asker
@@ -657,45 +707,6 @@ int badResponseCounter = 0;
      postPath:ServerPostPathURL
      parameters:params
      success:nil failure:nil];
-}
-
-- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
-{
-    
-    NSLog(@"%@ My location is: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
-    
-    UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
-    
-//    ChatViewController *chatViewController = (ChatViewController*)[navigationController.viewControllers objectAtIndex:0];
-    ShowMapViewController *showMapViewController = (ShowMapViewController*)[navigationController.viewControllers  objectAtIndex:0];
-    
-//    DataModel *dataModel = chatViewController.dataModel;
-    DataModel *dataModel = showMapViewController.dataModel;
-    
-    NSString *oldToken = [dataModel deviceToken];
-    
-    NSString *newToken = [deviceToken description];
-    newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"My token is: %@", newToken);
-    
-//    NSLog(@"Got a token so notificationsAreDisabled to NO");
-    [[SingletonClass singleObject] setNotificationsAreDisabled:NO];
-    
-    //Tell the app the good news
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];
-    
-    [dataModel setDeviceToken:newToken];
-    
-    if ([dataModel joinedChat] && ![newToken isEqualToString:oldToken])
-    {
-        [self postUpdateRequest];
-    }
-}
-
-- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
-{
-    NSLog(@"Failed to get token, error: %@", error);
 }
 
 #pragma mark - locationManager delegate methods
