@@ -873,7 +873,7 @@
                  self.badResponseRetry = self.badResponseRetry + 1;
                  NSString *toastStr = [NSString stringWithFormat:@"BRR:%d", self.badResponseRetry];
                  [self toastMsg:toastStr];
-                 if (self.badResponseRetry > 3) {
+                 if (self.badResponseRetry > 9) {
                      // kill timers
                      [[SingletonClass singleObject] setImInARoom:NO];
                      [self stopGetRoomTimer];
