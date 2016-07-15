@@ -177,9 +177,10 @@
                                 </variation>
                             </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ASS-b8-Q3d" customClass="GADBannerView">
-                                <rect key="frame" x="0.0" y="280" width="600" height="50"/>
+                                <rect key="frame" x="16" y="280" width="568" height="50"/>
                                 <color key="backgroundColor" red="0.84705882349999995" green="0.8862745098" blue="0.92941176469999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="568" id="mAe-6z-Mm1"/>
                                     <constraint firstAttribute="height" constant="50" id="soG-jn-Rhx"/>
                                 </constraints>
                             </view>
@@ -203,6 +204,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Cxp-Po-E0T" secondAttribute="trailing" id="0xZ-Nc-lQE"/>
+                            <constraint firstItem="ASS-b8-Q3d" firstAttribute="centerX" secondItem="Cxp-Po-E0T" secondAttribute="centerX" id="3R4-kV-YwZ"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="D5z-zi-4jS" secondAttribute="leading" constant="240" id="59S-DX-R8Q"/>
                             <constraint firstItem="ASS-b8-Q3d" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" id="6wi-sp-Lxp"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
@@ -277,6 +279,8 @@
                                 <exclude reference="ewG-qS-xwe"/>
                                 <exclude reference="s1A-af-RNr"/>
                                 <exclude reference="ygM-JQ-rxk"/>
+                                <exclude reference="6wi-sp-Lxp"/>
+                                <exclude reference="cxE-Cb-SSr"/>
                                 <exclude reference="KMQ-Hq-okL"/>
                                 <exclude reference="je9-MK-vIm"/>
                                 <exclude reference="S80-aW-BTx"/>
