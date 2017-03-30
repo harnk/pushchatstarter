@@ -8,7 +8,7 @@
 // for local testing use the next line
 //#define ServerApiURL @"http://10.0.0.27:44447"
 // for the real deal on bluehost use the next line
-#define ServerApiURL @"http://www.altcoinfolio.com"
+#define ServerApiURL @"https://www.altcoinfolio.com"
 
 //Test
 //#define ServerPostPathURL @"/whereru/api/api.php"

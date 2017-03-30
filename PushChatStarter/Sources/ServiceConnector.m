@@ -16,7 +16,7 @@
 -(void)getTest{
     
     //build up the request that is to be sent to the server
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL    URLWithString:@"http://www.altcoinfolio.com/whereru/api/jsonapi.php"]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL    URLWithString:@"https://www.altcoinfolio.com/whereru/api/jsonapi.php"]];
     
     [request setHTTPMethod:@"GET"];
     [request addValue:@"getValues" forHTTPHeaderField:@"METHOD"]; //selects what task the server will perform
@@ -32,7 +32,7 @@
 -(void)postTest{
     
     //build up the request that is to be sent to the server
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.altcoinfolio.com/whereru/api/jsonapi.php"]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.altcoinfolio.com/whereru/api/jsonapi.php"]];
     
     [request setHTTPMethod:@"POST"];
     [request addValue:@"postValues" forHTTPHeaderField:@"METHOD"];
