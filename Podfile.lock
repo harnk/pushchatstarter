@@ -1,16 +1,18 @@
 PODS:
-  - AFNetworking (1.2.0)
-  - MBProgressHUD (0.6)
+  - AFNetworking (1.2.1)
+  - MBProgressHUD (0.9.2)
   - UICKeyChainStore (2.1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 1.2.0)
-  - MBProgressHUD (~> 0.6)
-  - UICKeyChainStore (~> 2.1)
+  - AFNetworking (~> 1.2.1)
+  - MBProgressHUD (~> 0.9.2)
+  - UICKeyChainStore (~> 2.1.0)
 
 SPEC CHECKSUMS:
-  AFNetworking: bc60ab55d8917b969d31c80aa182c440229624fa
-  MBProgressHUD: dcb56a8726492cf4684b24fffa06582c1ebb3f41
+  AFNetworking: f60a525e16c10e857523265c3a77ad5cc6a91e82
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 635b32ce29c80db5d310b9221f3a136d86889627
+
+COCOAPODS: 1.2.0

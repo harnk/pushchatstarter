@@ -417,7 +417,8 @@
 }
 
 -(void) checkAdStatus {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {
+//    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {  //SCXTT Temporarily removed this check until I have time to finish in-app ads
+    if (YES) {
         [self toastMsg:@"Remove Ads is enabled - Thank You for your support!"];
         [self hideAds];
     } else {
@@ -871,9 +872,9 @@
              
              if (responseString.length == 0) {
                  self.badResponseRetry = self.badResponseRetry + 1;
-                 NSString *toastStr = [NSString stringWithFormat:@"BRR:%d", self.badResponseRetry];
-                 [self toastMsg:toastStr];
                  if (self.badResponseRetry > 9) {
+                     NSString *toastStr = [NSString stringWithFormat:@"SCXTT BRR:%d", self.badResponseRetry];
+                     [self toastMsg:toastStr];
                      // kill timers
                      [[SingletonClass singleObject] setImInARoom:NO];
                      [self stopGetRoomTimer];
@@ -1303,8 +1304,10 @@ didAddAnnotationViews:(NSArray *)annotationViews
                     if ([ann.title isEqualToString:_centerOnThisGuy]){
                         [self returnToAllWithMessage:@""];
                     }
-                    [self multiLineToastMsg:ann.title detailText:@"has left the map group"];
-                    [self.mapView removeAnnotation:ann];
+                    if (![ann.title isEqualToString:@"My Location"]){
+                        [self multiLineToastMsg:ann.title detailText:@"has left the map group"];
+                        [self.mapView removeAnnotation:ann];
+                    }
                 }
                 southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
                 southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
