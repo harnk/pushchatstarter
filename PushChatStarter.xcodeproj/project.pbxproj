@@ -35,7 +35,6 @@
 		61489EE5170427A90049C6F9 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61489EE4170427A80049C6F9 /* LoginViewController.m */; };
 		9E084B2F1A9AA9BE004439FA /* ServiceConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */; };
 		9E09A6681AF9BCAA00E09331 /* back-button.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9E09A6671AF9BCAA00E09331 /* back-button.jpg */; };
-		9E0E57041D139AC700A57D92 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0E57031D139AC700A57D92 /* StoreKit.framework */; };
 		9E15E2541AE86CE00031A6D7 /* pkall.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E15E2531AE86CE00031A6D7 /* pkall.png */; };
 		9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E1CE5831AD9E9660052B768 /* pkcyangray.png */; };
 		9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
@@ -43,6 +42,7 @@
 		9E2346551D07C7CF00E7825B /* iap_product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2346541D07C7CF00E7825B /* iap_product_ids.plist */; };
 		9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
 		9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
+		9E3117161E8CB045006CC478 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3117151E8CB045006CC478 /* StoreKit.framework */; };
 		9E4408F91AD8B3F70079A4CA /* pkblue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408EF1AD8B3F70079A4CA /* pkblue.png */; };
 		9E4408FA1AD8B3F70079A4CA /* pkcyan.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408F01AD8B3F70079A4CA /* pkcyan.png */; };
 		9E4408FB1AD8B3F70079A4CA /* pkdarkgreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408F11AD8B3F70079A4CA /* pkdarkgreen.png */; };
@@ -120,7 +120,6 @@
 		9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceConnector.m; sourceTree = "<group>"; };
 		9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONDictionaryExtensions.h; sourceTree = "<group>"; };
 		9E09A6671AF9BCAA00E09331 /* back-button.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button.jpg"; sourceTree = "<group>"; };
-		9E0E57031D139AC700A57D92 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9E15E2531AE86CE00031A6D7 /* pkall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkall.png; sourceTree = "<group>"; };
 		9E1B95CB1DEBE2B00001CAA5 /* libAFNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAFNetworking.a; path = "../../../Library/Developer/Xcode/DerivedData/PushChatStarter-eklwqjgxztmgneawqlodmmjyxdxi/Build/Products/Debug-iphoneos/AFNetworking/libAFNetworking.a"; sourceTree = "<group>"; };
 		9E1B95CC1DEBE2B00001CAA5 /* libMBProgressHUD.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMBProgressHUD.a; path = "../../../Library/Developer/Xcode/DerivedData/PushChatStarter-eklwqjgxztmgneawqlodmmjyxdxi/Build/Products/Debug-iphoneos/MBProgressHUD/libMBProgressHUD.a"; sourceTree = "<group>"; };
@@ -132,6 +131,8 @@
 		9E2346541D07C7CF00E7825B /* iap_product_ids.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iap_product_ids.plist; sourceTree = "<group>"; };
 		9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		9E3117151E8CB045006CC478 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		9E3117171E8DF249006CC478 /* WhereRU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WhereRU.entitlements; path = WhereRU/WhereRU.entitlements; sourceTree = "<group>"; };
 		9E4408EF1AD8B3F70079A4CA /* pkblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkblue.png; sourceTree = "<group>"; };
 		9E4408F01AD8B3F70079A4CA /* pkcyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkcyan.png; sourceTree = "<group>"; };
 		9E4408F11AD8B3F70079A4CA /* pkdarkgreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkdarkgreen.png; sourceTree = "<group>"; };
@@ -181,11 +182,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E3117161E8CB045006CC478 /* StoreKit.framework in Frameworks */,
 				9E885C021D2612AE007F1516 /* Security.framework in Frameworks */,
 				61489E9817041C660049C6F9 /* UIKit.framework in Frameworks */,
 				61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */,
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
-				9E0E57041D139AC700A57D92 /* StoreKit.framework in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
 				9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */,
 				9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */,
@@ -210,6 +211,7 @@
 		61489E8B17041C660049C6F9 = {
 			isa = PBXGroup;
 			children = (
+				9E3117171E8DF249006CC478 /* WhereRU.entitlements */,
 				9E2346541D07C7CF00E7825B /* iap_product_ids.plist */,
 				9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */,
 				61489E9D17041C660049C6F9 /* PushChatStarter */,
@@ -230,11 +232,11 @@
 		61489E9617041C660049C6F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E3117151E8CB045006CC478 /* StoreKit.framework */,
 				9E1B95CB1DEBE2B00001CAA5 /* libAFNetworking.a */,
 				9E1B95CC1DEBE2B00001CAA5 /* libMBProgressHUD.a */,
 				9E1B95CD1DEBE2B00001CAA5 /* libUICKeyChainStore.a */,
 				9E885C011D2612AE007F1516 /* Security.framework */,
-				9E0E57031D139AC700A57D92 /* StoreKit.framework */,
 				9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */,
 				9E2A75271A2D130C002B2A03 /* MapKit.framework */,
 				61489E9717041C660049C6F9 /* UIKit.framework */,
@@ -398,6 +400,9 @@
 						DevelopmentTeam = 64S84F3VVR;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -650,6 +655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = WhereRU/WhereRU.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 64S84F3VVR;
@@ -695,6 +701,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = WhereRU/WhereRU.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 64S84F3VVR;
