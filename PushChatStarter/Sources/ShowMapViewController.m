@@ -419,7 +419,7 @@
 -(void) checkAdStatus {
 //    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {  //SCXTT Temporarily removed this check until I have time to finish in-app ads
     if (YES) {
-        [self toastMsg:@"Remove Ads is enabled - Thank You for your support!"];
+//        [self toastMsg:@"Remove Ads is enabled - Thank You for your support!"];
         [self hideAds];
     } else {
 //        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];

@@ -396,14 +396,14 @@ int badResponseCounter = 0;
     
     // Deal with In-App purchase
     _canPurchase = NO;
-    if ([SKPaymentQueue canMakePayments]) {
-        NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
-        NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
-        [self validateProductIdentifiers:productsArray];
-        _canPurchase = YES;
-        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-        
-    }
+//    if ([SKPaymentQueue canMakePayments]) {
+//        NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
+//        NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
+//        [self validateProductIdentifiers:productsArray];
+//        _canPurchase = YES;
+//        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+//        
+//    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(startMyLocationUpdates)
