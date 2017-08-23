@@ -1,14 +1,27 @@
 {
   "images" : [
     {
+      "size" : "20x20",
+      "idiom" : "iphone",
+      "filename" : "40x40bb-1.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "20x20",
+      "idiom" : "iphone",
+      "filename" : "60x60bb.png",
+      "scale" : "3x"
+    },
+    {
       "size" : "29x29",
       "idiom" : "iphone",
       "filename" : "WhereRU58.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "iphone",
       "size" : "29x29",
+      "idiom" : "iphone",
+      "filename" : "87x87bb.png",
       "scale" : "3x"
     },
     {
@@ -18,8 +31,9 @@
       "scale" : "2x"
     },
     {
-      "idiom" : "iphone",
       "size" : "40x40",
+      "idiom" : "iphone",
+      "filename" : "120x120bb.png",
       "scale" : "3x"
     },
     {
@@ -35,8 +49,21 @@
       "scale" : "3x"
     },
     {
+      "size" : "20x20",
       "idiom" : "ipad",
+      "filename" : "20x20bb.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "40x40bb.png",
+      "scale" : "2x"
+    },
+    {
       "size" : "29x29",
+      "idiom" : "ipad",
+      "filename" : "29x29bb.png",
       "scale" : "1x"
     },
     {
@@ -46,8 +73,9 @@
       "scale" : "2x"
     },
     {
-      "idiom" : "ipad",
       "size" : "40x40",
+      "idiom" : "ipad",
+      "filename" : "40x40bb-2.png",
       "scale" : "1x"
     },
     {
