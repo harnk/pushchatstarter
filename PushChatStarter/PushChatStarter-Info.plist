@@ -25,7 +25,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.1.7</string>
+	<string>1.1.8</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -35,9 +35,9 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app uses the calendar to check the time since it was last updated</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>You must allow this in order for WhereRU to work correctly</string>
+	<string>You must allow this in order for WhereRU to work correctly while you are still in the map group but the app is in the background. </string>
 	<key>NSLocationWhenInUseDescription</key>
-	<string>You must allow this in order for WhereRU to work correctly</string>
+	<string>You must allow this in order for WhereRU to work correctly while you are still in the map group but the app is in the background. </string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
