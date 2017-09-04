@@ -32,7 +32,18 @@
         int digit = asciiCode % 10; n /= 10;
 //        NSLog(@"mPinImageString:%@ mNickName:%@ first char:%@ ASCII:%d digit:%d",mPinImageString, mNickName,[mNickName substringToIndex:1], asciiCode, digit);
         
-        self.memberPinImage = myPinImages[digit];
+
+        NSInteger minutesBetweenDates;
+        minutesBetweenDates = [self getPinAgeInMinutes:self.memberUpdateTime];
+        NSLog(@"minutesBetweenDates:%ld", (long)minutesBetweenDates);
+        
+        if (minutesBetweenDates > 10000) {
+            self.memberPinImage = @"inactivepin.png";
+        } else {
+            self.memberPinImage = myPinImages[digit];
+        }
+
+//        self.memberPinImage = myPinImages[digit];
 
         
 //        _memberUpdateTime = mUpdateTime;
@@ -41,4 +52,20 @@
     return self;
 }
 
+- (NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    //Create the date assuming the given string is in GMT
+    NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
+    NSDate *now = [NSDate date];
+    
+    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
+    double secondsInAnMinute = 60;
+    NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
+    return minutesBetweenDates;
+}
+
 @end
+

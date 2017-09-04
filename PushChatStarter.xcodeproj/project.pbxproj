@@ -62,6 +62,7 @@
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 		9E885C021D2612AE007F1516 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E885C011D2612AE007F1516 /* Security.framework */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
+		9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
 		9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
@@ -151,6 +152,7 @@
 		9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
+		9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inactivepin.png; sourceTree = "<group>"; };
 		9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
 		9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button-pressed.jpg"; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 		61489EBA17041CB20049C6F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */,
 				9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */,
 				9E09A6671AF9BCAA00E09331 /* back-button.jpg */,
 				9E4408EE1AD8B3870079A4CA /* pickerimages */,
@@ -437,6 +440,7 @@
 				61489EBF17041E370049C6F9 /* BubbleLefthand.png in Resources */,
 				9E7AC7E31AB2834E004996B6 /* cyan.png in Resources */,
 				9E7AC7EA1AB2834E004996B6 /* red.png in Resources */,
+				9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */,
 				D6FAA1E61AD7482300A68B6A /* blue.png in Resources */,
 				9E09A6681AF9BCAA00E09331 /* back-button.jpg in Resources */,
 				9E15E2541AE86CE00031A6D7 /* pkall.png in Resources */,

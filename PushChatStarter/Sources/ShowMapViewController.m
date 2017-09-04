@@ -456,23 +456,6 @@
     return date;
 }
 
-- (NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    //Create the date assuming the given string is in GMT
-    NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
-    NSDate *now = [NSDate date];
-    
-    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
-    double secondsInAnMinute = 60;
-    NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
-    return minutesBetweenDates;
-}
-
-
-
 #pragma mark - UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -904,7 +887,6 @@
                          @"cyangray.png"};
                      
                      int i = 0;
-                     UIImage *mPinImage;
                      // Add Return to All first then the room
                      
                      for(NSDictionary *item in jsonArray) {
@@ -914,9 +896,6 @@
                          NSString *mNickName = [item objectForKey:@"nickname"];
                          NSString *mLocation = [item objectForKey:@"location"];
                          NSString *gmtDateStr = [item objectForKey:@"loc_time"];
-                         NSInteger minutesBetweenDates;
-                         minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
-                         mPinImage = [UIImage imageNamed:myPinImages[i]];
                          
                          if (![mLocation isEqual: @"0.000000, 0.000000"]) {
                              Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
