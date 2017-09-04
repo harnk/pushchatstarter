@@ -17,18 +17,6 @@
 #import "JSONDictionaryExtensions.h"
 #import "Room.h"
 
-// DAD 41.723240, -86.184829
-#define CA_LATITUDE 41.723240
-#define CA_LONGITUDE -86.184829
-// Beach
-#define BE_LATITUDE 41.723240
-#define BE_LONGITUDE -86.184829
-// Reston hotel
-//#define BE_LATITUDE 38.960663
-//#define BE_LONGITUDE -77.423423
-#define BE2_LATITUDE 41.723240
-#define BE2_LONGITUDE -86.184829
-
 #define SPAN_VALUE 0.005f
 
 @interface ShowMapViewController () {
@@ -233,15 +221,9 @@
     self.mapView.layer.borderWidth = 1.0f;
     
     MKCoordinateRegion region;
-    region.center.latitude = CA_LATITUDE;
-    region.center.longitude = CA_LONGITUDE;
     region.span.latitudeDelta = 50.1f;
     region.span.longitudeDelta = 50.1f;
     [self.mapView setRegion:region animated:NO];
-    
-    CLLocationCoordinate2D location;
-    location.latitude = BE_LATITUDE;
-    location.longitude = BE_LONGITUDE;
     
     _textView.delegate = self;
     myPickerView.delegate = self;
