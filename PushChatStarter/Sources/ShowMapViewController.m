@@ -643,14 +643,18 @@
     self.title = [NSString stringWithFormat:@"%@", [[_roomArray objectAtIndex:row] memberNickName]];
     
     
-    UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"back-button-pressed.jpg"] forState:UIControlStateHighlighted];
-    [button addTarget:self action:@selector(returnToAll)forControlEvents:UIControlEventTouchUpInside];
-    [button setFrame:CGRectMake(0, 0, 42, 22)];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    self.navigationItem.leftBarButtonItem = barButton;
+//    UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
+//    [button setImage:[UIImage imageNamed:@"back-button.jpg"] forState:UIControlStateNormal];
+//    [button setImage:[UIImage imageNamed:@"back-button-pressed.jpg"] forState:UIControlStateHighlighted];
+//    [button addTarget:self action:@selector(returnToAll)forControlEvents:UIControlEventTouchUpInside];
+//    [button setFrame:CGRectMake(0, 0, 42, 22)];
+//    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+//    self.navigationItem.leftBarButtonItem = barButton;
     
+    
+    UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(returnToAll)];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnDone, nil] animated:YES];
+
     CLLocationCoordinate2D location;
     MKCoordinateRegion region;
     
