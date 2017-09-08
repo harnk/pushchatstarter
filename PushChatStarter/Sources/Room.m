@@ -24,7 +24,7 @@
         self.memberNickName = mNickName;
         self.memberLocation = mLocation;
         self.memberUpdateTime = mLocTime;
-//        self.memberPinImage = mPinImageString;
+        self.memberPinImage = mPinImageString;
 
         // NSString to ASCII
         int asciiCode = [[mNickName substringToIndex:1] characterAtIndex:0]; // 65
@@ -33,17 +33,15 @@
 //        NSLog(@"mPinImageString:%@ mNickName:%@ first char:%@ ASCII:%d digit:%d",mPinImageString, mNickName,[mNickName substringToIndex:1], asciiCode, digit);
         
 
-        NSInteger minutesBetweenDates;
-        minutesBetweenDates = [self getPinAgeInMinutes:self.memberUpdateTime];
-        NSLog(@"minutesBetweenDates:%ld", (long)minutesBetweenDates);
+//        NSInteger minutesBetweenDates;
+//        minutesBetweenDates = [self getPinAgeInMinutes:self.memberUpdateTime];
+//        NSLog(@"minutesBetweenDates:%ld", (long)minutesBetweenDates);
         
-        if (minutesBetweenDates > 10000) {
-            self.memberPinImage = @"inactivepin.png";
-        } else {
-            self.memberPinImage = myPinImages[digit];
-        }
-
-//        self.memberPinImage = myPinImages[digit];
+//        if (minutesBetweenDates > 10000) {
+//            self.memberPinImage = @"inactivepin.png";
+//        } else {
+//            self.memberPinImage = myPinImages[digit];
+//        }
 
         
 //        _memberUpdateTime = mUpdateTime;

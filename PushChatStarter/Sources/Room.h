@@ -21,6 +21,6 @@
 #pragma mark Class Methods
 
 -(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString;
-
+-(NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr;
 
 @end

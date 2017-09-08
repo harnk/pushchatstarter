@@ -221,6 +221,8 @@
     self.mapView.layer.borderWidth = 1.0f;
     
     MKCoordinateRegion region;
+    region.center.latitude = 0;
+    region.center.longitude = 0;
     region.span.latitudeDelta = 50.1f;
     region.span.longitudeDelta = 50.1f;
     [self.mapView setRegion:region animated:NO];
@@ -592,6 +594,14 @@
     
     
     NSString *pickerPin = [[_roomArray objectAtIndex:row] memberPinImage];
+    NSString *dateString = [[_roomArray objectAtIndex:row] memberUpdateTime];
+    
+    
+        
+    if ([self getPinAgeInMinutes:dateString ] > 10000.0) {
+        pickerPin = @"inactivepin.png";
+    }
+
     
     pickerImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"pk%@",pickerPin]];
 //    pickerImageView.image = [UIImage imageNamed:[[_roomArray objectAtIndex:row] memberPinImage]];
@@ -882,9 +892,19 @@
                          NSString *mNickName = [item objectForKey:@"nickname"];
                          NSString *mLocation = [item objectForKey:@"location"];
                          NSString *gmtDateStr = [item objectForKey:@"loc_time"];
+                         NSString *useThisPinImage = myPinImages[i];
+
+                         NSInteger minutesBetweenDates;
+                         minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
+//
+//                         NSLog(@"SCXTT WIP minutesBetweenDates:%ld", (long)minutesBetweenDates);
+//                         if (minutesBetweenDates > 10000) {
+//                             useThisPinImage = @"inactivepin.png";
+//                         }
                          
                          if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:myPinImages[i]];
+                             
+                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:useThisPinImage];
                              if (!_roomArray) {
                                  _roomArray = [[NSMutableArray alloc] init];
                              }
@@ -896,7 +916,7 @@
                      //                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
                      //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
                      if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
-                         [self returnToAllWithMessage:@"Eveyone has left the map group"];
+                         [self returnToAllWithMessage:@"Everyone has left the map group"];
                      }
                      [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
                  }
@@ -910,6 +930,31 @@
              [self toastMsg:[error localizedDescription]];
          }
      }];
+}
+
+- (NSInteger)getPinAgeInMinutesDate:(NSDate*)gmtDate {
+    NSDate *now = [NSDate date];
+    
+    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:gmtDate];
+    double secondsInAnMinute = 60;
+    NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
+    return minutesBetweenDates;
+    
+}
+
+- (NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    //Create the date assuming the given string is in GMT
+    NSDate *jsonDate = [formatter dateFromString:gmtDateStr];
+    NSDate *now = [NSDate date];
+    
+    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:jsonDate];
+    double secondsInAnMinute = 60;
+    NSInteger minutesBetweenDates = distanceBetweenDates / secondsInAnMinute;
+    return minutesBetweenDates;
 }
 
 
@@ -1164,13 +1209,14 @@
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
 //      Need to add code to test for old pins and use gray ones here
+        NSLog(@"viewForAnnotation loctime:%@", myAnnotation.loctime);
+
         if (annotationView == nil) {
             annotationView = myAnnotation.annotationView;
             annotationView.image = myAnnotation.pinImage;
         } else {
             annotationView.annotation = annotation;
             annotationView.image = [UIImage imageNamed:myAnnotation.pinImageFile];
-//            annotationView.highlighted = YES;
         }
         return annotationView;
     } else {
@@ -1282,6 +1328,34 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 // Move the updated pin to its new locations
                 if ([ann.title isEqualToString:who])
                 {
+                    long pinAge = (long)[self getPinAgeInMinutes:gmtDateStr ];
+                    NSLog(@"ann.title:%@ age:%ld imageString:%@", ann.title, pinAge, imageString);
+                    if (pinAge > 10000.0) {
+                        NSLog(@"OLD PIN and ann.pinImageFile:%@", ann.pinImageFile);
+                        if (![ann.pinImageFile isEqualToString:@"inactivepin.png"]) {
+                            VBAnnotation *swapAnn = ann;
+                            swapAnn.pinImage = [UIImage imageNamed:@"inactivepin.png"];
+                            swapAnn.pinImageFile = @"inactivepin.png";
+                            [swapAnn setPinImageFile:@"inactivepin.png"];
+                            [item setMemberPinImage:@"interactivepin.png"];
+                            [self.mapView removeAnnotation:ann];
+                            [self.mapView addAnnotation:swapAnn];
+                        }
+//                        useThisPin = [UIImage imageNamed:@"inactivepin.png"];
+                    } else {
+                        NSLog(@"NEW PIN and ann.pinImageFile:%@", ann.pinImageFile);
+                        if ([ann.pinImageFile isEqualToString:@"inactivepin.png"]) {
+                            VBAnnotation *swapAnn = ann;
+                            swapAnn.pinImage = [UIImage imageNamed:imageString];
+                            swapAnn.pinImageFile = imageString;
+                            [swapAnn setPinImageFile:imageString];
+                            [item setMemberPinImage:imageString];
+                            [self.mapView removeAnnotation:ann];
+                            [self.mapView addAnnotation:swapAnn];
+                            
+                        }
+                    }
+
                     //SCXTT RELEASE
 //                    NSLog(@"grooving %@ at loc %@ at %@", who, item.memberLocation, item.memberUpdateTime);
                     whoFound = YES;
