@@ -26,7 +26,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *removeAdsButton;
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapHeight;
+@property (nonatomic) CGFloat saveMapHeight;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UIScreenEdgePanGestureRecognizer *panDownChat;
+@property (weak, nonatomic) IBOutlet UIImageView *pullHandle;
 
 //Stuff for ServiceConnector //////////////////////////////////
 @property (weak, nonatomic) IBOutlet UITextView *output;

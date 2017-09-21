@@ -206,6 +206,13 @@
                                     <action selector="removeAds:" destination="jkb-oK-o03" eventType="touchUpInside" id="nwQ-EF-bqA"/>
                                 </connections>
                             </button>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="pullhandle.png" translatesAutoresizingMaskIntoConstraints="NO" id="9mQ-Hg-5Xw">
+                                <rect key="frame" x="187" y="496" width="40" height="8"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="8" id="19V-BG-iCm"/>
+                                    <constraint firstAttribute="width" constant="40" id="1vh-Rf-sOj"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -216,6 +223,7 @@
                             <constraint firstItem="ASS-b8-Q3d" firstAttribute="leading" secondItem="Cxp-Po-E0T" secondAttribute="leading" id="6wi-sp-Lxp"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="7OZ-1G-afX"/>
                             <constraint firstItem="TLh-R1-mLh" firstAttribute="top" secondItem="K66-ty-hky" secondAttribute="bottom" id="Afh-0C-48m"/>
+                            <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="9mQ-Hg-5Xw" secondAttribute="bottom" constant="-8" id="Bcm-BU-mcS"/>
                             <constraint firstAttribute="trailing" secondItem="K66-ty-hky" secondAttribute="trailing" id="CjF-0M-0ob"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="leading" id="CuC-gp-6Pr">
                                 <variation key="heightClass=regular-widthClass=regular" constant="240"/>
@@ -275,6 +283,7 @@
                             <constraint firstItem="Tog-1q-ick" firstAttribute="top" secondItem="VuG-ZS-Czn" secondAttribute="bottom" id="voI-xZ-pOm"/>
                             <constraint firstItem="K66-ty-hky" firstAttribute="top" secondItem="Tog-1q-ick" secondAttribute="bottom" id="wRN-No-QBI"/>
                             <constraint firstItem="Cxp-Po-E0T" firstAttribute="leading" secondItem="Tog-1q-ick" secondAttribute="trailing" id="ygM-JQ-rxk"/>
+                            <constraint firstItem="9mQ-Hg-5Xw" firstAttribute="centerX" secondItem="D5z-zi-4jS" secondAttribute="centerX" id="zkM-T1-PV4"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -342,8 +351,10 @@
                     <navigationItem key="navigationItem" id="1rI-cl-TOJ"/>
                     <connections>
                         <outlet property="bannerView" destination="ASS-b8-Q3d" id="fYD-93-G2a"/>
+                        <outlet property="mapHeight" destination="RjX-Pk-Kld" id="O3w-ND-aCQ"/>
                         <outlet property="mapView" destination="Cxp-Po-E0T" id="mDr-GR-KQo"/>
                         <outlet property="pinPickerButton" destination="Az7-a3-cc8" id="cm5-Hd-9RL"/>
+                        <outlet property="pullHandle" destination="9mQ-Hg-5Xw" id="A4G-Zq-dpd"/>
                         <outlet property="removeAdsButton" destination="8ke-Mh-Kud" id="qBO-y2-3wZ"/>
                         <outlet property="satMapButton" destination="twj-gq-7Ha" id="9mO-dC-Kgp"/>
                         <outlet property="tableView" destination="Tog-1q-ick" id="IkC-BC-ZYC"/>
@@ -351,7 +362,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Tw-hF-AKJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-95" y="-84"/>
+            <point key="canvasLocation" x="65.217391304347828" y="-117.39130434782609"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Ixo-Ar-85R">
@@ -452,5 +463,6 @@
     <resources>
         <image name="Splash" width="341" height="341"/>
         <image name="bluemenuitem.png" width="55" height="30"/>
+        <image name="pullhandle.png" width="40" height="8"/>
     </resources>
 </document>

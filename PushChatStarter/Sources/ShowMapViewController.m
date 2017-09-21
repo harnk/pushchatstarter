@@ -25,6 +25,7 @@
     NSTimer *getRoomTimer;
     NSTimer *getMessagesTimer;
     UIPickerView *myPickerView;
+    CGPoint touchStart;
 }
 
 @end
@@ -231,10 +232,26 @@
     myPickerView.delegate = self;
     _centerOnThisGuy = @"";
 
-    // Add this to detect user dragging map
+    // Add this to detect user swiping map
+    _pullHandle.userInteractionEnabled = YES;
+    UIPanGestureRecognizer* panHandle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPanHandle:)];
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    UIPanGestureRecognizer* tableSwipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragTable:)];
     [panRec setDelegate:self];
+    [tableSwipe setDelegate:self];
     [self.mapView addGestureRecognizer:panRec];
+    [self.tableView addGestureRecognizer:tableSwipe];
+    
+    panHandle.delegate = self;
+    [_pullHandle addGestureRecognizer:panHandle];
+    
+    
+    
+    // Add this to detect user swiping down map to full screen
+    UISwipeGestureRecognizer *swipeRec = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeMap:)];
+    [swipeRec setDelegate:self];
+    [self.tableView addGestureRecognizer:swipeRec];
+
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 
@@ -1253,9 +1270,90 @@ didAddAnnotationViews:(NSArray *)annotationViews
     return YES;
 }
 
-- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+-(void)didDragTable:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan){
+        CGFloat y = [gestureRecognizer locationInView:self.view].y;
+        NSLog(@"TABLE drag starting point at y:%f",y);
+    }
+    if (gestureRecognizer.state == UIGestureRecognizerStateChanged){
+        CGPoint touchPoint = [gestureRecognizer locationInView:self.view];
+        CGFloat topY = CGRectGetMinY(self.tableView.frame);
+        NSLog(@"tableView.topY:%f", topY);
+        NSLog(@"dragging at locationInView point y:%f", touchPoint.y);
+        if (touchPoint.y < topY) {
+            NSLog(@"SWIPE UP Table - change constraints");
+            [self.view layoutIfNeeded];
+            self.mapHeight.constant = 196;
+            [UIView animateWithDuration:0.5
+                             animations:^{
+                                 [self.view layoutIfNeeded]; // Called on parent view
+                             }];
+        }
+    }
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         NSLog(@"drag ended");
+        CGFloat topY = CGRectGetMinY(self.tableView.frame);
+        NSLog(@"top y:%f", topY);
+    }
+}
+
+- (void)didPanHandle:(UIPanGestureRecognizer *)panGestureRecognizer {
+    NSLog(@"SCXTT The HANDLE is doing it");
+    if (panGestureRecognizer.state == UIGestureRecognizerStateChanged){
+        CGFloat y = [panGestureRecognizer locationInView:self.mapView].y;
+        NSLog(@"_saveMapHeight:%f y(in view):%f _mapView.bounds.size.height:%f", _saveMapHeight, y, _mapView.bounds.size.height);
+        if ((y > _saveMapHeight)) {
+            NSLog(@"animate change constraints");
+            [self.view layoutIfNeeded];
+            self.mapHeight.constant = 10;
+            [UIView animateWithDuration:0.5
+                             animations:^{
+                                 [self.view layoutIfNeeded]; // Called on parent view
+                             }];
+        } else {
+            [self.view layoutIfNeeded];
+            self.mapHeight.constant = 10;
+            [UIView animateWithDuration:0.5
+                             animations:^{
+                                 [self.view layoutIfNeeded]; // Called on parent view
+                             }];
+        }
+    }
+}
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan){
+        _saveMapHeight = _mapView.bounds.size.height;
+        CGFloat y = [gestureRecognizer locationInView:self.view].y;
+        NSLog(@"drag starting point at y:%f",y);
+    }
+    if (gestureRecognizer.state == UIGestureRecognizerStateChanged){
+        CGFloat y = [gestureRecognizer locationInView:self.mapView].y;
+        NSLog(@"_saveMapHeight:%f y(in view):%f _mapView.bounds.size.height:%f", _saveMapHeight, y, _mapView.bounds.size.height);
+        if ((y > _saveMapHeight)) {
+            NSLog(@"animate change constraints");
+            [self.view layoutIfNeeded];
+            self.mapHeight.constant = 10;
+            [UIView animateWithDuration:0.5
+                             animations:^{
+                                 [self.view layoutIfNeeded]; // Called on parent view
+                             }];
+        }
+    }
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        NSLog(@"drag ended");
+//        CGFloat botY = CGRectGetMaxY(self.view.frame);
+//        NSLog(@"bottom y:%f", botY);
+//        if (self.mapHeight.constant < 196){
+//            self.mapHeight.constant = 15;
+//        }
+        _okToRecenterMap = NO;
+    }
+}
+
+- (void)didSwipeMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        NSLog(@"Swipe ended");
         _okToRecenterMap = NO;
     }
 }
@@ -1329,9 +1427,9 @@ didAddAnnotationViews:(NSArray *)annotationViews
                 if ([ann.title isEqualToString:who])
                 {
                     long pinAge = (long)[self getPinAgeInMinutes:gmtDateStr ];
-                    NSLog(@"ann.title:%@ age:%ld imageString:%@", ann.title, pinAge, imageString);
+//                    NSLog(@"ann.title:%@ age:%ld imageString:%@", ann.title, pinAge, imageString);
                     if (pinAge > 10000.0) {
-                        NSLog(@"OLD PIN and ann.pinImageFile:%@", ann.pinImageFile);
+//                        NSLog(@"OLD PIN and ann.pinImageFile:%@", ann.pinImageFile);
                         if (![ann.pinImageFile isEqualToString:@"inactivepin.png"]) {
                             VBAnnotation *swapAnn = ann;
                             swapAnn.pinImage = [UIImage imageNamed:@"inactivepin.png"];
@@ -1343,7 +1441,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
                         }
 //                        useThisPin = [UIImage imageNamed:@"inactivepin.png"];
                     } else {
-                        NSLog(@"NEW PIN and ann.pinImageFile:%@", ann.pinImageFile);
+//                        NSLog(@"NEW PIN and ann.pinImageFile:%@", ann.pinImageFile);
                         if ([ann.pinImageFile isEqualToString:@"inactivepin.png"]) {
                             VBAnnotation *swapAnn = ann;
                             swapAnn.pinImage = [UIImage imageNamed:imageString];
