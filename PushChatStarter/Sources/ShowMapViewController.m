@@ -1298,21 +1298,24 @@ didAddAnnotationViews:(NSArray *)annotationViews
 }
 
 - (void)didPanHandle:(UIPanGestureRecognizer *)panGestureRecognizer {
-    NSLog(@"SCXTT The HANDLE is doing it");
+    if (panGestureRecognizer.state == UIGestureRecognizerStateBegan){
+        _saveMapHeight = _mapView.bounds.size.height;
+    }
     if (panGestureRecognizer.state == UIGestureRecognizerStateChanged){
         CGFloat y = [panGestureRecognizer locationInView:self.mapView].y;
-        NSLog(@"_saveMapHeight:%f y(in view):%f _mapView.bounds.size.height:%f", _saveMapHeight, y, _mapView.bounds.size.height);
+        CGFloat ttopY = CGRectGetMinY(self.tableView.frame);
+        CGPoint touchPoint = [panGestureRecognizer locationInView:self.view];
+        NSLog(@"is y:%f > _saveMapHeight:%f (down) || tp.y:%f < ttopY:%f (up)", y, _saveMapHeight, touchPoint.y, ttopY);
         if ((y > _saveMapHeight)) {
-            NSLog(@"animate change constraints");
             [self.view layoutIfNeeded];
-            self.mapHeight.constant = 10;
+            self.mapHeight.constant = 15;
             [UIView animateWithDuration:0.5
                              animations:^{
                                  [self.view layoutIfNeeded]; // Called on parent view
                              }];
-        } else {
+        } else if (touchPoint.y < ttopY) {
             [self.view layoutIfNeeded];
-            self.mapHeight.constant = 10;
+            self.mapHeight.constant = 196;
             [UIView animateWithDuration:0.5
                              animations:^{
                                  [self.view layoutIfNeeded]; // Called on parent view
@@ -1333,7 +1336,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
         if ((y > _saveMapHeight)) {
             NSLog(@"animate change constraints");
             [self.view layoutIfNeeded];
-            self.mapHeight.constant = 10;
+            self.mapHeight.constant = 15;
             [UIView animateWithDuration:0.5
                              animations:^{
                                  [self.view layoutIfNeeded]; // Called on parent view
