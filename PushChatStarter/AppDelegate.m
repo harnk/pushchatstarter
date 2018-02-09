@@ -13,6 +13,10 @@
 #import "Message.h"
 #import "Harpy.h"
 
+#import <AWSCore/AWSCore.h>
+#import <AWSIoT/AWSIot.h>
+
+
 void ShowErrorAlert(NSString* text)
 {
 	UIAlertView* alertView = [[UIAlertView alloc]
@@ -320,6 +324,8 @@ int badResponseCounter = 0;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self initializeAWS];
+    
     // Override point for customization after application launch.
     _currentState = @"AD_DFLWO";
     _purchased = NO;
@@ -508,6 +514,49 @@ int badResponseCounter = 0;
     NSLog(@"%@ applicationWillTerminate", _currentState);
 }
 
+#pragma mark - AWS IoT MQTT Methods
+
+-(void)initializeAWS {
+    NSString *identityId;
+    AWSIoTManager *iotManager;
+    
+    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
+    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
+    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
+    
+    
+    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
+    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
+    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
+    
+    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
+        cognitoRegionString = @"us-west-2";
+    }
+    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
+    
+    // Initialize the Amazon Cognito credentials provider
+    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
+                                                                                                    identityPoolId:@"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184"];
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
+                                                                         credentialsProvider:credentialsProvider];
+    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+    
+    // Keep a reference to the provider
+//    self.credentialsProvider = credentialsProvider;
+//    self.serviceConfiguration = configuration;
+    
+    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
+        NSLog(@"Cognito identityId = [%@]", credentialsProvider.identityId);
+        NSLog(@"identityId =", credentialsProvider.identityId);
+        return nil;
+    }];
+    
+    // do IoT
+    iotManager = [AWSIoTManager defaultIoTManager];
+    AWSIoT *iot = [AWSIoT defaultIoT];
+}
+
+
 #pragma mark -
 #pragma mark custom methods
 
@@ -618,7 +667,7 @@ int badResponseCounter = 0;
          NSError *e = nil;
          NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
          if (!jsonArray) {
-             NSLog(@"Error parsing JSON: %@", e);
+             NSLog(@"4 Error parsing JSON: %@", e);
          } else {
              BOOL foundALooker = NO;
              for(NSDictionary *item in jsonArray) {

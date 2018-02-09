@@ -735,6 +735,12 @@
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
     [self.tableView reloadData];
+    if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        _pullHandle.hidden = NO;
+    }else if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation)){
+        _pullHandle.hidden = YES;
+    }
+
 }
 
 - (IBAction)showPinPicker:(id)sender {
@@ -885,7 +891,8 @@
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
                  if (!jsonArray) {
-                     NSLog(@"Error parsing JSON: %@", e);
+                     NSLog(@"1 Error parsing JSON: %@", e);
+                     NSLog(@"JSON Array:%@", jsonArray);
 //                     [[SingletonClass singleObject] setImInARoom:NO];
                  } else {
                      
@@ -1031,7 +1038,7 @@
          NSError *e = nil;
          NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
          if (!jsonArray) {
-             NSLog(@"Error parsing JSON: %@", e);
+             NSLog(@"2 Error parsing JSON: %@", e);
          } else {
              BOOL foundALooker = NO;
              for(NSDictionary *item in jsonArray) {
@@ -1116,7 +1123,7 @@
                  NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
                  
                  if (!jsonArray) {
-                     NSLog(@"Error parsing JSON: %@", e);
+                     NSLog(@"3 Error parsing JSON: %@", e);
                      [self.dataModel.messages removeAllObjects];
                  } else {
                      if (!_roomMessagesArray) {

@@ -49,6 +49,10 @@
 		9E702E971A6CB1C700D0E91E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E961A6CB1C700D0E91E /* Images.xcassets */; };
 		9E702E991A6CB4BF00D0E91E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E702E981A6CB4BF00D0E91E /* LaunchScreen.xib */; };
 		9E7453691A85C6D900522BCA /* SingletonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7453681A85C6D900522BCA /* SingletonClass.m */; };
+		9E768BBB202D5156003C7502 /* AWSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F8A202AAAEB001A9B57 /* AWSCore.framework */; };
+		9E768BBC202D5156003C7502 /* AWSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F8A202AAAEB001A9B57 /* AWSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9E768BBE202D5175003C7502 /* AWSIoT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F89202AAAEB001A9B57 /* AWSIoT.framework */; };
+		9E768BBF202D5175003C7502 /* AWSIoT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F89202AAAEB001A9B57 /* AWSIoT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9E7AC7E31AB2834E004996B6 /* cyan.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7D91AB2834E004996B6 /* cyan.png */; };
 		9E7AC7E41AB2834E004996B6 /* darkgreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7DA1AB2834E004996B6 /* darkgreen.png */; };
 		9E7AC7E51AB2834E004996B6 /* gold.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AC7DB1AB2834E004996B6 /* gold.png */; };
@@ -61,6 +65,8 @@
 		9E7CE78B1AAAA88500C7364D /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CE78A1AAAA88500C7364D /* Room.m */; };
 		9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */; };
 		9E885C021D2612AE007F1516 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E885C011D2612AE007F1516 /* Security.framework */; };
+		9E929F8B202AAAEB001A9B57 /* AWSIoT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F89202AAAEB001A9B57 /* AWSIoT.framework */; };
+		9E929F8C202AAAEB001A9B57 /* AWSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F8A202AAAEB001A9B57 /* AWSCore.framework */; };
 		9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
 		9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
 		9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */; };
@@ -73,6 +79,21 @@
 		D6FAA1E61AD7482300A68B6A /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E41AD7482300A68B6A /* blue.png */; };
 		D6FAA1E71AD7482300A68B6A /* bluemenuitem.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9E768BBD202D5156003C7502 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9E768BBC202D5156003C7502 /* AWSCore.framework in Embed Frameworks */,
+				9E768BBF202D5175003C7502 /* AWSIoT.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4C4B2E0A364E8CC966827582 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -151,6 +172,8 @@
 		9E81F9FB1A5CD8A000310C40 /* VBAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBAnnotation.h; sourceTree = "<group>"; };
 		9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBAnnotation.m; sourceTree = "<group>"; };
 		9E885C011D2612AE007F1516 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		9E929F89202AAAEB001A9B57 /* AWSIoT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSIoT.framework; sourceTree = "<group>"; };
+		9E929F8A202AAAEB001A9B57 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSCore.framework; sourceTree = "<group>"; };
 		9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
 		9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
@@ -177,8 +200,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E3117161E8CB045006CC478 /* StoreKit.framework in Frameworks */,
+				9E929F8C202AAAEB001A9B57 /* AWSCore.framework in Frameworks */,
 				9E885C021D2612AE007F1516 /* Security.framework in Frameworks */,
+				9E768BBE202D5175003C7502 /* AWSIoT.framework in Frameworks */,
 				61489E9817041C660049C6F9 /* UIKit.framework in Frameworks */,
+				9E929F8B202AAAEB001A9B57 /* AWSIoT.framework in Frameworks */,
+				9E768BBB202D5156003C7502 /* AWSCore.framework in Frameworks */,
 				61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */,
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
@@ -226,6 +253,8 @@
 		61489E9617041C660049C6F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E929F8A202AAAEB001A9B57 /* AWSCore.framework */,
+				9E929F89202AAAEB001A9B57 /* AWSIoT.framework */,
 				9E3117151E8CB045006CC478 /* StoreKit.framework */,
 				9E1B95CB1DEBE2B00001CAA5 /* libAFNetworking.a */,
 				9E1B95CC1DEBE2B00001CAA5 /* libMBProgressHUD.a */,
@@ -368,6 +397,7 @@
 				61489E9217041C660049C6F9 /* Resources */,
 				E7436B7576484BA19D6BE6D5 /* [CP] Copy Pods Resources */,
 				9EC44A1CB0B7EAD105810CFC /* [CP] Embed Pods Frameworks */,
+				9E768BBD202D5156003C7502 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
