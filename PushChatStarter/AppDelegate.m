@@ -13,10 +13,6 @@
 #import "Message.h"
 #import "Harpy.h"
 
-#import <AWSCore/AWSCore.h>
-#import <AWSIoT/AWSIot.h>
-
-
 void ShowErrorAlert(NSString* text)
 {
 	UIAlertView* alertView = [[UIAlertView alloc]
@@ -326,6 +322,11 @@ int badResponseCounter = 0;
 {
     [self initializeAWS];
     
+    self.mqttTopic = @"Whereru/test";
+    
+    // Connect to MQTT
+    [self connectToMqtt];
+    
     // Override point for customization after application launch.
     _currentState = @"AD_DFLWO";
     _purchased = NO;
@@ -517,8 +518,8 @@ int badResponseCounter = 0;
 #pragma mark - AWS IoT MQTT Methods
 
 -(void)initializeAWS {
-    NSString *identityId;
-    AWSIoTManager *iotManager;
+//    NSString *identityId;
+//    AWSIoTManager *iotManager;
     
     //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
     AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
@@ -536,7 +537,7 @@ int badResponseCounter = 0;
     
     // Initialize the Amazon Cognito credentials provider
     AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
-                                                                                                    identityPoolId:@"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184"];
+                                                                                                    identityPoolId:CognitoIdentityPoolId];
     AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
                                                                          credentialsProvider:credentialsProvider];
     AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
@@ -546,13 +547,13 @@ int badResponseCounter = 0;
 //    self.serviceConfiguration = configuration;
     
     [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
-        NSLog(@"Cognito identityId = [%@]", credentialsProvider.identityId);
-        NSLog(@"identityId =", credentialsProvider.identityId);
+        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
+        self.identityId = credentialsProvider.identityId;
         return nil;
     }];
     
     // do IoT
-    iotManager = [AWSIoTManager defaultIoTManager];
+    self.iotManager = [AWSIoTManager defaultIoTManager];
     AWSIoT *iot = [AWSIoT defaultIoT];
 }
 
@@ -812,5 +813,256 @@ int badResponseCounter = 0;
     NSLog(@"%@ resuming location updates", _currentState);
 }
 
+#pragma mark - JSON to Dictionary Method
+
+-(NSDictionary *) dictionaryFromJSON:(NSString *)json
+{
+    NSError *jsonError;
+    NSData *myRequestData = [json dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *returnDict = [NSJSONSerialization JSONObjectWithData:myRequestData
+                                                               options: NSJSONReadingMutableContainers
+                                                                 error: &jsonError];
+    
+    return returnDict;
+}
+
+#pragma mark -
+#pragma mark custom methods
+
+-(void)connectToMqtt {
+    NSLog(@"connectToMqtt");
+    // setup handleMqttConnect method with AWSIoTMQTTStatus *status and set value for connected there
+    self.iotDataManager = [AWSIoTDataManager defaultIoTDataManager];
+    
+    if (self.connected == NO) {
+        NSString *lastWillJSON = [self createLastWillJSON:@"unavailable" withShow:@"dead"];
+        //        self.iotDataManager.mqttConfiguration.keepAliveTimeInterval = 75.0;
+        self.iotDataManager.mqttConfiguration.lastWillAndTestament.topic = self.mqttTopic;
+        self.iotDataManager.mqttConfiguration.lastWillAndTestament.message = lastWillJSON;
+        self.iotDataManager.mqttConfiguration.lastWillAndTestament.qos = AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce;
+        NSLog(@"connectUsingWebSocketWithClientId, setting last will message to: %@", lastWillJSON);
+        //
+        // Need a unique device ID because two devices logged onto the same conversation cannot share the same websocket
+        //
+        NSString *deviceId = [[NSUUID UUID] UUIDString] ;
+        NSLog(@"connectUsingWebSocketWithClientId with deviceId: %@", deviceId);
+        //
+        // Connect to IoT using websocket
+        //
+        [self.iotDataManager connectUsingWebSocketWithClientId:deviceId cleanSession:true statusCallback:^(AWSIoTMQTTStatus status) {
+            
+            NSLog(@"in connectToMqtt callback with status:%ld", (long)status);
+            
+            switch (status) {
+                case AWSIoTMQTTStatusConnecting:
+                    NSLog(@"AWSIoTMQTTStatusConnecting");
+                    break;
+                    
+                case AWSIoTMQTTStatusConnected:
+                    NSLog(@"AWSIoTMQTTStatusConnected");
+                    self.connected = YES;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mqttConnected" object:self];
+                    break;
+                    
+                case AWSIoTMQTTStatusDisconnected:
+                    NSLog(@"AWSIoTMQTTStatusDisconnected");
+                    self.connected = NO;
+                    break;
+                    
+                case AWSIoTMQTTStatusConnectionRefused:
+                    NSLog(@"AWSIoTMQTTStatusConnectionRefused");
+                    break;
+                    
+                case AWSIoTMQTTStatusConnectionError:
+                    NSLog(@"AWSIoTMQTTStatusConnectionError");
+                    break;
+                    
+                case AWSIoTMQTTStatusProtocolError:
+                    NSLog(@"AWSIoTMQTTStatusProtocolError");
+                    break;
+                    
+                case AWSIoTMQTTStatusUnknown:
+                    NSLog(@"AWSIoTMQTTStatusUnknown");
+                    break;
+                    
+                default:
+                    break;
+            }
+        }];
+    } else {
+        // you are already connected
+        NSLog(@"already connected to MQTT");
+    }
+}
+
+-(void)disconnectFromMqtt {
+    if (self.connected) {
+        // disconnect now
+        NSLog(@"disconnectFromMqtt");
+        [self.iotDataManager disconnect];
+    }
+}
+
+- (void) configureMqttReceivedMessageBlock {
+    // You can't refer to self or properties on self from within a block that will be strongly retained by self
+    // Create a weak reference to self to avoid a retain cycle
+    __weak typeof(self) weakSelf = self;
+    self.mqttReceivedMessageBlock = ^(NSData *data) {
+        NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
+        NSDictionary *bodyDict = [self dictionaryFromJSON:receivedString];
+        
+        // Don't do anything unless actor = agent
+        if ([[bodyDict objectForKey:@"actor"] isEqualToString:@"agent"]) {
+            if ([[bodyDict objectForKey:@"type"] isEqualToString:@"indicator"]) {
+                if ([[bodyDict objectForKey:@"show"] isEqualToString:@"composing"]) {
+                    // composing
+                    if (![weakSelf.mqttAgentIndicatorState isEqualToString:@"composing"]) {
+//                        [weakSelf createTypingIndicator];
+                    }
+                    weakSelf.mqttAgentIndicatorState = @"composing";
+                }
+                else if ([[bodyDict objectForKey:@"show"] isEqualToString:@"paused"]) {
+                    // paused
+                    if ([weakSelf.mqttAgentIndicatorState isEqualToString:@"composing"]) {
+//                        [weakSelf removeTypingIndicator];
+                    }
+                    weakSelf.mqttAgentIndicatorState = @"paused";
+                }
+            }
+            else if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
+                // message
+                if (weakSelf.isUpdating) {
+//                    weakSelf.runJob = @"loadConv";
+                } else {
+                    // Load the conversation
+//                    [weakSelf loadConversation:weakSelf.conversationGuid];
+                    weakSelf.mqttAgentIndicatorState = @"paused";
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mytimeDataChanged" object:weakSelf];
+                }
+            }
+        } else {
+            NSLog(@"message arrived but was not from an agent");
+        }
+        NSLog(@"--------------- END callback method --------------");
+    };
+}
+
+-(void)subscribeAndReceiveMqtt {
+    NSLog(@"subscribeAndReceiveMqtt");
+    [self configureMqttReceivedMessageBlock];
+    [self.iotDataManager subscribeToTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
+    [self publishConnectPresence];
+}
+
+- (void)publishIndicator:(NSString *)show {
+    NSString *bodyJson = [self createIndicatorJSON:show]; // simple JSON contains type, actor and show
+    NSLog(@"sendIndicator bodyJson:%@", bodyJson);
+    if (![bodyJson isEqualToString:@"error"]) {
+        [self.iotDataManager publishString:bodyJson onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+    }
+}
+
+- (void)publishMessageNotification {
+    NSString *bodyJson = [self createMessageNotificationJSON]; // simple JSON contains type, actor and show
+    NSLog(@"sendMessageNotification bodyJson:%@", bodyJson);
+    if (![bodyJson isEqualToString:@"error"]) {
+        [self.iotDataManager publishString:bodyJson onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+    }
+}
+
+- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
+    NSLog(@"publishPresence called with presenceState: %@ show: %@", presenceState, showString);
+    
+    NSString *jsonString = [self createPresenceJSON:presenceState withShow:showString];
+    
+    if ([jsonString isEqualToString:@"error"]) {
+        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
+    } else {
+        // send presence
+        NSLog(@"publishPresence publishString:jsonString:%@ ", jsonString);
+        [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+    }
+}
+
+- (void)publishConnectPresence {
+    [self publishPresence:@"available" withShow:@"chat"];
+//    [self.connectTimer invalidate];
+//    self.connectTimer = nil;
+}
+
+- (NSString *)createPresenceJSON:(NSString *)presenceState withShow:(NSString *)showString {
+    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+    
+//    [statusDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
+//    [statusDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
+//    [statusDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
+    [statusDict setObject:@"ios" forKey:@"resource"];
+    [statusDict setObject:@"user" forKey:@"actor"];
+    [statusDict setObject:@"presence" forKey:@"type"];
+    [statusDict setObject:presenceState forKey:@"presenceState"];
+    [statusDict setObject:showString forKey:@"show"];
+    
+    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
+    return [self serializeDictToJSON:statusDict];
+}
+
+- (NSString *)createLastWillJSON:(NSString *)presenceState withShow:(NSString *)showString {
+    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+    
+//    [statusDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
+//    [statusDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
+//    [statusDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
+//    [statusDict setObject:@"ios" forKey:kCSresource];
+//    [statusDict setObject:@"user" forKey:kCSactor];
+//    [statusDict setObject:@"presence" forKey:kCStype];
+//    [statusDict setObject:presenceState forKey:kCSpresenceState];
+//    [statusDict setObject:showString forKey:kCSshow];
+    
+    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
+    return [self serializeDictToJSON:statusDict];
+}
+
+-(NSString *)createIndicatorJSON:(NSString *)show {
+    NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
+    [bodyDict setObject:@"abcd1234" forKey:@"companyGuid"];
+    [bodyDict setObject:@"wxyz9876" forKey:@"conversationGuid"];
+    [bodyDict setObject:@"indicator" forKey:@"type"];
+    [bodyDict setObject:@"user" forKey:@"actor"];
+    return [self serializeDictToJSON:bodyDict];
+}
+
+-(NSString *)createMessageNotificationJSON {
+    NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
+//    [bodyDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
+//    [bodyDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
+//    [bodyDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
+    [bodyDict setObject:@"message" forKey:@"type"];
+    [bodyDict setObject:@"user" forKey:@"actor"];
+    return [self serializeDictToJSON:bodyDict];
+}
+
+-(NSString *)serializeDictToJSON:(NSMutableDictionary *)inputDict {
+    NSError *serializeError;
+    NSData *statusData;
+    
+    if ([NSJSONSerialization isValidJSONObject:inputDict])
+    {
+        statusData = [NSJSONSerialization dataWithJSONObject:inputDict options:NSJSONWritingPrettyPrinted error:&serializeError];
+    }
+    if (serializeError)
+    {
+        NSLog(@"jsonError: %@", serializeError);
+        return @"error";
+    }
+    else
+    {
+        NSLog(@"jsonSuccess: %@", statusData);
+        NSString *statusAsString = [[NSString alloc] initWithData:statusData encoding:NSUTF8StringEncoding];
+        NSLog(@"stringSuccess: %@", statusAsString);
+        return statusAsString;
+    }
+}
 
 @end
