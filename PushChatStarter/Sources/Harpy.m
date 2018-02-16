@@ -139,7 +139,8 @@
                                                     self.appData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
             
                                                     if ([self isDebugEnabled]) {
-                                                        NSLog(@"[Harpy] JSON Results: %@", _appData);
+                                                        NSLog(@"[Harpy] JSON Results: UNCOMMENT TO SEE");
+//                                                        NSLog(@"[Harpy] JSON Results: %@", _appData);
                                                     }
             
                                                     dispatch_async(dispatch_get_main_queue(), ^{

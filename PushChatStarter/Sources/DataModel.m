@@ -133,7 +133,7 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
 {
     UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU.storedid"];
     NSString *userId = [keychain stringForKey:@"mysaveduserid"];
-    NSLog(@"GETTING userId from UICKeyChainStore:%@", userId);
+//    NSLog(@"GETTING userId from UICKeyChainStore:%@", userId);
     
     if (userId == nil || userId.length == 0) {
         NSLog(@"USERID IS NULL userId from NSUserDefaults:%@", userId);

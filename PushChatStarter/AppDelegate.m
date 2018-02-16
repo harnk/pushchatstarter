@@ -427,7 +427,11 @@ int badResponseCounter = 0;
                                                  name:@"allowBackgroundUpdates"
                                                object:nil];
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(subscribeAndReceiveMqtt)
+                                                 name:@"mqttConnected"
+                                               object:nil];
+    
     //REMOVE this next bit later - its for testing while sitting in one place
 //    backgroundTimer = [NSTimer scheduledTimerWithTimeInterval: 20
 //                                                       target: self
@@ -785,12 +789,6 @@ int badResponseCounter = 0;
     
     CLLocation *newLoc = [locations lastObject];
     
-    // If the stored loc string is the same as this new one do not print to the console
-    //    if ([[[SingletonClass singleObject] myLocStr] isEqualToString: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]] ) {
-    //        //do nothing
-    //        NSLog(@"same");
-    //    } else {
-    
     //log it, save it
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     //SCXTT RELEASE
@@ -801,6 +799,8 @@ int badResponseCounter = 0;
     // Do NOT do this next line if SMVC is still active and looking
     if (_isBackgroundMode) {
         [self postMyLoc];
+//        get postMyLoc params
+        [self publishIMoved];
     }
     //    }
 }
@@ -908,6 +908,7 @@ int badResponseCounter = 0;
     // You can't refer to self or properties on self from within a block that will be strongly retained by self
     // Create a weak reference to self to avoid a retain cycle
     __weak typeof(self) weakSelf = self;
+    NSLog(@"SCXTT configureMqttReceivedMessageBlock setting up mqttReceivedMessageBlock^");
     self.mqttReceivedMessageBlock = ^(NSData *data) {
         NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
@@ -915,32 +916,8 @@ int badResponseCounter = 0;
         
         // Don't do anything unless actor = agent
         if ([[bodyDict objectForKey:@"actor"] isEqualToString:@"agent"]) {
-            if ([[bodyDict objectForKey:@"type"] isEqualToString:@"indicator"]) {
-                if ([[bodyDict objectForKey:@"show"] isEqualToString:@"composing"]) {
-                    // composing
-                    if (![weakSelf.mqttAgentIndicatorState isEqualToString:@"composing"]) {
-//                        [weakSelf createTypingIndicator];
-                    }
-                    weakSelf.mqttAgentIndicatorState = @"composing";
-                }
-                else if ([[bodyDict objectForKey:@"show"] isEqualToString:@"paused"]) {
-                    // paused
-                    if ([weakSelf.mqttAgentIndicatorState isEqualToString:@"composing"]) {
-//                        [weakSelf removeTypingIndicator];
-                    }
-                    weakSelf.mqttAgentIndicatorState = @"paused";
-                }
-            }
-            else if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
+            if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
                 // message
-                if (weakSelf.isUpdating) {
-//                    weakSelf.runJob = @"loadConv";
-                } else {
-                    // Load the conversation
-//                    [weakSelf loadConversation:weakSelf.conversationGuid];
-                    weakSelf.mqttAgentIndicatorState = @"paused";
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mytimeDataChanged" object:weakSelf];
-                }
             }
         } else {
             NSLog(@"message arrived but was not from an agent");
@@ -950,18 +927,11 @@ int badResponseCounter = 0;
 }
 
 -(void)subscribeAndReceiveMqtt {
-    NSLog(@"subscribeAndReceiveMqtt");
+    NSLog(@"subscribeAndReceiveMqtt subscribing to %@ and Whereru/moving", self.mqttTopic);
     [self configureMqttReceivedMessageBlock];
     [self.iotDataManager subscribeToTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
+    [self.iotDataManager subscribeToTopic:@"Whereru/moving" QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
     [self publishConnectPresence];
-}
-
-- (void)publishIndicator:(NSString *)show {
-    NSString *bodyJson = [self createIndicatorJSON:show]; // simple JSON contains type, actor and show
-    NSLog(@"sendIndicator bodyJson:%@", bodyJson);
-    if (![bodyJson isEqualToString:@"error"]) {
-        [self.iotDataManager publishString:bodyJson onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-    }
 }
 
 - (void)publishMessageNotification {
@@ -973,31 +943,35 @@ int badResponseCounter = 0;
 }
 
 - (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
-    NSLog(@"publishPresence called with presenceState: %@ show: %@", presenceState, showString);
-    
     NSString *jsonString = [self createPresenceJSON:presenceState withShow:showString];
     
     if ([jsonString isEqualToString:@"error"]) {
         NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
     } else {
         // send presence
-        NSLog(@"publishPresence publishString:jsonString:%@ ", jsonString);
         [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
     }
 }
 
 - (void)publishConnectPresence {
     [self publishPresence:@"available" withShow:@"chat"];
-//    [self.connectTimer invalidate];
-//    self.connectTimer = nil;
+    //    [self.connectTimer invalidate];
+    //    self.connectTimer = nil;
+}
+
+- (void)publishIMoved {
+    NSLog(@"publishIMoved");
+    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+    [statusDict setObject:@"liveupdate" forKey:@"cmd"];
+    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
+    [statusDict setObject:[[SingletonClass singleObject] myLocStr] forKey:@"location"];
+    NSString *jsonString = [self serializeDictToJSON:statusDict];
+    [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+
 }
 
 - (NSString *)createPresenceJSON:(NSString *)presenceState withShow:(NSString *)showString {
     NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    
-//    [statusDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
-//    [statusDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
-//    [statusDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
     [statusDict setObject:@"ios" forKey:@"resource"];
     [statusDict setObject:@"user" forKey:@"actor"];
     [statusDict setObject:@"presence" forKey:@"type"];
@@ -1010,27 +984,9 @@ int badResponseCounter = 0;
 
 - (NSString *)createLastWillJSON:(NSString *)presenceState withShow:(NSString *)showString {
     NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    
-//    [statusDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
-//    [statusDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
-//    [statusDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
-//    [statusDict setObject:@"ios" forKey:kCSresource];
-//    [statusDict setObject:@"user" forKey:kCSactor];
-//    [statusDict setObject:@"presence" forKey:kCStype];
-//    [statusDict setObject:presenceState forKey:kCSpresenceState];
-//    [statusDict setObject:showString forKey:kCSshow];
-    
+    [statusDict setObject:@"dead" forKey:@"ios"];
     NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
     return [self serializeDictToJSON:statusDict];
-}
-
--(NSString *)createIndicatorJSON:(NSString *)show {
-    NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
-    [bodyDict setObject:@"abcd1234" forKey:@"companyGuid"];
-    [bodyDict setObject:@"wxyz9876" forKey:@"conversationGuid"];
-    [bodyDict setObject:@"indicator" forKey:@"type"];
-    [bodyDict setObject:@"user" forKey:@"actor"];
-    return [self serializeDictToJSON:bodyDict];
 }
 
 -(NSString *)createMessageNotificationJSON {

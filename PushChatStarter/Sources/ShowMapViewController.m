@@ -1145,7 +1145,7 @@
                          message.location = [item objectForKey:@"location"];
                          message.text = [item objectForKey:@"message"];
                          int index = [self.dataModel addMessage:message];
-                         NSLog(@"SMVC Message added at index:%d" ,index);
+//                         NSLog(@"SMVC Message added at index:%d" ,index);
                      }
                      [self.tableView reloadData];
                      [self scrollToNewestMessage];
@@ -1233,7 +1233,7 @@
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MyCustomAnnotation"];
         
 //      Need to add code to test for old pins and use gray ones here
-        NSLog(@"viewForAnnotation loctime:%@", myAnnotation.loctime);
+//        NSLog(@"viewForAnnotation loctime:%@", myAnnotation.loctime);
 
         if (annotationView == nil) {
             annotationView = myAnnotation.annotationView;
