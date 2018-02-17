@@ -519,49 +519,6 @@ int badResponseCounter = 0;
     NSLog(@"%@ applicationWillTerminate", _currentState);
 }
 
-#pragma mark - AWS IoT MQTT Methods
-
--(void)initializeAWS {
-//    NSString *identityId;
-//    AWSIoTManager *iotManager;
-    
-    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
-    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
-    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
-    
-    
-    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
-    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
-    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
-    
-    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
-        cognitoRegionString = @"us-west-2";
-    }
-    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
-    
-    // Initialize the Amazon Cognito credentials provider
-    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
-                                                                                                    identityPoolId:CognitoIdentityPoolId];
-    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
-                                                                         credentialsProvider:credentialsProvider];
-    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    
-    // Keep a reference to the provider
-//    self.credentialsProvider = credentialsProvider;
-//    self.serviceConfiguration = configuration;
-    
-    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
-        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
-        self.identityId = credentialsProvider.identityId;
-        return nil;
-    }];
-    
-    // do IoT
-    self.iotManager = [AWSIoTManager defaultIoTManager];
-    AWSIoT *iot = [AWSIoT defaultIoT];
-}
-
-
 #pragma mark -
 #pragma mark custom methods
 
@@ -647,6 +604,7 @@ int badResponseCounter = 0;
     
     //    NSLog(@"Doing API Call with %@", params);
     
+    NSLog(@"ServerApiURL:%@   API Post: %@ params:%@", ServerApiURL, ServerPostPathURL, params);
     AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
     [client
      postPath:ServerPostPathURL
@@ -813,22 +771,49 @@ int badResponseCounter = 0;
     NSLog(@"%@ resuming location updates", _currentState);
 }
 
-#pragma mark - JSON to Dictionary Method
+#pragma mark - AWS IoT MQTT Methods
 
--(NSDictionary *) dictionaryFromJSON:(NSString *)json
-{
-    NSError *jsonError;
-    NSData *myRequestData = [json dataUsingEncoding:NSUTF8StringEncoding];
+-(void)initializeAWS {
+    //    NSString *identityId;
+    //    AWSIoTManager *iotManager;
     
-    NSDictionary *returnDict = [NSJSONSerialization JSONObjectWithData:myRequestData
-                                                               options: NSJSONReadingMutableContainers
-                                                                 error: &jsonError];
+    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
+    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
+    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
     
-    return returnDict;
+    
+    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
+    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
+    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
+    
+    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
+        cognitoRegionString = @"us-west-2";
+    }
+    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
+    
+    // Initialize the Amazon Cognito credentials provider
+    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
+                                                                                                    identityPoolId:CognitoIdentityPoolId];
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
+                                                                         credentialsProvider:credentialsProvider];
+    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+    
+    // Keep a reference to the provider
+    //    self.credentialsProvider = credentialsProvider;
+    //    self.serviceConfiguration = configuration;
+    
+    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
+        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
+        self.identityId = credentialsProvider.identityId;
+        return nil;
+    }];
+    
+    // do IoT
+    self.iotManager = [AWSIoTManager defaultIoTManager];
+    AWSIoT *iot = [AWSIoT defaultIoT];
 }
 
-#pragma mark -
-#pragma mark custom methods
+
 
 -(void)connectToMqtt {
     NSLog(@"connectToMqtt");
@@ -920,7 +905,7 @@ int badResponseCounter = 0;
                 // message
             }
         } else {
-            NSLog(@"message arrived but was not from an agent");
+            NSLog(@"message arrived but was not from an agent, message");
         }
         NSLog(@"--------------- END callback method --------------");
     };
@@ -931,7 +916,31 @@ int badResponseCounter = 0;
     [self configureMqttReceivedMessageBlock];
     [self.iotDataManager subscribeToTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
     [self.iotDataManager subscribeToTopic:@"Whereru/moving" QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
-    [self publishConnectPresence];
+    [self publishPresence:@"available" withShow:@"bogus"];
+    [self publishMessageNotification];
+}
+
+- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
+    NSString *jsonString = [self createUserUpdateJSON:presenceState withShow:showString];
+    
+    if ([jsonString isEqualToString:@"error"]) {
+        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
+    } else {
+        // send presence
+        [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+    }
+}
+
+- (void)publishIMoved {
+    NSLog(@"publishIMoved");
+    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+    [statusDict setObject:@"liveupdate" forKey:@"cmd"];
+    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"Nickname"] forKey:@"nickname"];
+    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
+    [statusDict setObject:[[SingletonClass singleObject] myLocStr] forKey:@"location"];
+    NSString *jsonString = [self serializeDictToJSON:statusDict];
+    [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+
 }
 
 - (void)publishMessageNotification {
@@ -942,35 +951,7 @@ int badResponseCounter = 0;
     }
 }
 
-- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
-    NSString *jsonString = [self createPresenceJSON:presenceState withShow:showString];
-    
-    if ([jsonString isEqualToString:@"error"]) {
-        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
-    } else {
-        // send presence
-        [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-    }
-}
-
-- (void)publishConnectPresence {
-    [self publishPresence:@"available" withShow:@"chat"];
-    //    [self.connectTimer invalidate];
-    //    self.connectTimer = nil;
-}
-
-- (void)publishIMoved {
-    NSLog(@"publishIMoved");
-    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    [statusDict setObject:@"liveupdate" forKey:@"cmd"];
-    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
-    [statusDict setObject:[[SingletonClass singleObject] myLocStr] forKey:@"location"];
-    NSString *jsonString = [self serializeDictToJSON:statusDict];
-    [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-
-}
-
-- (NSString *)createPresenceJSON:(NSString *)presenceState withShow:(NSString *)showString {
+- (NSString *)createUserUpdateJSON:(NSString *)presenceState withShow:(NSString *)showString {
     NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
     [statusDict setObject:@"ios" forKey:@"resource"];
     [statusDict setObject:@"user" forKey:@"actor"];
@@ -991,12 +972,24 @@ int badResponseCounter = 0;
 
 -(NSString *)createMessageNotificationJSON {
     NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
-//    [bodyDict setObject:[[[CSSingletonClass singleObject] companyGuid] uppercaseString] forKey:kCScompanyGuid];
-//    [bodyDict setObject:[self.conversationGuid uppercaseString] forKey:kCSconversationGuid];
-//    [bodyDict setObject:[[[CSSingletonClass singleObject] userGuidString] uppercaseString] forKey:kCSuserGuid];
     [bodyDict setObject:@"message" forKey:@"type"];
     [bodyDict setObject:@"user" forKey:@"actor"];
     return [self serializeDictToJSON:bodyDict];
+}
+
+
+#pragma mark - JSON <==> Dictionary Methods
+
+-(NSDictionary *) dictionaryFromJSON:(NSString *)json
+{
+    NSError *jsonError;
+    NSData *myRequestData = [json dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *returnDict = [NSJSONSerialization JSONObjectWithData:myRequestData
+                                                               options: NSJSONReadingMutableContainers
+                                                                 error: &jsonError];
+    
+    return returnDict;
 }
 
 -(NSString *)serializeDictToJSON:(NSMutableDictionary *)inputDict {
