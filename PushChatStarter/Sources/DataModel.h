@@ -45,4 +45,5 @@
 - (NSString*)userId;
 - (NSString*)deviceToken;
 - (void)setDeviceToken:(NSString*)token;
+- (void)setUserId:(NSString*)userId;
 @end

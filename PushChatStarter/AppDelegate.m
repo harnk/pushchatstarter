@@ -774,13 +774,9 @@ int badResponseCounter = 0;
 #pragma mark - AWS IoT MQTT Methods
 
 -(void)initializeAWS {
-    //    NSString *identityId;
-    //    AWSIoTManager *iotManager;
-    
     //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
     AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
     NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
-    
     
     //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
     NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
@@ -812,8 +808,6 @@ int badResponseCounter = 0;
     self.iotManager = [AWSIoTManager defaultIoTManager];
     AWSIoT *iot = [AWSIoT defaultIoT];
 }
-
-
 
 -(void)connectToMqtt {
     NSLog(@"connectToMqtt");

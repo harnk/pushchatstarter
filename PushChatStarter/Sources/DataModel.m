@@ -138,7 +138,13 @@ static NSString * const DeviceTokenKey = @"DeviceToken";
     if (userId == nil || userId.length == 0) {
         NSLog(@"USERID IS NULL userId from NSUserDefaults:%@", userId);
     }
+    [self setUserId:userId];
     return userId;
+}
+
+-(void)setUserId:(NSString*)string
+{
+    [[NSUserDefaults standardUserDefaults] setObject:string forKey:UserId];
 }
 
 @end
