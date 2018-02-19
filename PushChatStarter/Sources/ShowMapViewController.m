@@ -136,6 +136,12 @@
                                                object:nil];
     
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePointsOnMapWithMQTTData:)
+                                                 name:@"receivedNewMQTTData"
+                                               object:nil];
+    
+
 }
 
 - (void)setUpButtonBarItems {
@@ -1368,6 +1374,27 @@ didAddAnnotationViews:(NSArray *)annotationViews
     }
 }
 
+- (void)checkPinPickerButton {
+    if ([_roomArray count] == 0) {
+        _pinPickerButton.enabled = NO;
+        [_mapView removeAnnotations:_mapView.annotations];
+    } else {
+        _pinPickerButton.enabled = YES;
+    }
+}
+
+-(void) updatePointsOnMapWithMQTTData:(NSNotification *)notification {
+    NSLog(@"SCXTT updatePointsOnMapWithMQTTData");
+    NSDictionary *dict = notification.userInfo;
+    @try {
+        NSLog(@"notification nickname:%@", [dict valueForKey:@"nickname"]);
+        NSLog(@"notification location:%@", [dict valueForKey:@"location"]);
+    }
+    @catch (NSException *exception) {
+            NSLog(@"SCXTT notification,userInfo NOT SET yet");
+    }
+}
+
 // This goes through all of the objects currently in the _roomArray
 // Seeds the region with this devices current location and sets the span
 // to include all the pins. This will not plot pins that are located at 0.00,0.00
@@ -1389,19 +1416,12 @@ didAddAnnotationViews:(NSArray *)annotationViews
     //SCXTT RELEASE
     NSLog(@"SMVC updatePointsOnMapWithAPIData");
     NSLog(@"SMVC My loc:%@", mLoc);
-
     
     // Loop thru all _roomArray[Room objects]
     // Pull from _roomArray where who matches memberNickName
     // each item is a Room object with memberNickName memberLocation & roomName
 //    NSLog(@"_roomArray count is:%lu",(unsigned long)[_roomArray count]);
-    if ([_roomArray count] == 0) {
-        _pinPickerButton.enabled = NO;
-        [_mapView removeAnnotations:_mapView.annotations];
-    } else {
-        _pinPickerButton.enabled = YES;
-    }
-//    NSLog(@"_mapView.annotations count is:%lu",(unsigned long)[_mapView.annotations count]);
+    [self checkPinPickerButton];
     for (Room *item in _roomArray) {
         BOOL whoFound = NO;
         if (![item.memberLocation  isEqual: @"0.000000, 0.000000"]) {

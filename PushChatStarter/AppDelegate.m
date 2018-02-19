@@ -892,6 +892,7 @@ int badResponseCounter = 0;
         NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
         NSDictionary *bodyDict = [self dictionaryFromJSON:receivedString];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMQTTData" object:self userInfo:bodyDict];
         
         // Don't do anything unless actor = agent
         if ([[bodyDict objectForKey:@"actor"] isEqualToString:@"agent"]) {
