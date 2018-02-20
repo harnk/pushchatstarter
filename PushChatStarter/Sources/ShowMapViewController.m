@@ -1384,11 +1384,28 @@ didAddAnnotationViews:(NSArray *)annotationViews
 }
 
 -(void) updatePointsOnMapWithMQTTData:(NSNotification *)notification {
-    NSLog(@"SCXTT updatePointsOnMapWithMQTTData");
+    CLLocationCoordinate2D location;
     NSDictionary *dict = notification.userInfo;
+    NSArray *strings = [[dict valueForKey:@"location"] componentsSeparatedByString:@","];
+    location.latitude = [strings[0] doubleValue];
+    location.longitude = [strings[1] doubleValue];
+    NSLog(@"SCXTT updatePointsOnMapWithMQTTData");
     @try {
-        NSLog(@"notification nickname:%@", [dict valueForKey:@"nickname"]);
-        NSLog(@"notification location:%@", [dict valueForKey:@"location"]);
+//        NSLog(@"notification nickname:%@", [dict valueForKey:@"nickname"]);
+//        NSLog(@"notification location:%@", [dict valueForKey:@"location"]);
+        for (Room *item in _roomArray) {
+            NSString *who = item.memberNickName;
+            for (VBAnnotation *ann in _mapView.annotations) {
+                if ([ann.title isEqualToString:who]) {
+//                    NSLog(@"I FOUND who:%@",who);
+                    if ([who isEqualToString:[dict valueForKey:@"nickname"]]){
+                        NSLog(@"I FOUND [dict valueForKey:@nickname]:%@ ... setting its location to:%@",who,[dict valueForKey:@"location"]);
+                        [ann setCoordinate:location];
+                    }
+                }
+            }
+        }
+        
     }
     @catch (NSException *exception) {
             NSLog(@"SCXTT notification,userInfo NOT SET yet");
