@@ -749,13 +749,12 @@ int badResponseCounter = 0;
     [[SingletonClass singleObject] setMyNewLocation:newLoc];
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     //SCXTT RELEASE
-    NSLog(@"%@ API postMyLoc didUpdateLocations I moved to: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
     
     // Do NOT do this next line if SMVC is still active and looking
     if (_isBackgroundMode) {
-        [self postMyLoc]; // API
+//        [self postMyLoc]; // API
         [self publishIMoved]; // MQTT
     }
 }
@@ -1000,7 +999,6 @@ int badResponseCounter = 0;
     }
     else
     {
-        NSLog(@"jsonSuccess: %@", statusData);
         NSString *statusAsString = [[NSString alloc] initWithData:statusData encoding:NSUTF8StringEncoding];
         NSLog(@"stringSuccess: %@", statusAsString);
         return statusAsString;
