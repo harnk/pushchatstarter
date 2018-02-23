@@ -738,16 +738,15 @@ int badResponseCounter = 0;
      didUpdateLocations:(NSArray *)locations {
     // This is the battery burner right here ... must optimize this
     
-    CLLocation * oldLocation = [[SingletonClass singleObject] myNewLocation];
-    CLLocation * newLocation = [locations lastObject];
-    CLLocationDistance distanceMoved = [oldLocation distanceFromLocation:newLocation];
-    NSLog(@"%@ AppDelegate background delegate device moved %f yards - DIDUPDATELOCATIONS", _currentState, distanceMoved);
-    
-    [[SingletonClass singleObject] setMyNewLocation:[locations lastObject]];
-    
+    CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
-    
-    //log it, save it
+    CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
+    if (distanceMoved == 0) {
+        NSLog(@"Moved 0 yards so DO NOTHING, abort!");
+        return;
+    }
+    NSLog(@"%@ AppDelegate-didUpdateLocations background delegate device moved %f yards", _currentState, distanceMoved);
+    [[SingletonClass singleObject] setMyNewLocation:newLoc];
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     //SCXTT RELEASE
     NSLog(@"%@ API postMyLoc didUpdateLocations I moved to: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
@@ -756,11 +755,9 @@ int badResponseCounter = 0;
     
     // Do NOT do this next line if SMVC is still active and looking
     if (_isBackgroundMode) {
-        [self postMyLoc];
-//        get postMyLoc params
-        [self publishIMoved];
+        [self postMyLoc]; // API
+        [self publishIMoved]; // MQTT
     }
-    //    }
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
@@ -815,7 +812,7 @@ int badResponseCounter = 0;
     self.iotDataManager = [AWSIoTDataManager defaultIoTDataManager];
     
     if (self.connected == NO) {
-        NSString *lastWillJSON = [self createLastWillJSON:@"unavailable" withShow:@"dead"];
+        NSString *lastWillJSON = [self createLastWillJSON:@"notused" withShow:@"alsonotyetused"];
         //        self.iotDataManager.mqttConfiguration.keepAliveTimeInterval = 75.0;
         self.iotDataManager.mqttConfiguration.lastWillAndTestament.topic = self.mqttTopic;
         self.iotDataManager.mqttConfiguration.lastWillAndTestament.message = lastWillJSON;
@@ -900,7 +897,7 @@ int badResponseCounter = 0;
                 // message
             }
         } else {
-            NSLog(@"message arrived but was not from an agent, message");
+//            NSLog(@"message arrived but was not from an agent, message");
         }
         NSLog(@"--------------- END callback method --------------");
     };
@@ -961,6 +958,7 @@ int badResponseCounter = 0;
 - (NSString *)createLastWillJSON:(NSString *)presenceState withShow:(NSString *)showString {
     NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
     [statusDict setObject:@"dead" forKey:@"ios"];
+    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
     NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
     return [self serializeDictToJSON:statusDict];
 }
