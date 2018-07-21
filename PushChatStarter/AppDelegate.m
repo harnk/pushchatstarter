@@ -411,7 +411,6 @@ int badResponseCounter = 0;
 //        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
 //        
 //    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(startMyLocationUpdates)
                                                  name:@"fireUpTheGPS"
@@ -891,7 +890,8 @@ int badResponseCounter = 0;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMQTTData" object:self userInfo:bodyDict];
         
         // Don't do anything unless actor = agent
-        if ([[bodyDict objectForKey:@"actor"] isEqualToString:@"agent"]) {
+        if ([[bodyDict objectForKey:@"cmd"] isEqualToString:@"rollcall"]) {
+            NSLog(@"TBD - report all your info to Whereru/room/<secret_code_guid>");
             if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
                 // message
             }
@@ -917,6 +917,7 @@ int badResponseCounter = 0;
     if ([jsonString isEqualToString:@"error"]) {
         NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
     } else {
+        NSLog(@"SENDING presence to topic: %@  jsonString: %@", self.mqttTopic, jsonString);
         // send presence
         [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
     }
