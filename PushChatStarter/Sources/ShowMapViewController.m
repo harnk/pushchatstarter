@@ -407,9 +407,36 @@
     
     //Pop an aler to let the user go to settings and change notifications setting for this app
     if (isdisabled) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-        alert.tag = kAlertViewNotifications;
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
+//        alert.tag = kAlertViewNotifications;
+//        [alert show];
+//        
+        UIAlertController *alert =
+        [UIAlertController alertControllerWithTitle:@"Notifications Are Disabled"
+                                            message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them"
+                                     preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction *cancel =
+        [UIAlertAction actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                               handler:^(UIAlertAction *action) {
+                                   // Cancel tapped
+                               }];
+
+        UIAlertAction *settings =
+        [UIAlertAction actionWithTitle:@"Settings"
+                                 style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *action) {
+                                   NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                                   if ([[UIApplication sharedApplication] canOpenURL:settingsURL]) {
+                                       [[UIApplication sharedApplication] openURL:settingsURL options:@{} completionHandler:nil];
+                                   }
+                               }];
+
+        [alert addAction:cancel];
+        [alert addAction:settings];
+
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -807,10 +834,32 @@
 
 - (IBAction)exitAction
 {
-    // SCXTT make this next part coexist with the alertview that launches the app settings TBD
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sign Out of This Map Group" message:@"Are you sure your wish to sign out of this map group? You friends here will miss you!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"I'm Sure", nil];
-    alert.tag = kAlertViewSignOut;
-    [alert show];
+    // old comment SCXTT make this next part coexist with the alertview that launches the app settings TBD
+    UIAlertController *alert =
+    [UIAlertController alertControllerWithTitle:@"Sign Out of This Map Group"
+                                        message:@"Are you sure you wish to sign out of this map group? Your friends here will miss you!"
+                                 preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancel =
+    [UIAlertAction actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleCancel
+                           handler:^(UIAlertAction *action) {
+                               // Do nothing
+                           }];
+
+    UIAlertAction *confirm =
+    [UIAlertAction actionWithTitle:@"I'm Sure"
+                             style:UIAlertActionStyleDestructive
+                           handler:^(UIAlertAction *action) {
+                               [self postLeaveRequest];
+                           }];
+
+    [alert addAction:cancel];
+    [alert addAction:confirm];
+
+    [self presentViewController:alert animated:YES completion:nil];
+    
+
 
 //    [self postLeaveRequest];
 }

@@ -12,6 +12,7 @@
 #import "DataModel.h"
 #import "Message.h"
 #import "Harpy.h"
+#import <UserNotifications/UserNotifications.h>
 
 void ShowErrorAlert(NSString* text)
 {
@@ -396,6 +397,14 @@ int badResponseCounter = 0;
 
     // register for types of remote notifications
     [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert |
+                                             UNAuthorizationOptionSound |
+                                             UNAuthorizationOptionBadge)
+                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+    }];
+
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
 //    we should only do this next line if we are already imInARoom and also move this to start updating when we are notified of leave ShowMapViewController and not right here
