@@ -808,7 +808,7 @@
 - (void)postLeaveRequest {
 
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    hud.labelText = NSLocalizedString(@"Signing Out", nil);
+    hud.label.text = NSLocalizedString(@"Signing Out", nil);
 
     NSDictionary *params = @{@"cmd":@"leave",
                              @"user_id":[_dataModel userId]};
@@ -1135,7 +1135,7 @@
         //    [_messageTextView resignFirstResponder];
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = NSLocalizedString(@"whereru", nil);
+        hud.label.text = NSLocalizedString(@"whereru", nil);
         
         //    NSString *text = self.messageTextView.text;
         NSString *text = @"Hey WhereRU?";
@@ -1760,12 +1760,12 @@ didAddAnnotationViews:(NSArray *)annotationViews
     
     // Configure for text only and offset down
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = toastStr;
+    hud.label.text = toastStr;
     //    hud.margin = 10.f;
     //    hud.yOffset = 50.f;
     hud.removeFromSuperViewOnHide = YES;
     
-    [hud hide:YES afterDelay:1];
+    [hud hideAnimated:YES afterDelay:1];
 }
 
 -(void)longToastMsg:(NSString *)toastStr {
@@ -1773,12 +1773,12 @@ didAddAnnotationViews:(NSArray *)annotationViews
     
     // Configure for text only and offset down
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = toastStr;
+    hud.label.text = toastStr;
     //    hud.margin = 10.f;
     //    hud.yOffset = 50.f;
     hud.removeFromSuperViewOnHide = YES;
     
-    [hud hide:YES afterDelay:3];
+    [hud hideAnimated:YES afterDelay:3];
 }
 
 -(void)multiLineToastMsg:(NSString *)toastStr detailText:(NSString *)detailsText {
@@ -1788,10 +1788,10 @@ didAddAnnotationViews:(NSArray *)annotationViews
     hud.frame = CGRectMake(0, 0, 120, 143);
 //    hud.mode = MBProgressHUDModeAnnularDeterminate;
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = toastStr;
-    hud.detailsLabelText = detailsText;
+    hud.label.text = toastStr;
+    hud.detailsLabel.text = detailsText;
     hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:2];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 - (void)didReceiveMemoryWarning {

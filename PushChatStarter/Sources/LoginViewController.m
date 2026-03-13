@@ -39,7 +39,7 @@
         [self.secretCodeTextField becomeFirstResponder];
 }
 
--(void)viewDidAppear:(BOOL)animated {    
+-(void)viewDidAppear:(BOOL)animated {
     NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
@@ -70,7 +70,7 @@
 
 - (void)postJoinRequest {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = NSLocalizedString(@"Connecting", nil);
+    hud.label.text = NSLocalizedString(@"Connecting", nil);
     
     NSDictionary *params = @{@"cmd":@"join",
                              @"user_id":[_dataModel userId],

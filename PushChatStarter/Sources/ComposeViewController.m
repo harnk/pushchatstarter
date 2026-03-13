@@ -66,7 +66,7 @@
     [_messageTextView resignFirstResponder];
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = NSLocalizedString(@"Sending", nil);
+    hud.label.text = NSLocalizedString(@"Sending", nil);
     
     NSString *text = self.messageTextView.text;
     
