@@ -6,13 +6,18 @@
 //  Copyright (c) 2013 Ray Wenderlich. All rights reserved.
 //
 
-@class DataModel;
+#import "DataModel.h"
+#import <AFNetworking/AFNetworking.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 // The Login screen lets the user register a nickname and chat map group
 @interface LoginViewController : UIViewController
 
-@property (nonatomic, assign) DataModel* dataModel;
-@property (nonatomic, strong) AFHTTPClient *client;
+@property (nonatomic, strong) DataModel* dataModel;
+@property (nonatomic, strong) AFHTTPSessionManager *client;
 @property (nonatomic) BOOL isUpdating;
 
 @end
+
+NS_ASSUME_NONNULL_END

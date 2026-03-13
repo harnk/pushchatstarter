@@ -16,14 +16,14 @@
 
 void ShowErrorAlert(NSString* text)
 {
-	UIAlertView* alertView = [[UIAlertView alloc]
+    UIAlertView* alertView = [[UIAlertView alloc]
                               initWithTitle:text
                               message:nil
                               delegate:nil
                               cancelButtonTitle:NSLocalizedString(@"OK", nil)
                               otherButtonTitles:nil];
     
-	[alertView show];
+    [alertView show];
 }
 
 @implementation AppDelegate
@@ -463,7 +463,7 @@ int badResponseCounter = 0;
     completionHandler(UIBackgroundFetchResultNewData);
     
 }
-							
+                            
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -587,12 +587,9 @@ int badResponseCounter = 0;
     
     //    NSLog(@"Doing API Call with %@", params);
     
-    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    [client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:nil failure:nil];
-    
+    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    client.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:nil failure:nil];
 }
 
 -(void)resetIsUpdating {
@@ -613,83 +610,70 @@ int badResponseCounter = 0;
     //    NSLog(@"Doing API Call with %@", params);
     
     NSLog(@"ServerApiURL:%@   API Post: %@ params:%@", ServerApiURL, ServerPostPathURL, params);
-    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    [client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-         //SCXTT RELEASE
-         NSLog(@"%@ responseString: %@", _currentState, responseString);
-         NSLog(@"%@ operation: %@", _currentState, operation);
-         NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
-         
-         // Deal with me if I have been deleted from the active_users table in the DB
-         if (responseString.length == 0) {
-             badResponseCounter += 1;
-             if (badResponseCounter > 5) {
-                 [[SingletonClass singleObject] setImInARoom:NO];
-             }
-         } else {
-             badResponseCounter = 0;
-         }
-         
-         // SCXTT WIP Loop thru the response and check key "looking"
-         NSError *e = nil;
-         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-         if (!jsonArray) {
-             NSLog(@"4 Error parsing JSON: %@", e);
-         } else {
-             BOOL foundALooker = NO;
-             for(NSDictionary *item in jsonArray) {
-                 NSString *mLooking = [item objectForKey:@"looking"];
-                 if ([mLooking isEqual:@"1"]) {
-                     NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSLog(@"%@  %@ is looking", _currentState, mNickName);
-                     foundALooker = YES;
-                     NSLog(@"%@ Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop", _currentState);
-                 }
-             }
-             NSLog(@"%@ set singleton someoneIsLooking = foundALooker which equals %d", _currentState, foundALooker);
-             if (foundALooker) {
-                 NSLog(@"%@ since someoneIsLooking keep updating my loc in the background", _currentState);
-                 retryCounter = 0;
-             } else {
-                 if (_isBackgroundMode){
-                     retryCounter += 1;
-                     NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
-                     if (retryCounter > 10) {
-                         NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
-                         NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
+    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    client.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+        //SCXTT RELEASE
+        NSLog(@"%@ responseString: %@", _currentState, responseString);
+        NSLog(@"%@ task: %@", _currentState, task);
+        NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
+        
+        // Deal with me if I have been deleted from the active_users table in the DB
+        if (responseString.length == 0) {
+            badResponseCounter += 1;
+            if (badResponseCounter > 5) {
+                [[SingletonClass singleObject] setImInARoom:NO];
+            }
+        } else {
+            badResponseCounter = 0;
+        }
+        
+        // SCXTT WIP Loop thru the response and check key "looking"
+        NSError *e = nil;
+        NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+        if (!jsonArray) {
+            NSLog(@"4 Error parsing JSON: %@", e);
+        } else {
+            BOOL foundALooker = NO;
+            for(NSDictionary *item in jsonArray) {
+                NSString *mLooking = [item objectForKey:@"looking"];
+                if ([mLooking isEqual:@"1"]) {
+                    NSString *mNickName = [item objectForKey:@"nickname"];
+                    NSLog(@"%@  %@ is looking", _currentState, mNickName);
+                    foundALooker = YES;
+                    NSLog(@"%@ Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop", _currentState);
+                }
+            }
+            NSLog(@"%@ set singleton someoneIsLooking = foundALooker which equals %d", _currentState, foundALooker);
+            if (foundALooker) {
+                NSLog(@"%@ since someoneIsLooking keep updating my loc in the background", _currentState);
+                retryCounter = 0;
+            } else {
+                if (_isBackgroundMode){
+                    retryCounter += 1;
+                    NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
+                    if (retryCounter > 10) {
+                        NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
+                        NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
 
-                         
-                         self.locationManager.pausesLocationUpdatesAutomatically = YES;
-                         self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
-                         [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
-                         [self.locationManager setDistanceFilter:99999];
-                         
-                         
-                         
-                         
-                     }
-                 }
-             }
-         }
 
-         
-         [NSTimer scheduledTimerWithTimeInterval: 5
-                                          target: self
-                                        selector: @selector(resetIsUpdating)
-                                        userInfo: nil
-                                         repeats: NO];
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         [NSTimer scheduledTimerWithTimeInterval: 10
-                                          target: self
-                                        selector: @selector(resetIsUpdating)
-                                        userInfo: nil
-                                         repeats: NO];
-     }];
-    
+                        self.locationManager.pausesLocationUpdatesAutomatically = YES;
+                        self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
+                        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
+                        [self.locationManager setDistanceFilter:99999];
+
+
+                    }
+                }
+            }
+        }
+
+
+        [NSTimer scheduledTimerWithTimeInterval: 5 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [NSTimer scheduledTimerWithTimeInterval: 10 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
+    }];
 }
 
 -(void) postMyLoc {
@@ -722,11 +706,9 @@ int badResponseCounter = 0;
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"token":[[NSUserDefaults standardUserDefaults] stringForKey:@"DeviceToken"]};
-    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    [client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:nil failure:nil];
+    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    client.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:nil failure:nil];
 }
 
 #pragma mark - locationManager delegate methods

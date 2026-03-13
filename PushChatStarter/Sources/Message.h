@@ -5,6 +5,7 @@
 //  Created by Kauserali on 28/03/13.
 //  Copyright (c) 2013 Ray Wenderlich. All rights reserved.
 //
+NS_ASSUME_NONNULL_BEGIN
 
 // Data model object that stores a single message
 @interface Message : NSObject <NSCoding>
@@ -33,3 +34,5 @@
 - (BOOL)isSentByUser;
 
 @end
+
+NS_ASSUME_NONNULL_END

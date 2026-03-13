@@ -18,9 +18,9 @@
 
 - (void)viewDidLoad
 {
-	[super viewDidLoad];
-	self.nicknameTextField.text = [self.dataModel nickname];
-	self.secretCodeTextField.text = [self.dataModel secretCode];
+    [super viewDidLoad];
+    self.nicknameTextField.text = [self.dataModel nickname];
+    self.secretCodeTextField.text = [self.dataModel secretCode];
     _secretCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     _nicknameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     
@@ -31,12 +31,12 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     
-	if (self.nicknameTextField.text.length == 0)
-		[self.nicknameTextField becomeFirstResponder];
-	else
-		[self.secretCodeTextField becomeFirstResponder];
+    if (self.nicknameTextField.text.length == 0)
+        [self.nicknameTextField becomeFirstResponder];
+    else
+        [self.secretCodeTextField becomeFirstResponder];
 }
 
 -(void)viewDidAppear:(BOOL)animated {    
@@ -60,10 +60,10 @@
 
 - (void)userDidJoin
 {
-	// Close the Login screen
-	[self.dataModel setJoinedChat:YES];
+    // Close the Login screen
+    [self.dataModel setJoinedChat:YES];
     [[SingletonClass singleObject] setImInARoom:YES];
-	[self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
     //Send notification
     [[NSNotificationCenter defaultCenter] postNotificationName:@"userJoinedRoom" object:nil userInfo:nil];
 }
@@ -78,50 +78,52 @@
                              @"name":[_dataModel nickname],
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"code":[_dataModel secretCode]};
-    
-    [_client postPath:ServerPostPathURL
-           parameters:params
-              success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                  
-                  if ([self isViewLoaded]) {
-                      [MBProgressHUD hideHUDForView:self.view animated:YES];
-                      if([operation.response statusCode] != 200) {
-                          ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
-                      } else {
-                          [self userDidJoin];
-                      }
+
+    // Using AFHTTPSessionManager (AFNetworking 3.x) POST API
+    [_client POST:ServerPostPathURL
+       parameters:params
+          headers:nil
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              if ([self isViewLoaded]) {
+                  [MBProgressHUD hideHUDForView:self.view animated:YES];
+                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)((NSURLSessionDataTask *)task).response;
+                  if([httpResp statusCode] != 200) {
+                      ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
+                  } else {
+                      [self userDidJoin];
                   }
-              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                  if ([self isViewLoaded]) {
-                      [MBProgressHUD hideHUDForView:self.view animated:YES];
-                      
-                      ShowErrorAlert([error localizedDescription]);
-                  }
-              }];
+              }
+          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              if ([self isViewLoaded]) {
+                  [MBProgressHUD hideHUDForView:self.view animated:YES];
+                  ShowErrorAlert([error localizedDescription]);
+              }
+          }];
 }
 
 - (IBAction)loginAction
 {
-	if (self.nicknameTextField.text.length == 0)
-	{
-		ShowErrorAlert(NSLocalizedString(@"Fill in your nickname", nil));
-		return;
-	}
+    if (self.nicknameTextField.text.length == 0)
+    {
+        ShowErrorAlert(NSLocalizedString(@"Fill in your nickname", nil));
+        return;
+    }
 
-	if (self.secretCodeTextField.text.length == 0)
-	{
-		ShowErrorAlert(NSLocalizedString(@"Fill in a map group name", nil));
-		return;
-	}
+    if (self.secretCodeTextField.text.length == 0)
+    {
+        ShowErrorAlert(NSLocalizedString(@"Fill in a map group name", nil));
+        return;
+    }
 
-	[self.dataModel setNickname:self.nicknameTextField.text];
-	[self.dataModel setSecretCode:self.secretCodeTextField.text];
+    [self.dataModel setNickname:self.nicknameTextField.text];
+    [self.dataModel setSecretCode:self.secretCodeTextField.text];
 
-	// Hide the keyboard
-	[self.nicknameTextField resignFirstResponder];
-	[self.secretCodeTextField resignFirstResponder];
+    // Hide the keyboard
+    [self.nicknameTextField resignFirstResponder];
+    [self.secretCodeTextField resignFirstResponder];
 
-//	[self userDidJoin];
+//    [self userDidJoin];
     [self postJoinRequest];
 }
 

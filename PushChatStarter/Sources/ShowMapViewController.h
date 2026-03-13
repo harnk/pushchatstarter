@@ -13,10 +13,13 @@
 #import <CoreLocation/CoreLocation.h>
 #import "ServiceConnector.h"
 @import GoogleMobileAds;
+#import <AFNetworking/AFNetworking.h>
 
 @class ShowMapViewController;
 @class DataModel;
 //@class Message;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIGestureRecognizerDelegate>{
     CLLocation* locationObject;
@@ -45,7 +48,7 @@
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;
-@property (nonatomic, strong) AFHTTPClient *client;
+@property (nonatomic, strong) AFHTTPSessionManager *client;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) int badResponseRetry;
 
@@ -67,3 +70,5 @@
 @property (nonatomic, strong) NSMutableArray * roomMessagesArray; // Current messages in the room
 @property (nonatomic, strong) NSString *centerOnThisGuy;
 @end
+
+NS_ASSUME_NONNULL_END

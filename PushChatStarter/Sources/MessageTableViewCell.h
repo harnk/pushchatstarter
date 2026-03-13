@@ -8,6 +8,8 @@
 
 @class Message;
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Table view cell that displays a Message. The message text appears in a
 // speech bubble; the sender name and date are shown in a UILabel below that.
 @interface MessageTableViewCell : UITableViewCell
@@ -18,3 +20,6 @@
 
 
 @end
+
+NS_ASSUME_NONNULL_END
+

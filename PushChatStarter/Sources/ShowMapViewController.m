@@ -20,7 +20,7 @@
 #define SPAN_VALUE 0.005f
 
 @interface ShowMapViewController () {
-    AFHTTPClient *_client;
+    AFHTTPSessionManager *_client;
     NSArray *pinImages;
     NSTimer *getRoomTimer;
     NSTimer *getMessagesTimer;
@@ -49,15 +49,17 @@
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        
+
         _dataModel = [[DataModel alloc] init];
         // Load all the messages for this room
         [_dataModel loadMessages:[[SingletonClass singleObject] myLocStr]];
-        
-        _client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+
+        _client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+        // If other code expects raw NSData response (older AFNetworking behavior), use AFHTTPResponseSerializer
+        _client.responseSerializer = [AFHTTPResponseSerializer serializer];
 
 //        NSLog(@"myPinImages[1]:%@", myPinImages[0]);
-        
+
     }
     return self;
 }
@@ -804,32 +806,34 @@
 }
 
 - (void)postLeaveRequest {
-    
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     hud.labelText = NSLocalizedString(@"Signing Out", nil);
-    
+
     NSDictionary *params = @{@"cmd":@"leave",
                              @"user_id":[_dataModel userId]};
     //    [ApplicationDelegate.client
-    [_client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         if ([self isViewLoaded]) {
-             [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-             if (operation.response.statusCode != 200) {
-                 ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
-             } else {
-                 [self userDidLeave];
-             }
-         }
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         if ([self isViewLoaded]) {
-             [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-             ShowErrorAlert([error localizedDescription]);
-         }
-     }];
-    
+    [_client POST:ServerPostPathURL
+       parameters:params
+          headers:nil
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              if ([self isViewLoaded]) {
+                  [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+                  if (httpResp.statusCode != 200) {
+                      ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
+                  } else {
+                      [self userDidLeave];
+                  }
+              }
+          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              if ([self isViewLoaded]) {
+                  [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+                  ShowErrorAlert([error localizedDescription]);
+              }
+          }];
+
 }
 
 - (IBAction)exitAction
@@ -866,7 +870,7 @@
 
 - (IBAction)chgMapAction
 {
-    //	Toggle the map betweem Satellite Hybrid and Standard
+    //    Toggle the map betweem Satellite Hybrid and Standard
     if (self.mapView.mapType == 0) {
         self.mapView.mapType = MKMapTypeHybrid;
 //        _btnMapType.title =@" Map";
@@ -909,106 +913,109 @@
 
 - (void)getAPI:(NSDictionary *)params
 {
-    [_client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
-         _isUpdating = NO;
-         if (operation.response.statusCode != 200) {
-             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-         } else {
-             //SCXTT RELEASE
-             NSLog(@"getAPI cmd request sent");
-             NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-             
-             //SCXTT RELEASE
-             NSLog(@"responseString: %@ length equals %lu", responseString, (unsigned long)responseString.length);
-             
-             // if responseString is null then go back to the login screen - your user may have been deleted
-             
-             if (responseString.length == 0) {
-                 self.badResponseRetry = self.badResponseRetry + 1;
-                 if (self.badResponseRetry > 9) {
-                     NSString *toastStr = [NSString stringWithFormat:@"SCXTT BRR:%d", self.badResponseRetry];
-                     [self toastMsg:toastStr];
-                     // kill timers
-                     [[SingletonClass singleObject] setImInARoom:NO];
-                     [self stopGetRoomTimer];
-                     [self showLoginViewController];
-                     return;
-                 }
-             } else {
-                 self.badResponseRetry = 0;
-                 NSLog(@"operation: %@", operation);
-                 
-                 NSError *e = nil;
-                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-                 
-                 if (!jsonArray) {
-                     NSLog(@"1 Error parsing JSON: %@", e);
-                     NSLog(@"JSON Array:%@", jsonArray);
-//                     [[SingletonClass singleObject] setImInARoom:NO];
-                 } else {
-                     
-                     //                     Blank out and reload _roomArray
-                     if (!_roomArray) {
-                         _roomArray = [[NSMutableArray alloc] init];
-                     } else {
-                         [_roomArray removeAllObjects];
-                     }
-                     NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
-                         @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
-                         @"cyangray.png"};
-                     
-                     int i = 0;
-                     // Add Return to All first then the room
-                     
-                     for(NSDictionary *item in jsonArray) {
-                         if (i > 10) {
-                             i = 0;
-                         }
-                         NSString *mNickName = [item objectForKey:@"nickname"];
-                         NSString *mLocation = [item objectForKey:@"location"];
-                         NSString *gmtDateStr = [item objectForKey:@"loc_time"];
-                         NSString *useThisPinImage = myPinImages[i];
+    [_client POST:ServerPostPathURL
+       parameters:params
+          headers:nil
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              [MBProgressHUD hideHUDForView:self.view animated:YES];
+              _isUpdating = NO;
+              NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+              if (httpResp.statusCode != 200) {
+                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+              } else {
+                  //SCXTT RELEASE
+                  NSLog(@"getAPI cmd request sent");
+                  // Response serializer is AFHTTPResponseSerializer in init above, so responseObject is NSData
+                  NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
 
-                         NSInteger minutesBetweenDates;
-                         minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
-//
-//                         NSLog(@"SCXTT WIP minutesBetweenDates:%ld", (long)minutesBetweenDates);
-//                         if (minutesBetweenDates > 10000) {
-//                             useThisPinImage = @"inactivepin.png";
-//                         }
-                         
-                         if (![mLocation isEqual: @"0.000000, 0.000000"]) {
-                             
-                             Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:useThisPinImage];
-                             if (!_roomArray) {
-                                 _roomArray = [[NSMutableArray alloc] init];
-                             }
-                             [_roomArray addObject:roomObj];
-                         }
-                         i++;
-                         
-                     }
-                     //                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
-                     //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
-                     if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
-                         [self returnToAllWithMessage:@"Everyone has left the map group"];
-                     }
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
-                 }
-             }
-         }
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         if ([self isViewLoaded]) {
-             _isUpdating = NO;
-             [MBProgressHUD hideHUDForView:self.view animated:YES];
-//             ShowErrorAlert([error localizedDescription]);
-             [self toastMsg:[error localizedDescription]];
-         }
-     }];
+                  //SCXTT RELEASE
+                  NSLog(@"responseString: %@ length equals %lu", responseString, (unsigned long)responseString.length);
+
+                  // if responseString is null then go back to the login screen - your user may have been deleted
+
+                  if (responseString.length == 0) {
+                      self.badResponseRetry = self.badResponseRetry + 1;
+                      if (self.badResponseRetry > 9) {
+                          NSString *toastStr = [NSString stringWithFormat:@"SCXTT BRR:%d", self.badResponseRetry];
+                          [self toastMsg:toastStr];
+                          // kill timers
+                          [[SingletonClass singleObject] setImInARoom:NO];
+                          [self stopGetRoomTimer];
+                          [self showLoginViewController];
+                          return;
+                      }
+                  } else {
+                      self.badResponseRetry = 0;
+                      NSLog(@"operation: %@", task);
+
+                      NSError *e = nil;
+                      NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+
+                      if (!jsonArray) {
+                          NSLog(@"1 Error parsing JSON: %@", e);
+                          NSLog(@"JSON Array:%@", jsonArray);
+      //                     [[SingletonClass singleObject] setImInARoom:NO];
+                      } else {
+
+                          //                     Blank out and reload _roomArray
+                          if (!_roomArray) {
+                              _roomArray = [[NSMutableArray alloc] init];
+                          } else {
+                              [_roomArray removeAllObjects];
+                          }
+                          NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
+                              @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
+                              @"cyangray.png"};
+
+                          int i = 0;
+                          // Add Return to All first then the room
+
+                          for(NSDictionary *item in jsonArray) {
+                              if (i > 10) {
+                                  i = 0;
+                              }
+                              NSString *mNickName = [item objectForKey:@"nickname"];
+                              NSString *mLocation = [item objectForKey:@"location"];
+                              NSString *gmtDateStr = [item objectForKey:@"loc_time"];
+                              NSString *useThisPinImage = myPinImages[i];
+
+                              NSInteger minutesBetweenDates;
+                              minutesBetweenDates = [self getPinAgeInMinutes:gmtDateStr];
+      //
+      //                         NSLog(@"SCXTT WIP minutesBetweenDates:%ld", (long)minutesBetweenDates);
+      //                         if (minutesBetweenDates > 10000) {
+      //                             useThisPinImage = @"inactivepin.png";
+      //                         }
+
+                              if (![mLocation isEqual: @"0.000000, 0.000000"]) {
+
+                                  Room *roomObj = [[Room alloc] initWithRoomName:[_dataModel secretCode] andMemberNickName:mNickName andMemberLocation:mLocation andMemberLocTime:gmtDateStr andMemberPinImage:useThisPinImage];
+                                  if (!_roomArray) {
+                                      _roomArray = [[NSMutableArray alloc] init];
+                                  }
+                                  [_roomArray addObject:roomObj];
+                              }
+                              i++;
+
+                          }
+                          //                 NSLog(@" before updatePointsOnMapWithAPIData _roomAray.count: %lu", (unsigned long)_roomArray.count);
+                          //SCXTT this next line calls updatePoinsOnMapWithAPIData, do we want that every time?
+                          if ((_roomArray.count == 0) && (_centerOnThisGuy.length > 0)) {
+                              [self returnToAllWithMessage:@"Everyone has left the map group"];
+                          }
+                          [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewAPIData" object:nil userInfo:nil];
+                      }
+                  }
+              }
+          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              if ([self isViewLoaded]) {
+                  _isUpdating = NO;
+                  [MBProgressHUD hideHUDForView:self.view animated:YES];
+                  //             ShowErrorAlert([error localizedDescription]);
+                  [self toastMsg:[error localizedDescription]];
+              }
+          }];
 }
 
 - (NSInteger)getPinAgeInMinutesDate:(NSDate*)gmtDate {
@@ -1071,51 +1078,52 @@
 
 - (void)postDoneLookingLiveUpdate {
     //    NSLog(@"This is called whenever we leave the ShowMapVC");
-    
+
     //SCXTT RELEASE
     NSLog(@"SMVC postDoneLookingLiveUpdate cmd:liveupdate set looking = 0");
-    
+
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr]};
-    
-    AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    [client
-     postPath:ServerPostPathURL
-     parameters:params
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-         //SCXTT RELEASE
-         NSLog(@"SMVC responseString: %@", responseString);
-         NSLog(@"SMVC operation: %@", operation);
-         
-         // SCXTT WIP Loop thru the response and check key "looking"
-         NSError *e = nil;
-         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-         if (!jsonArray) {
-             NSLog(@"2 Error parsing JSON: %@", e);
-         } else {
-             BOOL foundALooker = NO;
-             for(NSDictionary *item in jsonArray) {
-                 NSString *mLooking = [item objectForKey:@"looking"];
-                 if ([mLooking isEqual:@"1"]) {
-                     NSString *mNickName = [item objectForKey:@"nickname"];
-                     NSLog(@"SMVC ShowMapViewController %@ is looking", mNickName );
-                     foundALooker = YES;
-                     NSLog(@"SMVC ShowMapViewController Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+
+    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+    client.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [client POST:ServerPostPathURL
+      parameters:params
+         headers:nil
+        progress:nil
+         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+             //SCXTT RELEASE
+             NSLog(@"SMVC responseString: %@", responseString);
+             NSLog(@"SMVC task: %@", task);
+             
+             // SCXTT WIP Loop thru the response and check key "looking"
+             NSError *e = nil;
+             NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+             if (!jsonArray) {
+                 NSLog(@"2 Error parsing JSON: %@", e);
+             } else {
+                 BOOL foundALooker = NO;
+                 for(NSDictionary *item in jsonArray) {
+                     NSString *mLooking = [item objectForKey:@"looking"];
+                     if ([mLooking isEqual:@"1"]) {
+                         NSString *mNickName = [item objectForKey:@"nickname"];
+                         NSLog(@"SMVC ShowMapViewController %@ is looking", mNickName );
+                         foundALooker = YES;
+                         NSLog(@"SMVC ShowMapViewController Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop");
+                     }
+                 }
+                 NSLog(@"SMVC set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
+                 if (foundALooker) {
+                     NSLog(@"SMVC since someoneIsLooking keep updating my loc in the background");
+                 } else {
+                     NSLog(@"SMVC NO ONE is looking so why am I wasting my battery with these background API calls?!?");
                  }
              }
-             NSLog(@"SMVC set singleton someoneIsLooking = foundALooker which equals %d", foundALooker);
-             if (foundALooker) {
-                 NSLog(@"SMVC since someoneIsLooking keep updating my loc in the background");
-             } else {
-                 NSLog(@"SMVC NO ONE is looking so why am I wasting my battery with these background API calls?!?");
-             }
-         }
-         
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-     }];
-    
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+         }];
+
 }
 
 - (void)postFindRequest
@@ -1163,59 +1171,59 @@
                                  @"user_id":[_dataModel userId],
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"secret_code":secret_code};
-        [_client
-         postPath:ServerPostPathURL
-         parameters:params
-         success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             NSLog(@"SMVC in callback - success");
-             _isUpdating = NO;
-             if (operation.response.statusCode != 200) {
-                 ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-             } else {
-                 NSLog(@"SMVC Get all messages for this room");
-//                 NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                 NSError *e = nil;
-                 NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-                 
-                 if (!jsonArray) {
-                     NSLog(@"3 Error parsing JSON: %@", e);
-                     [self.dataModel.messages removeAllObjects];
-                 } else {
-                     if (!_roomMessagesArray) {
-                         _roomMessagesArray = [[NSMutableArray alloc] init];
-                     } else {
-                         [_roomMessagesArray removeAllObjects];
-                     }
-                     [self.dataModel.messages removeAllObjects];
-                     
-                     // Process all messages from JSON array //////////////////////////////////////////
-                     for(NSDictionary *item in jsonArray) {
-                         Message *message = [[Message alloc] init];
-                         if ([[_dataModel userId] isEqualToString:[item objectForKey:@"user_id"]]) {
-                             message.senderName = nil;
-                         } else {
-                             message.senderName = [item objectForKey:@"nickname"];
-                         }
-                         message.date = [self dateFromUTCDateStr:[item objectForKey:@"time_posted"]];
-                         message.location = [item objectForKey:@"location"];
-                         message.text = [item objectForKey:@"message"];
-                         int index = [self.dataModel addMessage:message];
-//                         NSLog(@"SMVC Message added at index:%d" ,index);
-                     }
-                     [self.tableView reloadData];
-                     [self scrollToNewestMessage];
-                     // We got it so reset below
-                     _isFromNotification = NO;
-                 }
-             }
-         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             if ([self isViewLoaded]) {
-                 _isUpdating = NO;
-                 _isFromNotification = NO;
-                 //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
-                 //                 ShowErrorAlert([error localizedDescription]);
-             }
-         }];
+        [_client POST:ServerPostPathURL
+           parameters:params
+              headers:nil
+             progress:nil
+              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                  NSLog(@"SMVC in callback - success");
+                  _isUpdating = NO;
+                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+                  if (httpResp.statusCode != 200) {
+                      ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+                  } else {
+                      NSLog(@"SMVC Get all messages for this room");
+                      NSError *e = nil;
+                      NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+
+                      if (!jsonArray) {
+                          NSLog(@"3 Error parsing JSON: %@", e);
+                          [self.dataModel.messages removeAllObjects];
+                      } else {
+                          if (!_roomMessagesArray) {
+                              _roomMessagesArray = [[NSMutableArray alloc] init];
+                          } else {
+                              [_roomMessagesArray removeAllObjects];
+                          }
+                          [self.dataModel.messages removeAllObjects];
+
+                          // Process all messages from JSON array //////////////////////////////////////////
+                          for(NSDictionary *item in jsonArray) {
+                              Message *message = [[Message alloc] init];
+                              if ([[_dataModel userId] isEqualToString:[item objectForKey:@"user_id"]]) {
+                                  message.senderName = nil;
+                              } else {
+                                  message.senderName = [item objectForKey:@"nickname"];
+                              }
+                              message.date = [self dateFromUTCDateStr:[item objectForKey:@"time_posted"]];
+                              message.location = [item objectForKey:@"location"];
+                              message.text = [item objectForKey:@"message"];
+                              int index = [self.dataModel addMessage:message];
+                          }
+                          [self.tableView reloadData];
+                          [self scrollToNewestMessage];
+                          // We got it so reset below
+                          _isFromNotification = NO;
+                      }
+                  }
+              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                  if ([self isViewLoaded]) {
+                      _isUpdating = NO;
+                      _isFromNotification = NO;
+                      //                 Since this is running like every 10 seconds we DONT want to throw an alert everytime we lose the network connection
+                      //                 ShowErrorAlert([error localizedDescription]);
+                  }
+              }];
     } else {
         NSLog(@"SMVC busy, skipping getting room messages");
 //        _isUpdating = NO;
@@ -1793,7 +1801,7 @@ didAddAnnotationViews:(NSArray *)annotationViews
 
 - (IBAction)cancelAction
 {
-    //	[self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    //    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

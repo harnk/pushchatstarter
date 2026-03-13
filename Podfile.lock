@@ -1,18 +1,38 @@
 PODS:
-  - AFNetworking (1.2.1)
-  - MBProgressHUD (0.9.2)
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - MBProgressHUD (1.2.0)
   - UICKeyChainStore (2.1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 1.2.1)
-  - MBProgressHUD (~> 0.9.2)
-  - UICKeyChainStore (~> 2.1.0)
+  - AFNetworking (~> 4.0)
+  - MBProgressHUD (~> 1.2)
+  - UICKeyChainStore (~> 2.1)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - AFNetworking
+    - MBProgressHUD
+    - UICKeyChainStore
 
 SPEC CHECKSUMS:
-  AFNetworking: f60a525e16c10e857523265c3a77ad5cc6a91e82
-  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
 
-PODFILE CHECKSUM: 635b32ce29c80db5d310b9221f3a136d86889627
+PODFILE CHECKSUM: 8ebb9a3626eac2e888326632c11d3374c53c984c
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.16.2

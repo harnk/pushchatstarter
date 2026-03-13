@@ -12,6 +12,8 @@
 -(void)requestReturnedData:(NSData*)data;
 @end
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ServiceConnector : NSObject <NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 
 @property (strong,nonatomic) id <ServiceConnectorDelegate> delegate;
@@ -20,3 +22,6 @@
 -(void)postTest;
 
 @end
+
+NS_ASSUME_NONNULL_END
+

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface VBAnnotation : NSObject <MKAnnotation>
 
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate; // MKAnnotation property
@@ -29,3 +31,5 @@
 //- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
 
 @end
+
+NS_ASSUME_NONNULL_END

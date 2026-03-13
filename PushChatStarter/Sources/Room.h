@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface Room : NSObject
 
 @property (strong, nonatomic) NSString *roomName; // db active_users secret_code
@@ -24,3 +26,5 @@
 -(NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr;
 
 @end
+
+NS_ASSUME_NONNULL_END

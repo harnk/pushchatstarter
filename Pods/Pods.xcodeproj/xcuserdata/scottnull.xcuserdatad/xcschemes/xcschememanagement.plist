@@ -7,46 +7,25 @@
 		<key>AFNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>Pods-WhereRU.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>UICKeyChainStore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>175B076ED45EB1A3E40F58BA14036467</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>1A499C2136C86A2ED2E4866B318C174D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8A8EAFA206292F8F39C298C9C4E9D0F6</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C0EC2B7121160CC673B0A200574B3735</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

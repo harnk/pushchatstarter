@@ -8,6 +8,8 @@
 
 @class Message;
 
+NS_ASSUME_NONNULL_BEGIN
+
 // The main data model object
 @interface DataModel : NSObject
 
@@ -47,3 +49,5 @@
 - (void)setDeviceToken:(NSString*)token;
 - (void)setUserId:(NSString*)userId;
 @end
+
+NS_ASSUME_NONNULL_END

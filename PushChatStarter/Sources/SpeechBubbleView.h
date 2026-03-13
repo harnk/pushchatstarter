@@ -14,6 +14,8 @@ typedef enum
 }
 BubbleType;
 
+NS_ASSUME_NONNULL_BEGIN
+
 // A UIView that shows a speech bubble
 @interface SpeechBubbleView : UIView 
 
@@ -24,3 +26,6 @@ BubbleType;
 - (void)setText:(NSString*)text bubbleType:(BubbleType)bubbleType;
 
 @end
+
+NS_ASSUME_NONNULL_END
+

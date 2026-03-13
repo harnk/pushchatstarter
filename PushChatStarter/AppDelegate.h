@@ -17,6 +17,8 @@
 
 @class DataModel;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
@@ -56,3 +58,6 @@
 
 
 @end
+
+NS_ASSUME_NONNULL_END
+
