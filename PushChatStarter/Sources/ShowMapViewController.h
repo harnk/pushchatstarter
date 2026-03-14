@@ -12,7 +12,7 @@
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "ServiceConnector.h"
-@import GoogleMobileAds;
+//@import GoogleMobileAds;
 #import <AFNetworking/AFNetworking.h>
 
 @class ShowMapViewController;
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
     CLLocation* locationObject;
 }
 
-@property (weak, nonatomic) IBOutlet GADBannerView *bannerView;
+//@property (weak, nonatomic) IBOutlet GADBannerView *bannerView;
 @property (weak, nonatomic) IBOutlet UIButton *removeAdsButton;
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;

@@ -71,7 +71,6 @@
 		9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
 		9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */; };
 		9EBDFCC71F72144D009317F0 /* pullhandle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EBDFCC61F72144D009317F0 /* pullhandle.png */; };
-		9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EE11D97203E77D50030B011 /* MQTTHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE11D96203E77D50030B011 /* MQTTHelper.m */; };
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
@@ -183,7 +182,6 @@
 		9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inactivepin.png; sourceTree = "<group>"; };
 		9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkinactivepin.png; sourceTree = "<group>"; };
 		9EBDFCC61F72144D009317F0 /* pullhandle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pullhandle.png; sourceTree = "<group>"; };
-		9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
 		9EE11D95203E77870030B011 /* MQTTHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MQTTHelper.h; sourceTree = "<group>"; };
 		9EE11D96203E77D50030B011 /* MQTTHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MQTTHelper.m; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 				61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */,
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
-				9EC3202F1CE428F800F7814D /* GoogleMobileAds.framework in Frameworks */,
 				9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */,
 				968890D118F27A98571F9DAA /* libPods-WhereRU.a in Frameworks */,
 			);
@@ -224,7 +221,6 @@
 				4D869941B01333ECB305EF92 /* Pods-WhereRU.debug.xcconfig */,
 				7EE130F0A5777F3BD26909DE /* Pods-WhereRU.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -233,7 +229,6 @@
 			children = (
 				9E3117171E8DF249006CC478 /* WhereRU.entitlements */,
 				9E2346541D07C7CF00E7825B /* iap_product_ids.plist */,
-				9EC3202E1CE428F800F7814D /* GoogleMobileAds.framework */,
 				61489E9D17041C660049C6F9 /* PushChatStarter */,
 				61489E9617041C660049C6F9 /* Frameworks */,
 				61489E9517041C660049C6F9 /* Products */,

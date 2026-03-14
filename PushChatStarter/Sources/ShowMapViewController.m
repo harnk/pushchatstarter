@@ -213,14 +213,14 @@
      name:UIApplicationWillResignActiveNotification
      object:nil];
     
-    NSLog(@"SMVC viewDidLoad Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
+//    NSLog(@"SMVC viewDidLoad Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
     //test ad
     // self.bannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
     // real adUnitId
-    self.bannerView.adUnitID = @"ca-app-pub-2521098318893673/7870628745";
-    self.bannerView.rootViewController = self;
+//    self.bannerView.adUnitID = @"ca-app-pub-2521098318893673/7870628745";
+//    self.bannerView.rootViewController = self;
 //    _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeLargeBanner];
-    [self.bannerView loadRequest:[GADRequest request]];
+//    [self.bannerView loadRequest:[GADRequest request]];
     
     _okToRecenterMap = YES;
     _pickerIsUp = NO;
@@ -448,7 +448,7 @@
 
 - (void)hideAds {
     // Hide the banner and removeAds button since they have paid
-    _bannerView.hidden = YES;
+//    _bannerView.hidden = YES;
     _removeAdsButton.hidden = YES;
 }
 
