@@ -69,6 +69,12 @@
 }
 
 - (void)postJoinRequest {
+    
+    //skip until i get a server
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self userDidJoin];
+    //end skip until i get a server
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = NSLocalizedString(@"Connecting", nil);
     
