@@ -321,12 +321,12 @@ int badResponseCounter = 0;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self initializeAWS];
+//    [self initializeAWS];
     
-    self.mqttTopic = @"Whereru/test";
+//    self.mqttTopic = @"Whereru/test";
     
     // Connect to MQTT
-    [self connectToMqtt];
+//    [self connectToMqtt];
     
     // Override point for customization after application launch.
     _currentState = @"AD_DFLWO";
@@ -744,8 +744,8 @@ int badResponseCounter = 0;
     
     // Do NOT do this next line if SMVC is still active and looking
     if (_isBackgroundMode) {
-//        [self postMyLoc]; // API
-        [self publishIMoved]; // MQTT
+        [self postMyLoc]; // API
+//        [self publishIMoved]; // MQTT
     }
 }
 
@@ -757,209 +757,209 @@ int badResponseCounter = 0;
     NSLog(@"%@ resuming location updates", _currentState);
 }
 
-#pragma mark - AWS IoT MQTT Methods
-
--(void)initializeAWS {
-    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
-    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
-    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
-    
-    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
-    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
-    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
-    
-    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
-        cognitoRegionString = @"us-west-2";
-    }
-    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
-    
-    // Initialize the Amazon Cognito credentials provider
-    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
-                                                                                                    identityPoolId:CognitoIdentityPoolId];
-    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
-                                                                         credentialsProvider:credentialsProvider];
-    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    
-    // Keep a reference to the provider
-    //    self.credentialsProvider = credentialsProvider;
-    //    self.serviceConfiguration = configuration;
-    
-    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
-        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
-        self.identityId = credentialsProvider.identityId;
-        return nil;
-    }];
-    
-    // do IoT
-    self.iotManager = [AWSIoTManager defaultIoTManager];
-    AWSIoT *iot = [AWSIoT defaultIoT];
-}
-
--(void)connectToMqtt {
-    NSLog(@"connectToMqtt");
-    // setup handleMqttConnect method with AWSIoTMQTTStatus *status and set value for connected there
-    self.iotDataManager = [AWSIoTDataManager defaultIoTDataManager];
-    
-    if (self.connected == NO) {
-        NSString *lastWillJSON = [self createLastWillJSON:@"notused" withShow:@"alsonotyetused"];
-        //        self.iotDataManager.mqttConfiguration.keepAliveTimeInterval = 75.0;
-        self.iotDataManager.mqttConfiguration.lastWillAndTestament.topic = self.mqttTopic;
-        self.iotDataManager.mqttConfiguration.lastWillAndTestament.message = lastWillJSON;
-        self.iotDataManager.mqttConfiguration.lastWillAndTestament.qos = AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce;
-        NSLog(@"connectUsingWebSocketWithClientId, setting last will message to: %@", lastWillJSON);
-        //
-        // Need a unique device ID because two devices logged onto the same conversation cannot share the same websocket
-        //
-        NSString *deviceId = [[NSUUID UUID] UUIDString] ;
-        NSLog(@"connectUsingWebSocketWithClientId with deviceId: %@", deviceId);
-        //
-        // Connect to IoT using websocket
-        //
-        [self.iotDataManager connectUsingWebSocketWithClientId:deviceId cleanSession:true statusCallback:^(AWSIoTMQTTStatus status) {
-            
-            NSLog(@"in connectToMqtt callback with status:%ld", (long)status);
-            
-            switch (status) {
-                case AWSIoTMQTTStatusConnecting:
-                    NSLog(@"AWSIoTMQTTStatusConnecting");
-                    break;
-                    
-                case AWSIoTMQTTStatusConnected:
-                    NSLog(@"AWSIoTMQTTStatusConnected");
-                    self.connected = YES;
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mqttConnected" object:self];
-                    break;
-                    
-                case AWSIoTMQTTStatusDisconnected:
-                    NSLog(@"AWSIoTMQTTStatusDisconnected");
-                    self.connected = NO;
-                    break;
-                    
-                case AWSIoTMQTTStatusConnectionRefused:
-                    NSLog(@"AWSIoTMQTTStatusConnectionRefused");
-                    break;
-                    
-                case AWSIoTMQTTStatusConnectionError:
-                    NSLog(@"AWSIoTMQTTStatusConnectionError");
-                    break;
-                    
-                case AWSIoTMQTTStatusProtocolError:
-                    NSLog(@"AWSIoTMQTTStatusProtocolError");
-                    break;
-                    
-                case AWSIoTMQTTStatusUnknown:
-                    NSLog(@"AWSIoTMQTTStatusUnknown");
-                    break;
-                    
-                default:
-                    break;
-            }
-        }];
-    } else {
-        // you are already connected
-        NSLog(@"already connected to MQTT");
-    }
-}
-
--(void)disconnectFromMqtt {
-    if (self.connected) {
-        // disconnect now
-        NSLog(@"disconnectFromMqtt");
-        [self.iotDataManager disconnect];
-    }
-}
-
-- (void) configureMqttReceivedMessageBlock {
-    // You can't refer to self or properties on self from within a block that will be strongly retained by self
-    // Create a weak reference to self to avoid a retain cycle
-    __weak typeof(self) weakSelf = self;
-    NSLog(@"SCXTT configureMqttReceivedMessageBlock setting up mqttReceivedMessageBlock^");
-    self.mqttReceivedMessageBlock = ^(NSData *data) {
-        NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
-        NSDictionary *bodyDict = [self dictionaryFromJSON:receivedString];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMQTTData" object:self userInfo:bodyDict];
-        
-        // Don't do anything unless actor = agent
-        if ([[bodyDict objectForKey:@"cmd"] isEqualToString:@"rollcall"]) {
-            NSLog(@"TBD - report all your info to Whereru/room/<secret_code_guid>");
-            if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
-                // message
-            }
-        } else {
-//            NSLog(@"message arrived but was not from an agent, message");
-        }
-        NSLog(@"--------------- END callback method --------------");
-    };
-}
-
--(void)subscribeAndReceiveMqtt {
-    NSLog(@"subscribeAndReceiveMqtt subscribing to %@ and Whereru/moving", self.mqttTopic);
-    [self configureMqttReceivedMessageBlock];
-    [self.iotDataManager subscribeToTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
-    [self.iotDataManager subscribeToTopic:@"Whereru/moving" QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
-    [self publishPresence:@"available" withShow:@"bogus"];
-    [self publishMessageNotification];
-}
-
-- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
-    NSString *jsonString = [self createUserUpdateJSON:presenceState withShow:showString];
-    
-    if ([jsonString isEqualToString:@"error"]) {
-        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
-    } else {
-        NSLog(@"SENDING presence to topic: %@  jsonString: %@", self.mqttTopic, jsonString);
-        // send presence
-        [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-    }
-}
-
-- (void)publishIMoved {
-    NSLog(@"publishIMoved");
-    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    [statusDict setObject:@"liveupdate" forKey:@"cmd"];
-    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"Nickname"] forKey:@"nickname"];
-    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
-    [statusDict setObject:[[SingletonClass singleObject] myLocStr] forKey:@"location"];
-    NSString *jsonString = [self serializeDictToJSON:statusDict];
-    [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-
-}
-
-- (void)publishMessageNotification {
-    NSString *bodyJson = [self createMessageNotificationJSON]; // simple JSON contains type, actor and show
-    NSLog(@"sendMessageNotification bodyJson:%@", bodyJson);
-    if (![bodyJson isEqualToString:@"error"]) {
-        [self.iotDataManager publishString:bodyJson onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
-    }
-}
-
-- (NSString *)createUserUpdateJSON:(NSString *)presenceState withShow:(NSString *)showString {
-    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    [statusDict setObject:@"ios" forKey:@"resource"];
-    [statusDict setObject:@"user" forKey:@"actor"];
-    [statusDict setObject:@"presence" forKey:@"type"];
-    [statusDict setObject:presenceState forKey:@"presenceState"];
-    [statusDict setObject:showString forKey:@"show"];
-    
-    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
-    return [self serializeDictToJSON:statusDict];
-}
-
-- (NSString *)createLastWillJSON:(NSString *)presenceState withShow:(NSString *)showString {
-    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
-    [statusDict setObject:@"dead" forKey:@"ios"];
-    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
-    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
-    return [self serializeDictToJSON:statusDict];
-}
-
--(NSString *)createMessageNotificationJSON {
-    NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
-    [bodyDict setObject:@"message" forKey:@"type"];
-    [bodyDict setObject:@"user" forKey:@"actor"];
-    return [self serializeDictToJSON:bodyDict];
-}
+//#pragma mark - AWS IoT MQTT Methods
+//
+//-(void)initializeAWS {
+//    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
+//    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
+//    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
+//    
+//    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
+//    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
+//    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
+//    
+//    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
+//        cognitoRegionString = @"us-west-2";
+//    }
+//    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
+//    
+//    // Initialize the Amazon Cognito credentials provider
+//    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
+//                                                                                                    identityPoolId:CognitoIdentityPoolId];
+//    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
+//                                                                         credentialsProvider:credentialsProvider];
+//    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+//    
+//    // Keep a reference to the provider
+//    //    self.credentialsProvider = credentialsProvider;
+//    //    self.serviceConfiguration = configuration;
+//    
+//    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
+//        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
+//        self.identityId = credentialsProvider.identityId;
+//        return nil;
+//    }];
+//    
+//    // do IoT
+//    self.iotManager = [AWSIoTManager defaultIoTManager];
+//    AWSIoT *iot = [AWSIoT defaultIoT];
+//}
+//
+//-(void)connectToMqtt {
+//    NSLog(@"connectToMqtt");
+//    // setup handleMqttConnect method with AWSIoTMQTTStatus *status and set value for connected there
+//    self.iotDataManager = [AWSIoTDataManager defaultIoTDataManager];
+//    
+//    if (self.connected == NO) {
+//        NSString *lastWillJSON = [self createLastWillJSON:@"notused" withShow:@"alsonotyetused"];
+//        //        self.iotDataManager.mqttConfiguration.keepAliveTimeInterval = 75.0;
+//        self.iotDataManager.mqttConfiguration.lastWillAndTestament.topic = self.mqttTopic;
+//        self.iotDataManager.mqttConfiguration.lastWillAndTestament.message = lastWillJSON;
+//        self.iotDataManager.mqttConfiguration.lastWillAndTestament.qos = AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce;
+//        NSLog(@"connectUsingWebSocketWithClientId, setting last will message to: %@", lastWillJSON);
+//        //
+//        // Need a unique device ID because two devices logged onto the same conversation cannot share the same websocket
+//        //
+//        NSString *deviceId = [[NSUUID UUID] UUIDString] ;
+//        NSLog(@"connectUsingWebSocketWithClientId with deviceId: %@", deviceId);
+//        //
+//        // Connect to IoT using websocket
+//        //
+//        [self.iotDataManager connectUsingWebSocketWithClientId:deviceId cleanSession:true statusCallback:^(AWSIoTMQTTStatus status) {
+//            
+//            NSLog(@"in connectToMqtt callback with status:%ld", (long)status);
+//            
+//            switch (status) {
+//                case AWSIoTMQTTStatusConnecting:
+//                    NSLog(@"AWSIoTMQTTStatusConnecting");
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusConnected:
+//                    NSLog(@"AWSIoTMQTTStatusConnected");
+//                    self.connected = YES;
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mqttConnected" object:self];
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusDisconnected:
+//                    NSLog(@"AWSIoTMQTTStatusDisconnected");
+//                    self.connected = NO;
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusConnectionRefused:
+//                    NSLog(@"AWSIoTMQTTStatusConnectionRefused");
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusConnectionError:
+//                    NSLog(@"AWSIoTMQTTStatusConnectionError");
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusProtocolError:
+//                    NSLog(@"AWSIoTMQTTStatusProtocolError");
+//                    break;
+//                    
+//                case AWSIoTMQTTStatusUnknown:
+//                    NSLog(@"AWSIoTMQTTStatusUnknown");
+//                    break;
+//                    
+//                default:
+//                    break;
+//            }
+//        }];
+//    } else {
+//        // you are already connected
+//        NSLog(@"already connected to MQTT");
+//    }
+//}
+//
+//-(void)disconnectFromMqtt {
+//    if (self.connected) {
+//        // disconnect now
+//        NSLog(@"disconnectFromMqtt");
+//        [self.iotDataManager disconnect];
+//    }
+//}
+//
+//- (void) configureMqttReceivedMessageBlock {
+//    // You can't refer to self or properties on self from within a block that will be strongly retained by self
+//    // Create a weak reference to self to avoid a retain cycle
+//    __weak typeof(self) weakSelf = self;
+//    NSLog(@"SCXTT configureMqttReceivedMessageBlock setting up mqttReceivedMessageBlock^");
+//    self.mqttReceivedMessageBlock = ^(NSData *data) {
+//        NSString *receivedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
+//        NSDictionary *bodyDict = [self dictionaryFromJSON:receivedString];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMQTTData" object:self userInfo:bodyDict];
+//        
+//        // Don't do anything unless actor = agent
+//        if ([[bodyDict objectForKey:@"cmd"] isEqualToString:@"rollcall"]) {
+//            NSLog(@"TBD - report all your info to Whereru/room/<secret_code_guid>");
+//            if ([[bodyDict objectForKey:@"type"] isEqualToString:@"message"]) {
+//                // message
+//            }
+//        } else {
+////            NSLog(@"message arrived but was not from an agent, message");
+//        }
+//        NSLog(@"--------------- END callback method --------------");
+//    };
+//}
+//
+//-(void)subscribeAndReceiveMqtt {
+//    NSLog(@"subscribeAndReceiveMqtt subscribing to %@ and Whereru/moving", self.mqttTopic);
+//    [self configureMqttReceivedMessageBlock];
+//    [self.iotDataManager subscribeToTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
+//    [self.iotDataManager subscribeToTopic:@"Whereru/moving" QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtLeastOnce messageCallback:self.mqttReceivedMessageBlock];
+//    [self publishPresence:@"available" withShow:@"bogus"];
+//    [self publishMessageNotification];
+//}
+//
+//- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
+//    NSString *jsonString = [self createUserUpdateJSON:presenceState withShow:showString];
+//    
+//    if ([jsonString isEqualToString:@"error"]) {
+//        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
+//    } else {
+//        NSLog(@"SENDING presence to topic: %@  jsonString: %@", self.mqttTopic, jsonString);
+//        // send presence
+//        [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+//    }
+//}
+//
+//- (void)publishIMoved {
+//    NSLog(@"publishIMoved");
+//    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+//    [statusDict setObject:@"liveupdate" forKey:@"cmd"];
+//    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"Nickname"] forKey:@"nickname"];
+//    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
+//    [statusDict setObject:[[SingletonClass singleObject] myLocStr] forKey:@"location"];
+//    NSString *jsonString = [self serializeDictToJSON:statusDict];
+//    [self.iotDataManager publishString:jsonString onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+//
+//}
+//
+//- (void)publishMessageNotification {
+//    NSString *bodyJson = [self createMessageNotificationJSON]; // simple JSON contains type, actor and show
+//    NSLog(@"sendMessageNotification bodyJson:%@", bodyJson);
+//    if (![bodyJson isEqualToString:@"error"]) {
+//        [self.iotDataManager publishString:bodyJson onTopic:self.mqttTopic QoS:AWSIoTMQTTQoSMessageDeliveryAttemptedAtMostOnce];
+//    }
+//}
+//
+//- (NSString *)createUserUpdateJSON:(NSString *)presenceState withShow:(NSString *)showString {
+//    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+//    [statusDict setObject:@"ios" forKey:@"resource"];
+//    [statusDict setObject:@"user" forKey:@"actor"];
+//    [statusDict setObject:@"presence" forKey:@"type"];
+//    [statusDict setObject:presenceState forKey:@"presenceState"];
+//    [statusDict setObject:showString forKey:@"show"];
+//    
+//    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
+//    return [self serializeDictToJSON:statusDict];
+//}
+//
+//- (NSString *)createLastWillJSON:(NSString *)presenceState withShow:(NSString *)showString {
+//    NSMutableDictionary *statusDict = [[NSMutableDictionary alloc] init];
+//    [statusDict setObject:@"dead" forKey:@"ios"];
+//    [statusDict setObject:[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"] forKey:@"user_id"];
+//    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
+//    return [self serializeDictToJSON:statusDict];
+//}
+//
+//-(NSString *)createMessageNotificationJSON {
+//    NSMutableDictionary *bodyDict = [[NSMutableDictionary alloc] init];
+//    [bodyDict setObject:@"message" forKey:@"type"];
+//    [bodyDict setObject:@"user" forKey:@"actor"];
+//    return [self serializeDictToJSON:bodyDict];
+//}
 
 
 #pragma mark - JSON <==> Dictionary Methods

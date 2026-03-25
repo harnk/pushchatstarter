@@ -9,12 +9,16 @@
 //#define ServerApiURL @"http://10.0.0.27:44447"
 // for the real deal on bluehost use the next line
 //#define ServerApiURL @"https://www.altcoinfolio.com"
-#define ServerApiURL @"http://ec2-54-245-7-246.us-west-2.compute.amazonaws.com"
+//#define ServerApiURL @"http://ec2-54-245-7-246.us-west-2.compute.amazonaws.com"
+// Local development endpoint
+#define ServerApiURL @"http://localhost:8000"
 
 //Test
 //#define ServerPostPathURL @"/whereru/api/api.php"
 //Prod
-#define ServerPostPathURL @"/whereruprod/api/api.php"
+//#define ServerPostPathURL @"/whereruprod/api/api.php"
+// Local test API path
+#define ServerPostPathURL @"/api.php"
 
 #define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
 #define IS_OS_9_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
