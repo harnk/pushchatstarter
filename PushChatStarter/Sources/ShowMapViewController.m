@@ -387,7 +387,7 @@
 
     NSLog(@"SMVC findAction WAKE UP DEVICES & startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
-    getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 5
+    getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 50
                                                      target: self
                                                    selector: @selector(postGetRoom)
                                                    userInfo: nil
@@ -1046,7 +1046,7 @@
 
 - (void)postGetRoom
 {
-    NSLog(@"SMVC postGetRoom should happene every 5 secs");
+    NSLog(@"SMVC postGetRoom should happene every 50 secs");
     if ([_dataModel joinedChat]) {
         if (_isFromNotification) {
             [self postGetRoomMessages];
