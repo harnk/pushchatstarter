@@ -11,7 +11,7 @@
 //#define ServerApiURL @"https://www.altcoinfolio.com"
 //#define ServerApiURL @"http://ec2-54-245-7-246.us-west-2.compute.amazonaws.com"
 // Local development endpoint
-#define ServerApiURL @"http://localhost:8000"
+#define ServerApiURL @"http://192.168.4.132:8000"
 
 //Test
 //#define ServerPostPathURL @"/whereru/api/api.php"

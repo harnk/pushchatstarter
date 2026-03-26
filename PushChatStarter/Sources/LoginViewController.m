@@ -85,6 +85,8 @@
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"code":[_dataModel secretCode]};
 
+    // Debug log: full POST URL and params
+    NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
     // Using AFHTTPSessionManager (AFNetworking 3.x) POST API
     [_client POST:ServerPostPathURL
        parameters:params

@@ -75,6 +75,9 @@
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
     
+    // Debug log: full POST URL and params
+    NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
+    
     [_client POST:ServerPostPathURL
        parameters:params
           headers:nil
