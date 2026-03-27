@@ -148,7 +148,14 @@ int badResponseCounter = 0;
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-    
+    const unsigned char *dataBuffer = (const unsigned char *)[deviceToken bytes];
+    NSUInteger dataLength = [deviceToken length];
+    NSMutableString *hexString = [NSMutableString stringWithCapacity:(dataLength * 2)];
+
+    for (int i = 0; i < dataLength; ++i) {
+        [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
+    }
+    NSLog(@"My Device Token: %@", hexString);
     NSLog(@"%@ My location is: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     
     UINavigationController *navigationController = (UINavigationController*)_window.rootViewController;
@@ -161,19 +168,18 @@ int badResponseCounter = 0;
     
     NSString *oldToken = [dataModel deviceToken];
     
-    NSString *newToken = [deviceToken description];
-    newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"My token is: %@", newToken);
-    
+    NSLog(@"My oldToken is: %@", oldToken);
+    NSLog(@"My newToken is: %@", hexString);
+
     //    NSLog(@"Got a token so notificationsAreDisabled to NO");
     [[SingletonClass singleObject] setNotificationsAreDisabled:NO];
     
     //Tell the app the good news
     [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedDeviceToken" object:nil userInfo:nil];
     
-    [dataModel setDeviceToken:newToken];
-    
+    [dataModel setDeviceToken:hexString];
+    NSString *newToken = [dataModel deviceToken];
+
     if ([dataModel joinedChat] && ![newToken isEqualToString:oldToken])
     {
         [self postUpdateRequest];
