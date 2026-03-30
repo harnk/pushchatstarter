@@ -364,7 +364,7 @@ int badResponseCounter = 0;
     // Check the keychain for the userID
     UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU.storedid"];
     NSString *userId = [keychain stringForKey:@"mysaveduserid"];
-    NSLog(@"SCXTT READ KEYCHAIN BEFORE: %@", userId);
+    NSLog(@"SCXTT ====================================== READ KEYCHAIN BEFORE: %@", userId);
     
     if (!userId) {
         NSLog(@"SCXTT USERID FALSE: %@", userId);
@@ -414,7 +414,7 @@ int badResponseCounter = 0;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
 //    we should only do this next line if we are already imInARoom and also move this to start updating when we are notified of leave ShowMapViewController and not right here
-//    [self startMyLocationUpdates];
+    [self startMyLocationUpdates];
     
     // Deal with In-App purchase
     _canPurchase = NO;
@@ -737,6 +737,7 @@ int badResponseCounter = 0;
     CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
+    NSLog(@"%@ SCXTT SCXTT locationManager didUpdateLocations distanceMoved: %f", _currentState, distanceMoved);
     if (distanceMoved == 0) {
         NSLog(@"Moved 0 yards so DO NOTHING, abort!");
         return;
@@ -749,6 +750,7 @@ int badResponseCounter = 0;
     _deviceHasMoved = YES;
     
     // Do NOT do this next line if SMVC is still active and looking
+    [self postMyLoc]; //DEBUG - do this alot
     if (_isBackgroundMode) {
         [self postMyLoc]; // API
 //        [self publishIMoved]; // MQTT
