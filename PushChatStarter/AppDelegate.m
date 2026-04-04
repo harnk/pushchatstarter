@@ -609,6 +609,40 @@ int badResponseCounter = 0;
     _isUpdating = NO;
 }
 
+static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
+    BOOL foundALooker = NO;
+    for(NSDictionary *item in jsonArray) {
+        NSString *mLooking = [item objectForKey:@"looking"];
+        if ([mLooking isEqual:@"1"]) {
+            NSString *mNickName = [item objectForKey:@"nickname"];
+            NSLog(@"%@  %@ is looking", object->_currentState, mNickName);
+            foundALooker = YES;
+            NSLog(@"%@ Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop", object->_currentState);
+        }
+    }
+    NSLog(@"%@ set singleton someoneIsLooking = foundALooker which equals %d", object->_currentState, foundALooker);
+    if (foundALooker) {
+        NSLog(@"%@ since someoneIsLooking keep updating my loc in the background", object->_currentState);
+        retryCounter = 0;
+    } else {
+        if (object->_isBackgroundMode){
+            retryCounter += 1;
+            NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
+            if (retryCounter > 10) {
+                NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
+                NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
+                
+                
+                object.locationManager.pausesLocationUpdatesAutomatically = YES;
+                object.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
+                [object.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
+                [object.locationManager setDistanceFilter:99999];
+                
+            }
+        }
+    }
+}
+
 -(void)postLiveUpdate
 {
 //    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
@@ -627,10 +661,6 @@ int badResponseCounter = 0;
     client.responseSerializer = [AFHTTPResponseSerializer serializer];
     [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-        //SCXTT RELEASE
-//        NSLog(@"%@ responseString: %@", _currentState, responseString);
-//        NSLog(@"%@ task: %@", _currentState, task);
-//        NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
         
         // Deal with me if I have been deleted from the active_users table in the DB
         if (responseString.length == 0) {
@@ -640,48 +670,17 @@ int badResponseCounter = 0;
             }
         } else {
             badResponseCounter = 0;
-        }
-        
-        // SCXTT WIP Loop thru the response and check key "looking"
-        NSError *e = nil;
-        NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-        if (!jsonArray) {
-            NSLog(@"4 Error parsing JSON: %@", e); //THIS IS ALWAYS HAPPENING NOW BUT WHY??
-        } else {
-            BOOL foundALooker = NO;
-            for(NSDictionary *item in jsonArray) {
-                NSString *mLooking = [item objectForKey:@"looking"];
-                if ([mLooking isEqual:@"1"]) {
-                    NSString *mNickName = [item objectForKey:@"nickname"];
-                    NSLog(@"%@  %@ is looking", _currentState, mNickName);
-                    foundALooker = YES;
-                    NSLog(@"%@ Toggle singleton BOOL someoneIsLooking to foundALooker=YES and exit the loop", _currentState);
-                }
-            }
-            NSLog(@"%@ set singleton someoneIsLooking = foundALooker which equals %d", _currentState, foundALooker);
-            if (foundALooker) {
-                NSLog(@"%@ since someoneIsLooking keep updating my loc in the background", _currentState);
-                retryCounter = 0;
+            
+            // SCXTT WIP Loop thru the response and check key "looking"
+            NSError *e = nil;
+            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
+            
+            if (!jsonArray) {
+                NSLog(@"ERROR parsing JSON: %@ | Response was: %@", e, responseString);
             } else {
-                if (_isBackgroundMode){
-                    retryCounter += 1;
-                    NSLog(@"NO ONE is looking so why am I wasting my battery with these background API calls?!? Retry:%d", retryCounter);
-                    if (retryCounter > 10) {
-                        NSLog(@"IM DONE with AppDelegate LocationManager so setDistanceFilter:99999");
-                        NSLog(@"SCXTT CANT STOP LOCATIONMANAGER HERE so setDesiredAccuracy:kCLLocationAccuracyThreeKilometers");
-
-
-                        self.locationManager.pausesLocationUpdatesAutomatically = YES;
-                        self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
-                        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyThreeKilometers];
-                        [self.locationManager setDistanceFilter:99999];
-
-
-                    }
-                }
+                checkForLookers(self, jsonArray);
             }
         }
-
 
         [NSTimer scheduledTimerWithTimeInterval: 5 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
