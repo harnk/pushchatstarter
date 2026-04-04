@@ -609,6 +609,7 @@ int badResponseCounter = 0;
     _isUpdating = NO;
 }
 
+// next needs work has issues 4/26 SCXTT
 static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     BOOL foundALooker = NO;
     for(NSDictionary *item in jsonArray) {
@@ -678,7 +679,8 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
             if (!jsonArray) {
                 NSLog(@"ERROR parsing JSON: %@ | Response was: %@", e, responseString);
             } else {
-                checkForLookers(self, jsonArray);
+                //SCXTT next line temp commented out 4/26 because its not working properly
+//                checkForLookers(self, jsonArray); SCXTT WIP check if anyone is still looking and if not then stop updating location so much in the background since it is a battery burner
             }
         }
 
