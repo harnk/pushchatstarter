@@ -31,7 +31,7 @@ void ShowErrorAlert(NSString* text)
 int retryCounter = 0;
 int badResponseCounter = 0;
 
-#pragma mark - 
+#pragma mark -
 #pragma mark In-App Purchase Stuff
 
 -(NSArray *)getProductIdentifiersFromMainBundle{
@@ -146,7 +146,7 @@ int badResponseCounter = 0;
 #pragma mark -
 #pragma mark Notifications
 
-- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+- (NSString *)hexStringFromDeviceToken:(NSData *)deviceToken
 {
     const unsigned char *dataBuffer = (const unsigned char *)[deviceToken bytes];
     NSUInteger dataLength = [deviceToken length];
@@ -155,6 +155,13 @@ int badResponseCounter = 0;
     for (int i = 0; i < dataLength; ++i) {
         [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
     }
+    return [hexString copy];
+}
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    NSLog(@"My RAW Device Token: %@", deviceToken);
+    NSString *hexString = [self hexStringFromDeviceToken:deviceToken];
     NSLog(@"My Device Token: %@", hexString);
     NSLog(@"%@ My location is: %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     
@@ -424,7 +431,7 @@ int badResponseCounter = 0;
 //        [self validateProductIdentifiers:productsArray];
 //        _canPurchase = YES;
 //        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-//        
+//
 //    }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(startMyLocationUpdates)
@@ -489,7 +496,7 @@ int badResponseCounter = 0;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     _currentState = @"AD_BKGND";
     NSLog(@"%@ applicationDidEnterBackground", _currentState);
@@ -621,9 +628,9 @@ int badResponseCounter = 0;
     [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
         //SCXTT RELEASE
-        NSLog(@"%@ responseString: %@", _currentState, responseString);
-        NSLog(@"%@ task: %@", _currentState, task);
-        NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
+//        NSLog(@"%@ responseString: %@", _currentState, responseString);
+//        NSLog(@"%@ task: %@", _currentState, task);
+//        NSLog(@"%@ need to check repsonse to see if looking is 1 yet for anyone", _currentState);
         
         // Deal with me if I have been deleted from the active_users table in the DB
         if (responseString.length == 0) {
@@ -639,7 +646,7 @@ int badResponseCounter = 0;
         NSError *e = nil;
         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
         if (!jsonArray) {
-            NSLog(@"4 Error parsing JSON: %@", e);
+            NSLog(@"4 Error parsing JSON: %@", e); //THIS IS ALWAYS HAPPENING NOW BUT WHY??
         } else {
             BOOL foundALooker = NO;
             for(NSDictionary *item in jsonArray) {
@@ -723,11 +730,11 @@ int badResponseCounter = 0;
 //
 
 //-(void) fakeMove {
-//    
+//
 //    NSLog(@"SCXTT FAKEMOVE - TAKE OUT LATER - calling postMyLoc");
 //    _deviceHasMoved = YES;
 //    [self postMyLoc];
-//    
+//
 //}
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -737,20 +744,23 @@ int badResponseCounter = 0;
     CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
-    NSLog(@"%@ SCXTT SCXTT locationManager didUpdateLocations distanceMoved: %f", _currentState, distanceMoved);
+    NSLog(@"SCXTT SCXTT newLoc: %@ ", [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]);
     if (distanceMoved == 0) {
-        NSLog(@"Moved 0 yards so DO NOTHING, abort!");
-        return;
+//        NSLog(@"Moved 0 yards so DO NOTHING, abort!");
+//        return;
     }
-    NSLog(@"%@ AppDelegate-didUpdateLocations background delegate device moved %f yards", _currentState, distanceMoved);
+//    NSLog(@"%@ AppDelegate-didUpdateLocations background delegate device moved %f yards", _currentState, distanceMoved);
     [[SingletonClass singleObject] setMyNewLocation:newLoc];
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
     //SCXTT RELEASE
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
     
+    
     // Do NOT do this next line if SMVC is still active and looking
-    [self postMyLoc]; //DEBUG - do this alot
+    [self postLiveUpdate]; //DEBUG - do this alot FOR NOW UNTIL I GET THIS ALL WORKING AGAIN
+    
+    
     if (_isBackgroundMode) {
         [self postMyLoc]; // API
 //        [self publishIMoved]; // MQTT
@@ -771,33 +781,33 @@ int badResponseCounter = 0;
 //    //SCXTT THESE NEXT TWO LINES HARD CODED FOR NOW
 //    AWSRegionType const CognitoRegionType = AWSRegionUSWest2;
 //    NSString *const CognitoIdentityPoolId = @"us-west-2:98ec2e25-2767-4bb9-b2f3-1c0bea5c3184";
-//    
+//
 //    //awsRegionName and awsCognitoPoolId should have already been set in the singleton from login return values
 //    NSString *cognitoRegionString = [[SingletonClass singleObject] awsRegionName];
 //    NSString *cognitoId = [[SingletonClass singleObject] awsCognitoPoolId];
-//    
+//
 //    if (([cognitoRegionString length] == 0) || ([cognitoRegionString isEqualToString:@"null"])){
 //        cognitoRegionString = @"us-west-2";
 //    }
 //    AWSRegionType cognitoRegion = [cognitoRegionString aws_regionTypeValue];
-//    
+//
 //    // Initialize the Amazon Cognito credentials provider
 //    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:cognitoRegion
 //                                                                                                    identityPoolId:CognitoIdentityPoolId];
 //    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:cognitoRegion
 //                                                                         credentialsProvider:credentialsProvider];
 //    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-//    
+//
 //    // Keep a reference to the provider
 //    //    self.credentialsProvider = credentialsProvider;
 //    //    self.serviceConfiguration = configuration;
-//    
+//
 //    [[credentialsProvider getIdentityId] continueWithSuccessBlock:^id _Nullable(AWSTask<NSString *> * _Nonnull task) {
 //        NSLog(@"SCXTT Cognito identityId = [%@]", credentialsProvider.identityId);
 //        self.identityId = credentialsProvider.identityId;
 //        return nil;
 //    }];
-//    
+//
 //    // do IoT
 //    self.iotManager = [AWSIoTManager defaultIoTManager];
 //    AWSIoT *iot = [AWSIoT defaultIoT];
@@ -807,7 +817,7 @@ int badResponseCounter = 0;
 //    NSLog(@"connectToMqtt");
 //    // setup handleMqttConnect method with AWSIoTMQTTStatus *status and set value for connected there
 //    self.iotDataManager = [AWSIoTDataManager defaultIoTDataManager];
-//    
+//
 //    if (self.connected == NO) {
 //        NSString *lastWillJSON = [self createLastWillJSON:@"notused" withShow:@"alsonotyetused"];
 //        //        self.iotDataManager.mqttConfiguration.keepAliveTimeInterval = 75.0;
@@ -824,41 +834,41 @@ int badResponseCounter = 0;
 //        // Connect to IoT using websocket
 //        //
 //        [self.iotDataManager connectUsingWebSocketWithClientId:deviceId cleanSession:true statusCallback:^(AWSIoTMQTTStatus status) {
-//            
+//
 //            NSLog(@"in connectToMqtt callback with status:%ld", (long)status);
-//            
+//
 //            switch (status) {
 //                case AWSIoTMQTTStatusConnecting:
 //                    NSLog(@"AWSIoTMQTTStatusConnecting");
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusConnected:
 //                    NSLog(@"AWSIoTMQTTStatusConnected");
 //                    self.connected = YES;
 //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"mqttConnected" object:self];
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusDisconnected:
 //                    NSLog(@"AWSIoTMQTTStatusDisconnected");
 //                    self.connected = NO;
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusConnectionRefused:
 //                    NSLog(@"AWSIoTMQTTStatusConnectionRefused");
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusConnectionError:
 //                    NSLog(@"AWSIoTMQTTStatusConnectionError");
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusProtocolError:
 //                    NSLog(@"AWSIoTMQTTStatusProtocolError");
 //                    break;
-//                    
+//
 //                case AWSIoTMQTTStatusUnknown:
 //                    NSLog(@"AWSIoTMQTTStatusUnknown");
 //                    break;
-//                    
+//
 //                default:
 //                    break;
 //            }
@@ -887,7 +897,7 @@ int badResponseCounter = 0;
 //        NSLog(@"subscribeAndReceiveMqtt ^mqttReceivedMessage callback from subscribed topic with data: %@", receivedString);
 //        NSDictionary *bodyDict = [self dictionaryFromJSON:receivedString];
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewMQTTData" object:self userInfo:bodyDict];
-//        
+//
 //        // Don't do anything unless actor = agent
 //        if ([[bodyDict objectForKey:@"cmd"] isEqualToString:@"rollcall"]) {
 //            NSLog(@"TBD - report all your info to Whereru/room/<secret_code_guid>");
@@ -912,7 +922,7 @@ int badResponseCounter = 0;
 //
 //- (void)publishPresence:(NSString *)presenceState withShow:(NSString *)showString {
 //    NSString *jsonString = [self createUserUpdateJSON:presenceState withShow:showString];
-//    
+//
 //    if ([jsonString isEqualToString:@"error"]) {
 //        NSLog(@"do not send presence, there was a prepare json error: %@", jsonString);
 //    } else {
@@ -949,7 +959,7 @@ int badResponseCounter = 0;
 //    [statusDict setObject:@"presence" forKey:@"type"];
 //    [statusDict setObject:presenceState forKey:@"presenceState"];
 //    [statusDict setObject:showString forKey:@"show"];
-//    
+//
 //    NSLog(@"statusDic ready for jsonConversion: %@", statusDict);
 //    return [self serializeDictToJSON:statusDict];
 //}
