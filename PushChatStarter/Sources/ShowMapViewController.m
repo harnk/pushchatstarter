@@ -16,6 +16,7 @@
 #import "ServiceConnector.h"
 #import "JSONDictionaryExtensions.h"
 #import "Room.h"
+#import "APIClient.h"
 
 #define SPAN_VALUE 0.005f
 
@@ -151,6 +152,14 @@
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
+    
+    // Disable the problematic bluemenuitem button to fix layout constraints
+    if (self.pinPickerButton) {
+        self.pinPickerButton.enabled = NO;
+        // Hide it or replace with proper sized button
+        self.pinPickerButton.title = @"Pins";
+        self.pinPickerButton.enabled = YES;
+    }
 }
 
 -(void) returnToAllWithMessage:(NSString *)toastMsg {
@@ -412,7 +421,7 @@
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications Are Disabled" message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
 //        alert.tag = kAlertViewNotifications;
 //        [alert show];
-//        
+//
         UIAlertController *alert =
         [UIAlertController alertControllerWithTitle:@"Notifications Are Disabled"
                                             message:@"This app requires notifications in order to function. You need to enable notifications. Choose Settings to enable them"
@@ -576,7 +585,7 @@
     }
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark ServiceConnector stuff
 
 - (IBAction)getDown:(id)sender { //perform get request
@@ -616,7 +625,7 @@
 //    UIImageView *myImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cyan.png"]];
 //    [view addSubview:myImageView];
 //    [view addSubview:myColorView];
-//    
+//
 //    return view;
 //}
 //

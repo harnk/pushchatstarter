@@ -71,6 +71,7 @@
 		9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
 		9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */; };
 		9EBDFCC71F72144D009317F0 /* pullhandle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EBDFCC61F72144D009317F0 /* pullhandle.png */; };
+		9ED763B82F84A8D100CC5F4D /* APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763B72F84A8C800CC5F4D /* APIClient.m */; };
 		9EDA82C21AB132EA006DF8D2 /* pinshadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EDA82C11AB132EA006DF8D2 /* pinshadow.png */; };
 		9EE11D97203E77D50030B011 /* MQTTHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE11D96203E77D50030B011 /* MQTTHelper.m */; };
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
@@ -182,6 +183,8 @@
 		9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inactivepin.png; sourceTree = "<group>"; };
 		9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkinactivepin.png; sourceTree = "<group>"; };
 		9EBDFCC61F72144D009317F0 /* pullhandle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pullhandle.png; sourceTree = "<group>"; };
+		9ED763B62F84A8C800CC5F4D /* APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
+		9ED763B72F84A8C800CC5F4D /* APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APIClient.m; sourceTree = "<group>"; };
 		9EDA82C11AB132EA006DF8D2 /* pinshadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinshadow.png; sourceTree = "<group>"; };
 		9EE11D95203E77870030B011 /* MQTTHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MQTTHelper.h; sourceTree = "<group>"; };
 		9EE11D96203E77D50030B011 /* MQTTHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MQTTHelper.m; sourceTree = "<group>"; };
@@ -325,6 +328,8 @@
 		61489ECF1704226E0049C6F9 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9ED763B62F84A8C800CC5F4D /* APIClient.h */,
+				9ED763B72F84A8C800CC5F4D /* APIClient.m */,
 				61489ED6170423F90049C6F9 /* defs.h */,
 				61489EAF17041C660049C6F9 /* MainStoryboard.storyboard */,
 				9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */,
@@ -532,6 +537,7 @@
 				9E084B2F1A9AA9BE004439FA /* ServiceConnector.m in Sources */,
 				9E81F9FD1A5CD8A000310C40 /* VBAnnotation.m in Sources */,
 				61489ED5170422A20049C6F9 /* Message.m in Sources */,
+				9ED763B82F84A8D100CC5F4D /* APIClient.m in Sources */,
 				61489ED9170424080049C6F9 /* SpeechBubbleView.m in Sources */,
 				61489EDC170424CB0049C6F9 /* MessageTableViewCell.m in Sources */,
 				9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */,

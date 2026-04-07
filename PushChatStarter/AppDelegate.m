@@ -12,6 +12,7 @@
 #import "DataModel.h"
 #import "Message.h"
 #import "Harpy.h"
+#import "APIClient.h"
 #import <UserNotifications/UserNotifications.h>
 
 void ShowErrorAlert(NSString* text)
@@ -588,7 +589,6 @@ int badResponseCounter = 0;
 
 -(void)postImhere:(NSString *)asker
 {
-//    NSLog(@"Respond to WhereRU with Im Here back to asker");
     NSLog(@"%@ postImhere %@", _currentState, [[SingletonClass singleObject] myLocStr]);
     NSString *text = @"Im Here";
     
@@ -598,11 +598,10 @@ int badResponseCounter = 0;
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"text":text};
     
-    //    NSLog(@"Doing API Call with %@", params);
-    
-    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    client.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:nil failure:nil];
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:nil
+                                     failure:nil];
 }
 
 -(void)resetIsUpdating {
@@ -646,48 +645,32 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
 
 -(void)postLiveUpdate
 {
-//    NSLog(@"This is called whenever the device location changes, should not do more than once every 5 seconds");
-    
-    //SCXTT RELEASE
     NSLog(@"%@ postLiveUpdate %@", _currentState, [[SingletonClass singleObject] myLocStr]);
 
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr]};
     
-    //    NSLog(@"Doing API Call with %@", params);
-    
-    NSLog(@"ServerApiURL:%@   API Post: %@ params:%@", ServerApiURL, ServerPostPathURL, params);
-    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    client.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-        
-        // Deal with me if I have been deleted from the active_users table in the DB
-        if (responseString.length == 0) {
-            badResponseCounter += 1;
-            if (badResponseCounter > 5) {
-                [[SingletonClass singleObject] setImInARoom:NO];
-            }
-        } else {
-            badResponseCounter = 0;
-            
-            // SCXTT WIP Loop thru the response and check key "looking"
-            NSError *e = nil;
-            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
-            
-            if (!jsonArray) {
-                NSLog(@"ERROR parsing JSON: %@ | Response was: %@", e, responseString);
-            } else {
-                //SCXTT next line temp commented out 4/26 because its not working properly
-//                checkForLookers(self, jsonArray); SCXTT WIP check if anyone is still looking and if not then stop updating location so much in the background since it is a battery burner
-            }
-        }
-
-        [NSTimer scheduledTimerWithTimeInterval: 5 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [NSTimer scheduledTimerWithTimeInterval: 10 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
-    }];
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
+                                         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+                                         
+                                         // Deal with me if I have been deleted from the active_users table in the DB
+                                         if (responseString.length == 0) {
+                                             badResponseCounter += 1;
+                                             if (badResponseCounter > 5) {
+                                                 [[SingletonClass singleObject] setImInARoom:NO];
+                                             }
+                                         } else {
+                                             badResponseCounter = 0;
+                                         }
+                                         
+                                         [NSTimer scheduledTimerWithTimeInterval: 5 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
+                                     }
+                                     failure:^(NSError *error) {
+                                         [NSTimer scheduledTimerWithTimeInterval: 10 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
+                                     }];
 }
 
 -(void) postMyLoc {
@@ -697,7 +680,6 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
             NSLog(@"%@ were not _isUpdating", _currentState);
             if (_deviceHasMoved) {
                 _isUpdating = YES;
-                NSLog(@"%@ POSTLIVEUPDATE %@", _currentState, [[SingletonClass singleObject] myLocStr]);
                 [self postLiveUpdate];
                 _deviceHasMoved = NO;
 
@@ -720,9 +702,11 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr],
                              @"token":[[NSUserDefaults standardUserDefaults] stringForKey:@"DeviceToken"]};
-    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    client.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [client POST:ServerPostPathURL parameters:params headers:nil progress:nil success:nil failure:nil];
+    
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:nil
+                                     failure:nil];
 }
 
 #pragma mark - locationManager delegate methods
@@ -745,7 +729,7 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
-    NSLog(@"SCXTT SCXTT newLoc: %@ ", [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]);
+//    NSLog(@"SCXTT SCXTT newLoc: %@ ", [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]);
     if (distanceMoved == 0) {
 //        NSLog(@"Moved 0 yards so DO NOTHING, abort!");
 //        return;

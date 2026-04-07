@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "DataModel.h"
+#import "APIClient.h"
 
 @interface LoginViewController()
 @property (nonatomic, retain) IBOutlet UITextField* nicknameTextField;
@@ -82,27 +83,25 @@
 
     // Debug log: full POST URL and params
     NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
-    // Using AFHTTPSessionManager (AFNetworking 3.x) POST API
-    [_client POST:ServerPostPathURL
-       parameters:params
-          headers:nil
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              if ([self isViewLoaded]) {
-                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)((NSURLSessionDataTask *)task).response;
-                  if([httpResp statusCode] != 200) {
-                      ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
-                  } else {
-                      [self userDidJoin];
-                  }
-              }
-          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              if ([self isViewLoaded]) {
-                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                  ShowErrorAlert([error localizedDescription]);
-              }
-          }];
+    // Using APIClient for centralized POST API
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResp) {
+                                         if ([self isViewLoaded]) {
+                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             if(httpResp.statusCode != 200) {
+                                                 ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
+                                             } else {
+                                                 [self userDidJoin];
+                                             }
+                                         }
+                                     }
+                                     failure:^(NSError *error) {
+                                         if ([self isViewLoaded]) {
+                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             ShowErrorAlert([error localizedDescription]);
+                                         }
+                                     }];
 }
 
 - (IBAction)loginAction

@@ -10,6 +10,7 @@
 #import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "Message.h"
+#import "APIClient.h"
 
 @interface ComposeViewController ()
 @property (nonatomic, retain) IBOutlet UITextView* messageTextView;
@@ -78,24 +79,22 @@
     // Debug log: full POST URL and params
     NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
     
-    [_client POST:ServerPostPathURL
-       parameters:params
-          headers:nil
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              [MBProgressHUD hideHUDForView:self.view animated:YES];
-              NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-              if (httpResp.statusCode != 200) {
-                  ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
-              } else {
-                  [self userDidCompose:text];
-              }
-          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              if ([self isViewLoaded]) {
-                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                  ShowErrorAlert([error localizedDescription]);
-              }
-          }];
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResp) {
+                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                         if (httpResp.statusCode != 200) {
+                                             ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
+                                         } else {
+                                             [self userDidCompose:text];
+                                         }
+                                     }
+                                     failure:^(NSError *error) {
+                                         if ([self isViewLoaded]) {
+                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             ShowErrorAlert([error localizedDescription]);
+                                         }
+                                     }];
 }
 
 - (IBAction)cancelAction
@@ -142,3 +141,4 @@
 }
 
 @end
+
