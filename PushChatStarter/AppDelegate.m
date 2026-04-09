@@ -730,9 +730,12 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
 //    NSLog(@"SCXTT SCXTT newLoc: %@ ", [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]);
-    if (distanceMoved == 0) {
-//        NSLog(@"Moved 0 yards so DO NOTHING, abort!");
-//        return;
+//    NSLog(@"SCXTT distanceMoved: %f ", distanceMoved);
+    if (distanceMoved < 0.01) {
+        NSLog(@"%@ AppDelegate-didUpdateLocations device ONLY moved %f yards", _currentState, distanceMoved);
+        return;
+    } else {
+        NSLog(@"%@ AppDelegate-didUpdateLocations device moved %f yards", _currentState, distanceMoved);
     }
 //    NSLog(@"%@ AppDelegate-didUpdateLocations background delegate device moved %f yards", _currentState, distanceMoved);
     [[SingletonClass singleObject] setMyNewLocation:newLoc];
