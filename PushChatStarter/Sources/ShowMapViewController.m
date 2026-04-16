@@ -21,7 +21,6 @@
 #define SPAN_VALUE 0.005f
 
 @interface ShowMapViewController () {
-    AFHTTPSessionManager *_client;
     NSArray *pinImages;
     NSTimer *getRoomTimer;
     NSTimer *getMessagesTimer;
@@ -55,7 +54,7 @@
         // Load all the messages for this room
         [_dataModel loadMessages:[[SingletonClass singleObject] myLocStr]];
 
-        _client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
+        _client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:gServerApiURL]];
         // If other code expects raw NSData response (older AFNetworking behavior), use AFHTTPResponseSerializer
         _client.responseSerializer = [AFHTTPResponseSerializer serializer];
 
@@ -767,7 +766,6 @@
     LoginViewController* loginController = (LoginViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     loginController.dataModel = _dataModel;
     
-    loginController.client = _client;
     
     [self presentViewController:loginController animated:YES completion:nil];
 }
@@ -822,21 +820,19 @@
     NSDictionary *params = @{@"cmd":@"leave",
                              @"user_id":[_dataModel userId]};
     //    [ApplicationDelegate.client
-    [_client POST:ServerPostPathURL
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
        parameters:params
-          headers:nil
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+          success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
               if ([self isViewLoaded]) {
                   [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                  if (httpResp.statusCode != 200) {
+//                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+                  if (httpResponse.statusCode != 200) {
                       ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
                   } else {
                       [self userDidLeave];
                   }
               }
-          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        } failure:^(NSError *error) {
               if ([self isViewLoaded]) {
                   [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
                   ShowErrorAlert([error localizedDescription]);
@@ -901,7 +897,6 @@
     ComposeViewController* composeController = (ComposeViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"ComposeViewController"];
     composeController.dataModel = _dataModel;
     composeController.delegate = self;
-    composeController.client = _client;
     [self presentViewController:composeController animated:YES completion:nil];
 }
 
@@ -922,15 +917,13 @@
 
 - (void)getAPI:(NSDictionary *)params
 {
-    [_client POST:ServerPostPathURL
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
        parameters:params
-          headers:nil
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+          success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
               [MBProgressHUD hideHUDForView:self.view animated:YES];
               _isUpdating = NO;
-              NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-              if (httpResp.statusCode != 200) {
+//              NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+              if (httpResponse.statusCode != 200) {
                   ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
               } else {
                   //SCXTT RELEASE
@@ -956,7 +949,7 @@
                       }
                   } else {
                       self.badResponseRetry = 0;
-                      NSLog(@"operation: %@", task);
+//                      NSLog(@"operation: %@", task);
 
                       NSError *e = nil;
                       NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData: responseObject options: NSJSONReadingMutableContainers error: &e];
@@ -1017,7 +1010,7 @@
                       }
                   }
               }
-          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        } failure:^(NSError *error) {
               if ([self isViewLoaded]) {
                   _isUpdating = NO;
                   [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1095,17 +1088,11 @@
                              @"user_id":[[NSUserDefaults standardUserDefaults] stringForKey:@"UserId"],
                              @"location":[[SingletonClass singleObject] myLocStr]};
 
-    AFHTTPSessionManager *client = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-    client.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [client POST:ServerPostPathURL
-      parameters:params
-         headers:nil
-        progress:nil
-         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-             NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL parameters:params success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
+        NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
              //SCXTT RELEASE
              NSLog(@"SMVC responseString: %@", responseString);
-             NSLog(@"SMVC task: %@", task);
+             NSLog(@"SMVC httpResponse: %@", httpResponse);
              
              // SCXTT WIP Loop thru the response and check key "looking"
              NSError *e = nil;
@@ -1130,7 +1117,8 @@
                      NSLog(@"SMVC NO ONE is looking so why am I wasting my battery with these background API calls?!?");
                  }
              }
-         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+         } failure:^(NSError *error) {
+             NSLog(@"Error posting request: %@", error.localizedDescription);
          }];
 
 }
@@ -1180,15 +1168,13 @@
                                  @"user_id":[_dataModel userId],
                                  @"location":[[SingletonClass singleObject] myLocStr],
                                  @"secret_code":secret_code};
-        [_client POST:ServerPostPathURL
+        [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
            parameters:params
-              headers:nil
-             progress:nil
-              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
                   NSLog(@"SMVC in callback - success");
                   _isUpdating = NO;
-                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                  if (httpResp.statusCode != 200) {
+//                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
+                  if (httpResponse.statusCode != 200) {
                       ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
                   } else {
                       NSLog(@"SMVC Get all messages for this room");
@@ -1225,7 +1211,7 @@
                           _isFromNotification = NO;
                       }
                   }
-              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            } failure:^(NSError *error) {
                   if ([self isViewLoaded]) {
                       _isUpdating = NO;
                       _isFromNotification = NO;

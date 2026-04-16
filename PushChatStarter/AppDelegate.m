@@ -13,6 +13,7 @@
 #import "Message.h"
 #import "Harpy.h"
 #import "APIClient.h"
+#import "ServerURLManager.h"
 #import <UserNotifications/UserNotifications.h>
 
 void ShowErrorAlert(NSString* text)
@@ -335,15 +336,16 @@ int badResponseCounter = 0;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [self initializeAWS];
+    // FIRST: Initialize the server URL from the gist before making any API calls
+    [ServerURLManager initializeServerURL:^(BOOL success) {
+        if (success) {
+            NSLog(@"✅ App ready - Server URL is: %@", [ServerURLManager serverURL]);
+        } else {
+            NSLog(@"⚠️ Failed to initialize server URL, using fallback");
+        }
+    }];
     
-//    self.mqttTopic = @"Whereru/test";
-    
-    // Connect to MQTT
-//    [self connectToMqtt];
-    
-    // Override point for customization after application launch.
-    _currentState = @"AD_DFLWO";
+    // ...existing code...
     _purchased = NO;
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     

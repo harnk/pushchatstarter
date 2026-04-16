@@ -8,10 +8,13 @@
 
 #import "APIClient.h"
 #import "defs.h"
+#import "ServerURLManager.h"
 #import <AFNetworking/AFNetworking.h>
 
+extern NSString *gServerApiURL;
+
 @interface APIClient ()
-@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
+@property (nonatomic, strong, readwrite) AFHTTPSessionManager *sessionManager;
 @end
 
 @implementation APIClient
@@ -28,8 +31,16 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:ServerApiURL]];
-        self.sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        // Get the server URL that was initialized on app launch
+        NSString *serverURL = gServerApiURL;
+        if (serverURL) {
+            NSURL *baseURL = [NSURL URLWithString:serverURL];
+            self.sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+            self.sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+            NSLog(@"✅ APIClient initialized with server URL: %@", serverURL);
+        } else {
+            NSLog(@"⚠️ Server URL not yet initialized");
+        }
     }
     return self;
 }
@@ -39,8 +50,7 @@
                success:(APISuccessBlock)success
                failure:(APIFailureBlock)failure {
     
-    // Debug log: show full POST URL and params
-    NSLog(@"🌐 API POST %@%@ params:%@", ServerApiURL, endpoint, params);
+    NSLog(@"🌐 POST %@%@ params:%@", self.sessionManager.baseURL.absoluteString, endpoint, params);
     
     [self.sessionManager POST:endpoint
                    parameters:params
@@ -48,17 +58,11 @@
                      progress:nil
                       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                           NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                          NSLog(@"✅ API Response Status: %ld", (long)httpResp.statusCode);
-                          
-                          if (success) {
-                              success(responseObject, httpResp);
-                          }
+                          NSLog(@"✅ Response Status: %ld", (long)httpResp.statusCode);
+                          if (success) success(responseObject, httpResp);
                       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                          NSLog(@"❌ API Error: %@", error.localizedDescription);
-                          
-                          if (failure) {
-                              failure(error);
-                          }
+                          NSLog(@"❌ Error: %@", error.localizedDescription);
+                          if (failure) failure(error);
                       }];
 }
 
@@ -67,8 +71,7 @@
                 success:(APISuccessBlock)success
                 failure:(APIFailureBlock)failure {
     
-    // Debug log: show full GET URL and params
-    NSLog(@"🌐 API GET %@%@ params:%@", ServerApiURL, endpoint, params);
+    NSLog(@"🌐 GET %@%@ params:%@", self.sessionManager.baseURL.absoluteString, endpoint, params);
     
     [self.sessionManager GET:endpoint
                   parameters:params
@@ -76,17 +79,11 @@
                     progress:nil
                      success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                          NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                         NSLog(@"✅ API Response Status: %ld", (long)httpResp.statusCode);
-                         
-                         if (success) {
-                             success(responseObject, httpResp);
-                         }
+                         NSLog(@"✅ Response Status: %ld", (long)httpResp.statusCode);
+                         if (success) success(responseObject, httpResp);
                      } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                         NSLog(@"❌ API Error: %@", error.localizedDescription);
-                         
-                         if (failure) {
-                             failure(error);
-                         }
+                         NSLog(@"❌ Error: %@", error.localizedDescription);
+                         if (failure) failure(error);
                      }];
 }
 

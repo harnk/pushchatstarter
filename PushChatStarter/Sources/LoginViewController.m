@@ -70,7 +70,7 @@
 }
 
 - (void)postJoinRequest {
-    
+       
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = NSLocalizedString(@"Connecting", nil);
     
@@ -82,7 +82,7 @@
                              @"code":[_dataModel secretCode]};
 
     // Debug log: full POST URL and params
-    NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
+    NSLog(@"SCXTTT API POST %@%@ params:%@", gServerApiURL, ServerPostPathURL, params);
     // Using APIClient for centralized POST API
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params

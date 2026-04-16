@@ -77,7 +77,7 @@
                              @"text":text};
     
     // Debug log: full POST URL and params
-    NSLog(@"API POST %@%@ params:%@", ServerApiURL, ServerPostPathURL, params);
+    NSLog(@"API POST %@%@ params:%@", gServerApiURL, ServerPostPathURL, params);
     
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params

@@ -1,6 +1,6 @@
 
 // Maximum number of bytes that a text message may have. The payload data of
-// a push notification is limited to 256 bytes and that includes the JSON 
+// a push notification is limited to 256 bytes and that includes the JSON
 // overhead and the name of the sender.
 #define MaxMessageLength 190
 //#define MaxMessageLength 158
@@ -12,8 +12,14 @@
 //#define ServerApiURL @"http://ec2-54-245-7-246.us-west-2.compute.amazonaws.com"
 // Local development endpoint
 //#define ServerApiURL @"http://192.168.4.135:8000"
-#define ServerApiURL @"https://circumstances-organisations-achieved-structural.trycloudflare.com"
-//#define ServerApiURL @"http://52.144.37.179:8080"
+
+// Server URL is fetched dynamically on app launch from FetchServerApiURL
+//#define FetchServerApiURL @"https://gist.githubusercontent.com/harnk/576c39c41100a4e6f0533c2d179e9a65/raw"
+
+// Global variable for the server API URL (set on app launch)
+// Declared here, defined in ServerURLManager.m to avoid duplicate symbols
+extern NSString *gServerApiURL;
+#define FetchServerApiURL @"https://gist.githubusercontent.com/harnk/576c39c41100a4e6f0533c2d179e9a65/raw"
 
 
 //Test
