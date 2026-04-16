@@ -825,7 +825,6 @@
           success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
               if ([self isViewLoaded]) {
                   [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-//                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
                   if (httpResponse.statusCode != 200) {
                       ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
                   } else {
@@ -922,7 +921,6 @@
           success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
               [MBProgressHUD hideHUDForView:self.view animated:YES];
               _isUpdating = NO;
-//              NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
               if (httpResponse.statusCode != 200) {
                   ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
               } else {
@@ -1173,7 +1171,6 @@
              success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
                   NSLog(@"SMVC in callback - success");
                   _isUpdating = NO;
-//                  NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
                   if (httpResponse.statusCode != 200) {
                       ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
                   } else {
