@@ -13,9 +13,6 @@
 // Local development endpoint
 //#define ServerApiURL @"http://192.168.4.135:8000"
 
-// Server URL is fetched dynamically on app launch from FetchServerApiURL
-//#define FetchServerApiURL @"https://gist.githubusercontent.com/harnk/576c39c41100a4e6f0533c2d179e9a65/raw"
-
 // Global variable for the server API URL (set on app launch)
 // Declared here, defined in ServerURLManager.m to avoid duplicate symbols
 extern NSString *gServerApiURL;

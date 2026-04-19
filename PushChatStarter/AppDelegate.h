@@ -8,7 +8,6 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import "SingletonClass.h"
-#import <StoreKit/StoreKit.h>
 
 #define ApplicationDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
 
@@ -16,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
     NSTimer *backgroundTimer;
@@ -30,12 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL deviceHasMoved;
 @property (nonatomic, strong) NSString *currentState;
 
-//In-App purchase stuff
-@property (strong, nonatomic) SKProductsRequest* request;
-@property (strong, nonatomic) NSArray *products;
-@property (nonatomic) BOOL canPurchase;
-@property (strong, nonatomic) SKMutablePayment *payment;
-@property BOOL purchased, isBackgroundMode;
+@property BOOL isBackgroundMode;
 
 
 @end

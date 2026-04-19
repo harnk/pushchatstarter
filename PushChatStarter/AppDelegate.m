@@ -34,118 +34,6 @@ int retryCounter = 0;
 int badResponseCounter = 0;
 
 #pragma mark -
-#pragma mark In-App Purchase Stuff
-
--(NSArray *)getProductIdentifiersFromMainBundle{
-    NSArray *identifiers;
-    // do the following swift equivalent
-    // if let url =  NSBundle.mainBundle().URLForResource("iap_product_ids", withExtension: "plist") { identifiers = NSArray(contentsOfURL: url)! }
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"iap_product_ids"
-                                         withExtension:@"plist"];
-    identifiers = [NSArray arrayWithContentsOfURL:url];
-
-    return identifiers;
-    
-}
-
-- (void)validateProductIdentifiers:(NSArray *)productIdentifiers
-{
-    NSLog(@"SCXTT validateProductIdentifiers");
-    SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
-                                          initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
-    
-    // Keep a strong reference to the request.
-    self.request = productsRequest;
-    productsRequest.delegate = self;
-    [productsRequest start];
-}
-
-// SKProductsRequestDelegate protocol method
-- (void)productsRequest:(SKProductsRequest *)request
-     didReceiveResponse:(SKProductsResponse *)response
-{
-    self.products = response.products;
-    NSLog(@"SCXTT productsRequest:didReceiveResponse Delegate fired with response: %@", response.products[0].localizedDescription);
-    NSLog(@"SCXTT now put these into the singleton NOW");
-    [[SingletonClass singleObject] setMyProducts:self.products];
-    
-    for (NSString *invalidIdentifier in response.invalidProductIdentifiers) {
-        // Handle any invalid product identifiers.
-        NSLog(@"invalidIdentifier %@", invalidIdentifier);
-    }
-    
-//    [self displayStoreUI]; // Custom method
-}
-
--(void) paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions {
-    //flesh this out
-    NSLog(@"SCXTT paymentQueue:updatedTransactions delegate");
-    for (SKPaymentTransaction *transaction in transactions) {
-        
-        switch (transaction.transactionState) {
-                
-            case SKPaymentTransactionStatePurchasing:
-                
-//                [self initPurchase];
-                NSLog(@"PURCH 1 Purchasing");
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-                break;
-                
-            case SKPaymentTransactionStatePurchased:
-                
-                // this is successfully purchased!
-                _purchased = YES;
-                NSLog(@"PURCH 2 Purchased");
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"com.harnk.whereru.removeads"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                // finish the transaction
-                [queue finishTransaction:transaction];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"removeThoseAds" object:nil userInfo:nil];
-
-                //  and return the transaction data
-                
-//                if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
-//                    [delegate successfulPurchase:self restored:NO identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
-                
-                // and more code bla bla bla
-                
-                break;
-                
-            case SKPaymentTransactionStateRestored:
-                
-                // and more code bla bla bla
-                
-                //                [self restorePurchase];
-                NSLog(@"PURCH 3 Restored");
-                
-                break;
-                
-            case SKPaymentTransactionStateDeferred:
-                
-                // and more code bla bla bla
-                
-                //                [self ??];
-                NSLog(@"PURCH 4 Deferred");
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                
-                break;
-                
-            case SKPaymentTransactionStateFailed:
-                
-                // and more code bla bla bla
-                
-//                [self failedNotification];
-                NSLog(@"PURCH 5 Failed: %@", [[transaction error] localizedDescription]);
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                
-                break;
-        }
-    }
-}
-
-
-#pragma mark -
 #pragma mark Notifications
 
 - (NSString *)hexStringFromDeviceToken:(NSData *)deviceToken
@@ -346,7 +234,6 @@ int badResponseCounter = 0;
     }];
     
     // ...existing code...
-    _purchased = NO;
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
     // HARPY BEGIN
@@ -426,16 +313,6 @@ int badResponseCounter = 0;
 //    we should only do this next line if we are already imInARoom and also move this to start updating when we are notified of leave ShowMapViewController and not right here
     [self startMyLocationUpdates];
     
-    // Deal with In-App purchase
-    _canPurchase = NO;
-//    if ([SKPaymentQueue canMakePayments]) {
-//        NSArray *productsArray = [self getProductIdentifiersFromMainBundle];
-//        NSLog(@"SCXTT getProductIdentifiersFromMainBundle:%@", productsArray);
-//        [self validateProductIdentifiers:productsArray];
-//        _canPurchase = YES;
-//        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-//
-//    }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(startMyLocationUpdates)
                                                  name:@"fireUpTheGPS"

@@ -123,11 +123,6 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hideAds)
-                                                 name:@"removeThoseAds"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(stopGetRoomTimer)
                                                  name:@"killGetRoomTimer"
                                                object:nil];
@@ -275,8 +270,6 @@
     [self setUpButtonBarItems];
     
 //    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnExit, nil] animated:YES];
-    
-    [self checkAdStatus];
     
 }
 
@@ -450,25 +443,6 @@
     }
 }
 
-
-#pragma mark -
-#pragma mark In-App Purchases Methods
-
-- (void)hideAds {
-    // Hide the banner and removeAds button since they have paid
-//    _bannerView.hidden = YES;
-    _removeAdsButton.hidden = YES;
-}
-
--(void) checkAdStatus {
-//    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.harnk.whereru.removeads"]) {  //SCXTT Temporarily removed this check until I have time to finish in-app ads
-    if (YES) {
-//        [self toastMsg:@"Remove Ads is enabled - Thank You for your support!"];
-        [self hideAds];
-    } else {
-//        [self toastMsg:@"Remove Ads is disabled or uninitialized so let the banner and Remove Ads button show"];
-    }
-}
 
 #pragma mark -
 #pragma mark Date String Methods
@@ -748,19 +722,6 @@
 
 #pragma mark -
 #pragma mark Actions
-
-- (void) createPaymentRequestForProduct:(SKProduct *) product {
-    SKMutablePayment * payment = [SKMutablePayment paymentWithProduct:product];
-    payment.quantity = 1;
-    [[SKPaymentQueue defaultQueue]addPayment:payment];
-}
-
-- (IBAction)removeAds:(id)sender {
-    NSLog(@"Remove Ads pressed");
-    SKProduct *thisProduct = (SKProduct *)[[SingletonClass singleObject] myProducts][0];
-    [self createPaymentRequestForProduct:thisProduct];
-    
-}
 
 - (void) showLoginViewController {
     LoginViewController* loginController = (LoginViewController*) [ApplicationDelegate.storyBoard instantiateViewControllerWithIdentifier:@"LoginViewController"];

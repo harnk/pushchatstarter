@@ -32,10 +32,8 @@
         9E1CE5841AD9E9660052B768 /* pkcyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E1CE5831AD9E9660052B768 /* pkcyangray.png */; };
         9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */; };
         9E2035E11A50FC3800FDD3A4 /* ShowMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */; };
-        9E2346551D07C7CF00E7825B /* iap_product_ids.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2346541D07C7CF00E7825B /* iap_product_ids.plist */; };
         9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75271A2D130C002B2A03 /* MapKit.framework */; };
         9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */; };
-        9E3117161E8CB045006CC478 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E3117151E8CB045006CC478 /* StoreKit.framework */; };
         9E4408F91AD8B3F70079A4CA /* pkblue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408EF1AD8B3F70079A4CA /* pkblue.png */; };
         9E4408FA1AD8B3F70079A4CA /* pkcyan.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408F01AD8B3F70079A4CA /* pkcyan.png */; };
         9E4408FB1AD8B3F70079A4CA /* pkdarkgreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4408F11AD8B3F70079A4CA /* pkdarkgreen.png */; };
@@ -143,10 +141,8 @@
         9E2035DD1A4E4F0600FDD3A4 /* sweetbeep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sweetbeep.caf; sourceTree = "<group>"; };
         9E2035DF1A50FC3800FDD3A4 /* ShowMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowMapViewController.h; sourceTree = "<group>"; };
         9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowMapViewController.m; sourceTree = "<group>"; };
-        9E2346541D07C7CF00E7825B /* iap_product_ids.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iap_product_ids.plist; sourceTree = "<group>"; };
         9E2A75271A2D130C002B2A03 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
         9E2A75291A2D18F5002B2A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-        9E3117151E8CB045006CC478 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
         9E3117171E8DF249006CC478 /* WhereRU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WhereRU.entitlements; path = WhereRU/WhereRU.entitlements; sourceTree = "<group>"; };
         9E4408EF1AD8B3F70079A4CA /* pkblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkblue.png; sourceTree = "<group>"; };
         9E4408F01AD8B3F70079A4CA /* pkcyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkcyan.png; sourceTree = "<group>"; };
@@ -203,7 +199,6 @@
             isa = PBXFrameworksBuildPhase;
             buildActionMask = 2147483647;
             files = (
-                9E3117161E8CB045006CC478 /* StoreKit.framework in Frameworks */,
                 9E929F8C202AAAEB001A9B57 /* AWSCore.framework in Frameworks */,
                 9E885C021D2612AE007F1516 /* Security.framework in Frameworks */,
                 9E768BBE202D5175003C7502 /* AWSIoT.framework in Frameworks */,
@@ -234,7 +229,6 @@
             isa = PBXGroup;
             children = (
                 9E3117171E8DF249006CC478 /* WhereRU.entitlements */,
-                9E2346541D07C7CF00E7825B /* iap_product_ids.plist */,
                 61489E9D17041C660049C6F9 /* PushChatStarter */,
                 61489E9617041C660049C6F9 /* Frameworks */,
                 61489E9517041C660049C6F9 /* Products */,
@@ -253,7 +247,6 @@
         61489E9617041C660049C6F9 /* Frameworks */ = {
             isa = PBXGroup;
             children = (
-                9E3117151E8CB045006CC478 /* StoreKit.framework */,
                 9E1B95CB1DEBE2B00001CAA5 /* libAFNetworking.a */,
                 9E1B95CC1DEBE2B00001CAA5 /* libMBProgressHUD.a */,
                 9E1B95CD1DEBE2B00001CAA5 /* libUICKeyChainStore.a */,
@@ -492,7 +485,6 @@
                 9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */,
                 9E7AC7E71AB2834E004996B6 /* orange.png in Resources */,
                 9E4408FE1AD8B3F70079A4CA /* pkorange.png in Resources */,
-                9E2346551D07C7CF00E7825B /* iap_product_ids.plist in Resources */,
                 9E4409021AD8B3F70079A4CA /* pkyellow.png in Resources */,
                 9EEB95331F4FD41E00551CB7 /* iTunesArtwork in Resources */,
                 9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */,

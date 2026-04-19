@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
     CLLocation* locationObject;
 }
 
-//@property (weak, nonatomic) IBOutlet GADBannerView *bannerView;
-@property (weak, nonatomic) IBOutlet UIButton *removeAdsButton;
 @property (weak, nonatomic) IBOutlet UITextField *textView;
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapHeight;
