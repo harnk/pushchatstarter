@@ -2,7 +2,7 @@
 #import "defs.h"
 
 // Global variable to hold the server URL (defined here, declared extern in defs.h)
-NSString *gServerApiURL = @"https://began-possibilities-stable-ids.trycloudflare.com";
+NSString *gServerApiURL = nil;
 
 @implementation ServerURLManager
 
