@@ -7,9 +7,10 @@ NSString *gServerApiURL = nil;
 @implementation ServerURLManager
 
 + (void)initializeServerURL:(void (^)(BOOL success))completion {
-    // Fetch the server URL from the gist
+    // Clear any cached response for this URL to ensure we get fresh content
     NSURL *configURL = [NSURL URLWithString:FetchServerApiURL];
-    NSURLRequest *request = [NSURLRequest requestWithURL:configURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:[NSURLRequest requestWithURL:configURL]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:configURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
     
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
