@@ -65,7 +65,6 @@
         9E885C021D2612AE007F1516 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E885C011D2612AE007F1516 /* Security.framework */; };
         9E929F8B202AAAEB001A9B57 /* AWSIoT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F89202AAAEB001A9B57 /* AWSIoT.framework */; };
         9E929F8C202AAAEB001A9B57 /* AWSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E929F8A202AAAEB001A9B57 /* AWSCore.framework */; };
-        9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9A82BE1A7D5FA800A0F782 /* Harpy.m */; };
         9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
         9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */; };
         9EA13D662F8DE5130076E183 /* ServerURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA13D652F8DE5130076E183 /* ServerURLManager.m */; };
@@ -175,8 +174,6 @@
         9E929F89202AAAEB001A9B57 /* AWSIoT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSIoT.framework; sourceTree = "<group>"; };
         9E929F8A202AAAEB001A9B57 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSCore.framework; sourceTree = "<group>"; };
         9E983E791AC10B8400CB0DAC /* WhereRU-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WhereRU-Bridging-Header.h"; sourceTree = "<group>"; };
-        9E9A82BD1A7D5FA800A0F782 /* Harpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Harpy.h; sourceTree = "<group>"; };
-        9E9A82BE1A7D5FA800A0F782 /* Harpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Harpy.m; sourceTree = "<group>"; };
         9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inactivepin.png; sourceTree = "<group>"; };
         9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkinactivepin.png; sourceTree = "<group>"; };
         9EA13D642F8DE5130076E183 /* ServerURLManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerURLManager.h; sourceTree = "<group>"; };
@@ -332,8 +329,6 @@
                 9E2035E01A50FC3800FDD3A4 /* ShowMapViewController.m */,
                 9E81F9FB1A5CD8A000310C40 /* VBAnnotation.h */,
                 9E81F9FC1A5CD8A000310C40 /* VBAnnotation.m */,
-                9E9A82BD1A7D5FA800A0F782 /* Harpy.h */,
-                9E9A82BE1A7D5FA800A0F782 /* Harpy.m */,
                 61489EE3170427A70049C6F9 /* LoginViewController.h */,
                 61489EE4170427A80049C6F9 /* LoginViewController.m */,
                 61489EDD170425EA0049C6F9 /* ComposeViewController.h */,
@@ -526,7 +521,6 @@
                 9E7CE78B1AAAA88500C7364D /* Room.m in Sources */,
                 61489EA417041C660049C6F9 /* main.m in Sources */,
                 61489EA817041C660049C6F9 /* AppDelegate.m in Sources */,
-                9E9A82BF1A7D5FA800A0F782 /* Harpy.m in Sources */,
                 9EA13D662F8DE5130076E183 /* ServerURLManager.m in Sources */,
                 61489EB417041C660049C6F9 /* ViewController.m in Sources */,
                 61489ED4170422A20049C6F9 /* DataModel.m in Sources */,

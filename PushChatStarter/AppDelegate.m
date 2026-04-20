@@ -11,7 +11,6 @@
 #import "ShowMapViewController.h"
 #import "DataModel.h"
 #import "Message.h"
-#import "Harpy.h"
 #import "APIClient.h"
 #import "ServerURLManager.h"
 #import <UserNotifications/UserNotifications.h>
@@ -236,28 +235,6 @@ int badResponseCounter = 0;
     // ...existing code...
     _storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
-    // HARPY BEGIN
-    // Check to see if a newer version of this app is available
-    // Present Window before calling Harpy
-    [self.window makeKeyAndVisible];
-    
-    // Set the App ID for your app
-    [[Harpy sharedInstance] setAppID:@"976774720"];
-    
-    // Set the UIViewController that will present an instance of UIAlertController
-    [[Harpy sharedInstance] setPresentingViewController:_window.rootViewController];
-    
-    // (Optional) Set the App Name for your app
-    [[Harpy sharedInstance] setAppName:@"WhereRU - Locator and Chat"];
-    
-    /* (Optional) Set the Alert Type for your app
-     By default, Harpy is configured to use HarpyAlertTypeOption */
-    //    [[Harpy sharedInstance] setAlertType:HarpyAlertTypeForce];
-    
-    // Perform check for new version of your app
-    [[Harpy sharedInstance] checkVersion];
-
-    
     // Check the keychain for the userID
     UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.harnk.WhereRU.storedid"];
     NSString *userId = [keychain stringForKey:@"mysaveduserid"];
@@ -395,8 +372,6 @@ int badResponseCounter = 0;
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     _currentState = @"AD_FOREGROUND";
     NSLog(@"%@ applicationWillEnterForeground", _currentState);
-    [[Harpy sharedInstance] checkVersion];
-    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

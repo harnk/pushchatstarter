@@ -32,6 +32,5 @@ extern NSString *gServerApiURL;
 // Convenience function to show a UIAlertView
 void ShowErrorAlert(NSString* text);
 
-#define kAlertViewHarpy 1
 #define kAlertViewSignOut 2
 #define kAlertViewNotifications 3
