@@ -1091,7 +1091,7 @@
         //    [_messageTextView resignFirstResponder];
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.label.text = NSLocalizedString(@"whereru", nil);
+        hud.label.text = NSLocalizedString(@"whereru loading ...", nil);
         
         //    NSString *text = self.messageTextView.text;
         NSString *text = @"Hey WhereRU?";

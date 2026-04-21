@@ -30,19 +30,22 @@ extern NSString *gServerApiURL;
 
 - (instancetype)init {
     self = [super init];
-    if (self) {
-        // Get the server URL that was initialized on app launch
+    return self;
+}
+
+- (AFHTTPSessionManager *)sessionManager {
+    if (!_sessionManager) {
         NSString *serverURL = gServerApiURL;
         if (serverURL) {
             NSURL *baseURL = [NSURL URLWithString:serverURL];
-            self.sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-            self.sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-            NSLog(@"✅ APIClient initialized with server URL: %@", serverURL);
+            _sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+            _sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+            NSLog(@"✅ APIClient sessionManager created with server URL: %@", serverURL);
         } else {
             NSLog(@"⚠️ Server URL not yet initialized");
         }
     }
-    return self;
+    return _sessionManager;
 }
 
 - (void)postToEndpoint:(NSString *)endpoint
