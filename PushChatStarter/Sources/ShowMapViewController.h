@@ -13,7 +13,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import "ServiceConnector.h"
 //@import GoogleMobileAds;
-#import <AFNetworking/AFNetworking.h>
 
 @class ShowMapViewController;
 @class DataModel;
@@ -46,7 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;
-@property (nonatomic, strong) AFHTTPSessionManager *client;
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) int badResponseRetry;
 
