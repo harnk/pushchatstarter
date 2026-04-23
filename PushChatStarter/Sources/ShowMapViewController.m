@@ -13,7 +13,6 @@
 #import "Message.h"
 #import "MessageTableViewCell.h"
 #import "SpeechBubbleView.h"
-#import "ServiceConnector.h"
 #import "JSONDictionaryExtensions.h"
 #import "Room.h"
 #import "NetworkService.h"
@@ -210,15 +209,6 @@
      name:UIApplicationWillResignActiveNotification
      object:nil];
     
-//    NSLog(@"SMVC viewDidLoad Google Mobile Ads SDK version: %@", [GADRequest sdkVersion]);
-    //test ad
-    // self.bannerView.adUnitID = @"ca-app-pub-3940256099942544/2934735716";
-    // real adUnitId
-//    self.bannerView.adUnitID = @"ca-app-pub-2521098318893673/7870628745";
-//    self.bannerView.rootViewController = self;
-//    _bannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeLargeBanner];
-//    [self.bannerView loadRequest:[GADRequest request]];
-    
     _okToRecenterMap = YES;
     _pickerIsUp = NO;
     _isFromNotification = NO;
@@ -330,10 +320,6 @@
     [self postDoneLookingLiveUpdate];
 }
 
-- (void)viewDidUnload:(BOOL)animated {
-    NSLog(@"SMVC viewDidUnload");
-//    [self postDoneLookingLiveUpdate];
-}
 
 - (void) applicationWillResign{
     NSLog(@"SMVC applicationWillResign About to lose focus so stopGetRoomTimer COMMENTED OUT FOR NOW");
@@ -551,36 +537,6 @@
         [self scrollToNewestMessage];
     }
 }
-
-#pragma mark -
-#pragma mark ServiceConnector stuff
-
-- (IBAction)getDown:(id)sender { //perform get request
-    ServiceConnector *serviceConnector = [[ServiceConnector alloc] init];
-    serviceConnector.delegate = self;
-    [serviceConnector getTest];
-}
-- (IBAction)postDown:(id)sender { //perform post request
-    ServiceConnector *serviceConnector = [[ServiceConnector alloc] init];
-    serviceConnector.delegate = self;
-    [serviceConnector postTest];
-}
-#pragma mark - ServiceConnectorDelegate -
--(void)requestReturnedData:(NSData *)data{ //activated when data is returned
-    
-    NSDictionary *dictionary = [NSDictionary dictionaryWithJSONData:data];
-    _output.text = dictionary.JSONString; // set the textview to the raw string value of the data recieved
-    
-    _value1TextField.text = [NSString stringWithFormat:@"%d",[[dictionary objectForKey:@"value1"] intValue]];
-    _value2TextField.text = [dictionary objectForKey:@"value2"];
-    
-    //SCXTT RELEASE
-    NSLog(@"requestReturnedData: %@",dictionary);
-    NSLog(@"_output.text JSON RECEIVED: %@", _output.text);
-    NSLog(@"_value1TextField.text: %@", _value1TextField.text);
-    NSLog(@"_value2TextField.text: %@", _value2TextField.text);
-}
-
 
 #pragma mark -
 #pragma mark Picker View Delegates
@@ -853,11 +809,6 @@
     }
 }
 
-
--(NSString *)setPinImageBasedOnNickName {
-    
-    return @"";
-}
 
 - (void)fetchRoomsWithCompletion:(NetworkServiceRoomsCompletion)originalCompletion {
     NSString *userId = [_dataModel userId];
@@ -1559,89 +1510,6 @@ didAddAnnotationViews:(NSArray *)annotationViews
             region = self.mapView.region;
             [self reCenterMap:region meters:meters];
             
-        }
-    }
-}
-
-//SCXTT this whole method can go
--(void) updatePointsOnMapWithNotification:(NSNotification *)notification {
-
-    BOOL whoFound = NO;
-    NSDictionary *dict = [notification userInfo];
-    
-    if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]) {
-
-        NSString *who = [dict valueForKey:@"who"];
-//        NSString *toast = [NSString stringWithFormat:@" Found: %@", who];
-//        [self toastMsg:toast];
-        NSLog(@"who=%@",who);
-        
-        CLLocationCoordinate2D location, southWest, northEast;
-        MKCoordinateRegion region;
-        
-        // seed the region values to set the span later to include all the pins
-        NSArray *strings = [[dict valueForKey:@"loc"] componentsSeparatedByString:@","];
-        southWest.latitude = [strings[0] doubleValue];
-        southWest.longitude = [strings[1] doubleValue];
-        northEast = southWest;
-        
-        //Scxtt may need to move this to mapView delegate
-        // Format the message date
-        NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateStyle:NSDateFormatterShortStyle];
-        [formatter setTimeStyle:NSDateFormatterShortStyle];
-        [formatter setDoesRelativeDateFormatting:YES];
-        NSString* dateString = [formatter stringFromDate:[NSDate date]];
-        
-//        for (id<MKAnnotation> ann in _mapView.annotations)
-        for (VBAnnotation *ann in _mapView.annotations){
-            //SCXTT RELEASE
-//            NSLog(@"moving points checking ann.title is %@",ann.title);
-            
-            // reset the span to include each and every pin as you go thru the list
-            //ignore the 0,0 uninitialize annotations
-            if (ann.coordinate.latitude != 0) {
-                southWest.latitude = MIN(southWest.latitude, ann.coordinate.latitude);
-                southWest.longitude = MIN(southWest.longitude, ann.coordinate.longitude);
-                northEast.latitude = MAX(northEast.latitude, ann.coordinate.latitude);
-                northEast.longitude = MAX(northEast.longitude, ann.coordinate.longitude);
-            }
-            // Move the updated pin to its new locations
-            if ([ann.title isEqualToString:who])
-            {
-                NSLog(@"found %@ moving %@", who, who);
-//                [self openAnnotation:ann];
-                whoFound = YES;
-                location.latitude = [strings[0] doubleValue];
-                location.longitude = [strings[1] doubleValue];
-                NSLog(@"loc = %@",[dict valueForKey:@"loc"]);
-//                ann.coordinate = location;
-                [ann setCoordinate:location];
-                ann.subtitle = dateString;
-                break;
-            }
-        }
-        // new who so add addAnnotation and set coordinate
-        if (!whoFound) {
-            NSLog(@"Adding new who %@", who);
-            VBAnnotation *annNew = [[VBAnnotation alloc] initWithTitle:who newSubTitle:dateString Location:location LocTime:[NSDate date] PinImageFile:@"blue.png" PinImage:[UIImage imageNamed:@"blue.png"]];
-            
-            location.latitude = [strings[0] doubleValue];
-            location.longitude = [strings[1] doubleValue];
-            if (![[dict valueForKey:@"loc"]  isEqual: @"0.000000, 0.000000"]){
-                [annNew setCoordinate:location];
-                [self.mapView addAnnotation:annNew];
-            }
-        }
-        if (_okToRecenterMap) {
-            _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
-            _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-            
-            // This is a diag distance (if you wanted tighter you could do NE-NW or NE-SE)
-            CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-            
-            region = self.mapView.region;
-            [self reCenterMap:region meters:meters];
         }
     }
 }

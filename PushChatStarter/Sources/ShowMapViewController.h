@@ -11,8 +11,6 @@
 #import <MapKit/MapKit.h>
 #import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
-#import "ServiceConnector.h"
-//@import GoogleMobileAds;
 
 @class ShowMapViewController;
 @class DataModel;
@@ -20,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, ServiceConnectorDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIGestureRecognizerDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIGestureRecognizerDelegate>{
     CLLocation* locationObject;
 }
 
@@ -32,16 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UIScreenEdgePanGestureRecognizer *panDownChat;
 @property (weak, nonatomic) IBOutlet UIImageView *pullHandle;
 
-//Stuff for ServiceConnector //////////////////////////////////
-@property (weak, nonatomic) IBOutlet UITextView *output;
-@property (weak, nonatomic) IBOutlet UITextField *value1TextField;
-@property (weak, nonatomic) IBOutlet UITextField *value2TextField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *satMapButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *pinPickerButton;
-
-- (IBAction)getDown:(id)sender;
-- (IBAction)postDown:(id)sender;
-//End Stuff for ServiceConnector //////////////////////////////
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;
