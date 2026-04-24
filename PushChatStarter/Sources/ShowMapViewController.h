@@ -9,8 +9,8 @@
 #import "ComposeViewController.h"
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-#import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MapManager.h"
 
 @class ShowMapViewController;
 @class DataModel;
@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, ComposeDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIGestureRecognizerDelegate>{
+@interface ShowMapViewController : UIViewController <CLLocationManagerDelegate, ComposeDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIGestureRecognizerDelegate, MapManagerDelegate>{
     CLLocation* locationObject;
 }
 
@@ -40,21 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL isFromNotification;
 @property (nonatomic) BOOL pickerIsUp;
-@property (nonatomic) BOOL okToRecenterMap;
+@property (nonatomic, strong) MapManager *mapManager;
 
 @property(nonatomic, copy) NSArray *rightBarButtonItems;
-//@property(nonatomic, copy) UIBarButtonItem *btnMapType;
-//@property (nonatomic, strong) UIPickerView *myPickerView;
 
 @property (nonatomic, retain) CLLocationManager *locationManager;
-@property (nonatomic, retain) CLLocation *mapViewSouthWest;
-@property (nonatomic, retain) CLLocation *mapViewNorthEast;
-
-//@property CLLocationDistance distanceFromMeInMeters;
 
 @property (nonatomic, strong) NSMutableArray * roomArray; // Current locations of all in the room
 @property (nonatomic, strong) NSMutableArray * roomMessagesArray; // Current messages in the room
-@property (nonatomic, strong) NSString *centerOnThisGuy;
 @end
 
 NS_ASSUME_NONNULL_END

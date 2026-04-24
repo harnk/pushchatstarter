@@ -2,15 +2,14 @@
 #import "defs.h"
 
 // Global variable to hold the server URL (defined here, declared extern in defs.h)
-NSString *gServerApiURL = nil;
+NSString *gServerApiURL = @"https://api.harnk-whereru.uk";
 
 @implementation ServerURLManager
 
 + (void)initializeServerURL:(void (^)(BOOL success))completion {
-    // Clear any cached response for this URL to ensure we get fresh content
+    // Fetch the server URL from the gist
     NSURL *configURL = [NSURL URLWithString:FetchServerApiURL];
-    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:[NSURLRequest requestWithURL:configURL]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:configURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+    NSURLRequest *request = [NSURLRequest requestWithURL:configURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
     
     NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
