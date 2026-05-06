@@ -256,7 +256,7 @@
     if (screenHeight == 320) {
         region.span.longitudeDelta = meters / 80319.5;
     } else {
-        region.span.longitudeDelta = 0;
+        region.span.longitudeDelta = 0.002;
     }
     MKCoordinateRegion savedRegion = [_mapView regionThatFits:region];
     [_mapView setRegion:savedRegion animated:YES];
