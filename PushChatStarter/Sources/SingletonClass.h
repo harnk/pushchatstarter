@@ -16,6 +16,5 @@
 @property (nonatomic) BOOL notificationsAreDisabled;
 @property (nonatomic) BOOL imInARoom;
 @property BOOL mapIsActive;
-@property (nonatomic, strong) NSString *awsCognitoPoolId, *awsRegionName, *awsIotEndpoint;
 
 @end
