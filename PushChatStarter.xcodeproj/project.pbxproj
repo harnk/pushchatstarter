@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5DC2A89555E7F904A734F5D4 /* Pods_WhereRU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 945A33A24FA7A50C4B060C35 /* Pods_WhereRU.framework */; };
 		61489E9817041C660049C6F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61489E9717041C660049C6F9 /* UIKit.framework */; };
 		61489E9A17041C660049C6F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61489E9917041C660049C6F9 /* Foundation.framework */; };
 		61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61489E9B17041C660049C6F9 /* CoreGraphics.framework */; };
@@ -62,6 +61,7 @@
 		9E9C523D1F5CF27900FDFAF5 /* inactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523C1F5CF27900FDFAF5 /* inactivepin.png */; };
 		9E9C523F1F5D02ED00FDFAF5 /* pkinactivepin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */; };
 		9EA13D662F8DE5130076E183 /* ServerURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA13D652F8DE5130076E183 /* ServerURLManager.m */; };
+		9EBC49202FC14E01005F17A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EBC491F2FC14E01005F17A7 /* PrivacyInfo.xcprivacy */; };
 		9EBDFCC71F72144D009317F0 /* pullhandle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EBDFCC61F72144D009317F0 /* pullhandle.png */; };
 		9ED763B82F84A8D100CC5F4D /* APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763B72F84A8C800CC5F4D /* APIClient.m */; };
 		9ED763BA2F8CB00000CC5F4D /* NetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763B92F8CB00000CC5F4D /* NetworkService.m */; };
@@ -71,6 +71,7 @@
 		9EE4CACC1B0D796D00E648CC /* back-button-pressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */; };
 		9EEB95331F4FD41E00551CB7 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 9EEB95321F4FD41E00551CB7 /* iTunesArtwork */; };
 		9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */; };
+		BA8528A30F6A6B35973AC097 /* Pods_WhereRU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06C9323788D07CD710463D45 /* Pods_WhereRU.framework */; };
 		D6FAA1E61AD7482300A68B6A /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E41AD7482300A68B6A /* blue.png */; };
 		D6FAA1E71AD7482300A68B6A /* bluemenuitem.png in Resources */ = {isa = PBXBuildFile; fileRef = D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */; };
 /* End PBXBuildFile section */
@@ -89,7 +90,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1F423F37230EC87443F64A5F /* Pods-WhereRU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereRU.release.xcconfig"; path = "Target Support Files/Pods-WhereRU/Pods-WhereRU.release.xcconfig"; sourceTree = "<group>"; };
+		06C9323788D07CD710463D45 /* Pods_WhereRU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhereRU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61489E9417041C660049C6F9 /* WhereRU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereRU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61489E9717041C660049C6F9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		61489E9917041C660049C6F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -120,7 +121,7 @@
 		61489EDE170425EA0049C6F9 /* ComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComposeViewController.m; sourceTree = "<group>"; };
 		61489EE3170427A70049C6F9 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		61489EE4170427A80049C6F9 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		945A33A24FA7A50C4B060C35 /* Pods_WhereRU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhereRU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		64A64044FBBD58EAC09E658E /* Pods-WhereRU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereRU.release.xcconfig"; path = "Target Support Files/Pods-WhereRU/Pods-WhereRU.release.xcconfig"; sourceTree = "<group>"; };
 		9E084B2D1A9AA9BE004439FA /* ServiceConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceConnector.h; sourceTree = "<group>"; };
 		9E084B2E1A9AA9BE004439FA /* ServiceConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceConnector.m; sourceTree = "<group>"; };
 		9E084B301A9AACDE004439FA /* JSONDictionaryExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONDictionaryExtensions.h; sourceTree = "<group>"; };
@@ -166,6 +167,7 @@
 		9E9C523E1F5D02ED00FDFAF5 /* pkinactivepin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pkinactivepin.png; sourceTree = "<group>"; };
 		9EA13D642F8DE5130076E183 /* ServerURLManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerURLManager.h; sourceTree = "<group>"; };
 		9EA13D652F8DE5130076E183 /* ServerURLManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerURLManager.m; sourceTree = "<group>"; };
+		9EBC491F2FC14E01005F17A7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		9EBDFCC61F72144D009317F0 /* pullhandle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pullhandle.png; sourceTree = "<group>"; };
 		9ED763B62F84A8C800CC5F4D /* APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
 		9ED763B72F84A8C800CC5F4D /* APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APIClient.m; sourceTree = "<group>"; };
@@ -179,7 +181,7 @@
 		9EE4CACB1B0D796D00E648CC /* back-button-pressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-button-pressed.jpg"; sourceTree = "<group>"; };
 		9EEB95321F4FD41E00551CB7 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
 		9EEFBF3E1AB7C5A80021A8A5 /* cyangray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cyangray.png; sourceTree = "<group>"; };
-		C406C29B422FF987A350CA01 /* Pods-WhereRU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereRU.debug.xcconfig"; path = "Target Support Files/Pods-WhereRU/Pods-WhereRU.debug.xcconfig"; sourceTree = "<group>"; };
+		AB51BBBA809FCFBD9214FF73 /* Pods-WhereRU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereRU.debug.xcconfig"; path = "Target Support Files/Pods-WhereRU/Pods-WhereRU.debug.xcconfig"; sourceTree = "<group>"; };
 		D6FAA1E41AD7482300A68B6A /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		D6FAA1E51AD7482300A68B6A /* bluemenuitem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluemenuitem.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,7 +197,7 @@
 				61489E9C17041C660049C6F9 /* CoreGraphics.framework in Frameworks */,
 				9E2A75281A2D130C002B2A03 /* MapKit.framework in Frameworks */,
 				9E2A752A1A2D18F5002B2A03 /* CoreLocation.framework in Frameworks */,
-				5DC2A89555E7F904A734F5D4 /* Pods_WhereRU.framework in Frameworks */,
+				BA8528A30F6A6B35973AC097 /* Pods_WhereRU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,8 +207,8 @@
 		4AF750F039039A2FFEA9A0BF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C406C29B422FF987A350CA01 /* Pods-WhereRU.debug.xcconfig */,
-				1F423F37230EC87443F64A5F /* Pods-WhereRU.release.xcconfig */,
+				AB51BBBA809FCFBD9214FF73 /* Pods-WhereRU.debug.xcconfig */,
+				64A64044FBBD58EAC09E658E /* Pods-WhereRU.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -214,6 +216,7 @@
 		61489E8B17041C660049C6F9 = {
 			isa = PBXGroup;
 			children = (
+				9EBC491F2FC14E01005F17A7 /* PrivacyInfo.xcprivacy */,
 				9E3117171E8DF249006CC478 /* WhereRU.entitlements */,
 				61489E9D17041C660049C6F9 /* PushChatStarter */,
 				61489E9617041C660049C6F9 /* Frameworks */,
@@ -240,7 +243,7 @@
 				61489E9717041C660049C6F9 /* UIKit.framework */,
 				61489E9917041C660049C6F9 /* Foundation.framework */,
 				61489E9B17041C660049C6F9 /* CoreGraphics.framework */,
-				945A33A24FA7A50C4B060C35 /* Pods_WhereRU.framework */,
+				06C9323788D07CD710463D45 /* Pods_WhereRU.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -380,12 +383,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61489EB717041C660049C6F9 /* Build configuration list for PBXNativeTarget "WhereRU" */;
 			buildPhases = (
-				53D04BE7C70E09CB57F336B6 /* [CP] Check Pods Manifest.lock */,
+				F51BD5C471642608237F1FC3 /* [CP] Check Pods Manifest.lock */,
 				61489E9017041C660049C6F9 /* Sources */,
 				61489E9117041C660049C6F9 /* Frameworks */,
 				61489E9217041C660049C6F9 /* Resources */,
 				9E768BBD202D5156003C7502 /* Embed Frameworks */,
-				2EB2C85D844075EC478E07F0 /* [CP] Embed Pods Frameworks */,
+				127A389738CAD92EDCC88F35 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -457,6 +460,7 @@
 				9E2035DE1A4E4F0600FDD3A4 /* sweetbeep.caf in Resources */,
 				9EEFBF3F1AB7C5A80021A8A5 /* cyangray.png in Resources */,
 				61489EAE17041C660049C6F9 /* Default-568h@2x.png in Resources */,
+				9EBC49202FC14E01005F17A7 /* PrivacyInfo.xcprivacy in Resources */,
 				9E7AC7E41AB2834E004996B6 /* darkgreen.png in Resources */,
 				61489EB117041C660049C6F9 /* MainStoryboard.storyboard in Resources */,
 				9E4408FB1AD8B3F70079A4CA /* pkdarkgreen.png in Resources */,
@@ -488,7 +492,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2EB2C85D844075EC478E07F0 /* [CP] Embed Pods Frameworks */ = {
+		127A389738CAD92EDCC88F35 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -510,7 +514,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WhereRU/Pods-WhereRU-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		53D04BE7C70E09CB57F336B6 /* [CP] Check Pods Manifest.lock */ = {
+		F51BD5C471642608237F1FC3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -620,11 +624,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationTemporaryUsageDescriptionDictionary = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationTemporaryUsageDescriptionDictionary = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				SDKROOT = iphoneos;
 			};
@@ -659,11 +663,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationTemporaryUsageDescriptionDictionary = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to display your live position on the shared map to members of your current group and to keep your group profile updated while you are active.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationTemporaryUsageDescriptionDictionary = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "WhereRU uses your location to show your live position on the shared map so other group members can see where you are. For example, this allows your friends to find you easily when meeting up at a location.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
@@ -673,7 +677,7 @@
 		};
 		61489EB817041C660049C6F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C406C29B422FF987A350CA01 /* Pods-WhereRU.debug.xcconfig */;
+			baseConfigurationReference = AB51BBBA809FCFBD9214FF73 /* Pods-WhereRU.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -682,7 +686,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.2.7;
+				CURRENT_PROJECT_VERSION = 1.2.10;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 64S84F3VVR;
 				ENABLE_BITCODE = NO;
@@ -739,7 +743,7 @@
 		};
 		61489EB917041C660049C6F9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F423F37230EC87443F64A5F /* Pods-WhereRU.release.xcconfig */;
+			baseConfigurationReference = 64A64044FBBD58EAC09E658E /* Pods-WhereRU.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -748,7 +752,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.2.7;
+				CURRENT_PROJECT_VERSION = 1.2.10;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 64S84F3VVR;
 				ENABLE_BITCODE = NO;

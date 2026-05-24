@@ -21,4 +21,32 @@ post_install do |installer|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
     end
   end
+
+  # === Privacy Manifest Fix for Old Pods ===
+  puts "\n🔧 Adding Privacy Manifests for old frameworks..."
+
+  ['AFNetworking', 'MBProgressHUD'].each do |pod_name|
+    framework_path = "Pods/#{pod_name}/#{pod_name}.framework"
+    
+    if Dir.exist?(framework_path)
+      privacy_file = "#{framework_path}/PrivacyInfo.xcprivacy"
+      privacy_content = <<~XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>NSPrivacyTracking</key>
+            <false/>
+            <key>NSPrivacyCollectedDataTypes</key>
+            <array/>
+        </dict>
+        </plist>
+      XML
+
+      File.write(privacy_file, privacy_content)
+      puts "✅ Added PrivacyInfo.xcprivacy to #{pod_name}"
+    else
+      puts "⚠️  Framework not found for #{pod_name} (this is normal on first run)"
+    end
+  end
 end
