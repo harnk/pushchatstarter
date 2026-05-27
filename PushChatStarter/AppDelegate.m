@@ -578,29 +578,30 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
-//    NSLog(@"SCXTT SCXTT newLoc: %@ ", [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]);
-//    NSLog(@"SCXTT distanceMoved: %f ", distanceMoved);
     if (distanceMoved < 0.01) {
         fprintf(stderr, ".");
         return;
     } else {
         NSLog(@"%@ AppDelegate-didUpdateLocations device moved %f yards", _currentState, distanceMoved);
     }
-//    NSLog(@"%@ AppDelegate-didUpdateLocations background delegate device moved %f yards", _currentState, distanceMoved);
     [[SingletonClass singleObject] setMyNewLocation:newLoc];
     [[SingletonClass singleObject] setMyLocStr: [NSString stringWithFormat:@"%f, %f", newLoc.coordinate.latitude, newLoc.coordinate.longitude]];
+
     //SCXTT RELEASE
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
     
     
     // Do NOT do this next line if SMVC is still active and looking
-    [self postLiveUpdate]; //DEBUG - do this alot FOR NOW UNTIL I GET THIS ALL WORKING AGAIN
+    NSTimeInterval timeSinceLastUpdate = [_lastPostLiveUpdateTime timeIntervalSinceNow] * -1;
+    if (!_lastPostLiveUpdateTime || timeSinceLastUpdate >= 30.0) {
+        [self postLiveUpdate]; //DEBUG - do this alot FOR NOW UNTIL I GET THIS ALL WORKING AGAIN
+        _lastPostLiveUpdateTime = [NSDate date];
+    }
     
     
     if (_isBackgroundMode) {
         [self postMyLoc]; // API
-//        [self publishIMoved]; // MQTT
     }
 }
 

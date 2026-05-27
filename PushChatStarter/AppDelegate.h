@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *currentState;
 
 @property BOOL isBackgroundMode;
-
+@property (nonatomic, strong) NSDate *lastPostLiveUpdateTime;
 
 @end
 

@@ -131,7 +131,11 @@
                                              selector:@selector(handleReceivedNewMQTTData:)
                                                  name:@"receivedNewMQTTData"
                                                object:nil];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUserJoinedRoom)
+                                                 name:@"userJoinedRoom"
+                                               object:nil];
 
 }
 
@@ -270,17 +274,37 @@
         [[SingletonClass singleObject] setImInARoom:NO];
         [self showLoginViewController];
     } else {
-        [[SingletonClass singleObject] setImInARoom:YES];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"fireUpTheGPS" object:nil userInfo:nil];
-        
-        // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
-        self.isUpdating = NO;
-        [self toastMsg:@"Updating locations"];
-//        [self findAction];
-        [self postGetRoomMessages];
-        [self postGetRoom];
-        [self.tableView reloadData];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Share Location"
+                                                                       message:@"Do you want to share your location with others in this room?"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"Share My Location"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+            [[SingletonClass singleObject] setImInARoom:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"fireUpTheGPS" object:nil userInfo:nil];
+
+            // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
+            self.isUpdating = NO;
+            [self toastMsg:@"Updating locations"];
+//            [self findAction];
+            [self postGetRoomMessages];
+            [self postGetRoom];
+            [self.tableView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+        }];
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:^(UIAlertAction * _Nonnull action) {
+            // [[SingletonClass singleObject] setImInARoom:NO];
+            // [self showLoginViewController];
+            [self postLeaveRequest];
+        }];
+
+        [alert addAction:shareAction];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
 }
@@ -364,6 +388,8 @@
 }
 
 -(void)startGetRoomTimer {
+    NSLog(@"SMVC startGetRoomTimer (stop old timers first) findAction WAKE UP DEVICES & postGetRoom every 50s");
+    
     [self stopGetRoomTimer];
     // Also need to wake up other devices in the room now
     [self findAction];
@@ -371,7 +397,6 @@
     //Tell AD to stop postMyLoc
     [[NSNotificationCenter defaultCenter] postNotificationName:@"haltBackgroundUpdates" object:nil userInfo:nil];
 
-    NSLog(@"SMVC findAction WAKE UP DEVICES & startGetRoomTimer should kickoff postGetRoom every 5s");
     _isFromNotification = YES;
     getRoomTimer  = [NSTimer scheduledTimerWithTimeInterval: 50
                                                      target: self
@@ -1060,6 +1085,14 @@
 #pragma mark Map Notification Handlers
 
 - (void)handleReceivedNewAPIData {
+    [_mapManager updateAnnotationsFromRoomArray:_roomArray];
+}
+
+- (void)handleUserJoinedRoom {
+    [self toastMsg:@"Joining room..."];
+    [self postGetRoomMessages];
+    [self postGetRoom];
+    [self.tableView reloadData];
     [_mapManager updateAnnotationsFromRoomArray:_roomArray];
 }
 
