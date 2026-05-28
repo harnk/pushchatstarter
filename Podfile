@@ -25,28 +25,27 @@ post_install do |installer|
   # === Privacy Manifest Fix for Old Pods ===
   puts "\n🔧 Adding Privacy Manifests for old frameworks..."
 
-  ['AFNetworking', 'MBProgressHUD'].each do |pod_name|
-    framework_path = "Pods/#{pod_name}/#{pod_name}.framework"
-    
-    if Dir.exist?(framework_path)
-      privacy_file = "#{framework_path}/PrivacyInfo.xcprivacy"
-      privacy_content = <<~XML
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
-            <key>NSPrivacyTracking</key>
-            <false/>
-            <key>NSPrivacyCollectedDataTypes</key>
-            <array/>
-        </dict>
-        </plist>
-      XML
+  installer.pods_project.targets.each do |target|
+    if ['AFNetworking', 'MBProgressHUD', 'UICKeyChainStore'].include?(target.name)
+      framework_path = "Pods/Target Support Files/#{target.name}"
+      if Dir.exist?(framework_path)
+        privacy_file = "#{framework_path}/PrivacyInfo.xcprivacy"
+        privacy_content = <<~XML
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>NSPrivacyTracking</key>
+              <false/>
+              <key>NSPrivacyCollectedDataTypes</key>
+              <array/>
+          </dict>
+          </plist>
+        XML
 
-      File.write(privacy_file, privacy_content)
-      puts "✅ Added PrivacyInfo.xcprivacy to #{pod_name}"
-    else
-      puts "⚠️  Framework not found for #{pod_name} (this is normal on first run)"
+        File.write(privacy_file, privacy_content)
+        puts "✅ Added PrivacyInfo.xcprivacy to #{target.name}"
+      end
     end
   end
 end
