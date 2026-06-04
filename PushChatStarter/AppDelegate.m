@@ -132,11 +132,12 @@ int badResponseCounter = 0;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    
-    NSLog(@"Received notification: %@", userInfo);
-    
-//    NSString *extra = [[userInfo valueForKey:@"aps"] valueForKey:@"extra"];
+
+    NSLog(@"🔔🔔🔔 didReceiveRemoteNotification CALLED! App state: %ld", (long)application.applicationState);
+    NSLog(@"🔔 Full userInfo: %@", userInfo);
+
     NSString *extra = [userInfo valueForKey:@"extra"];
+    NSLog(@"🔔 Extra field: %@", extra);
 
     if([extra isEqualToString:@"whereru"]) {
         NSLog(@"whereru - in ^completionHandlerSilent push received");
@@ -215,11 +216,11 @@ int badResponseCounter = 0;
 #pragma mark -
 #pragma mark AppDelegate methods
 
-//- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
-//{
-//    NSLog(@"Received notification: %@", userInfo);
-//    [self addMessageFromRemoteNotification:userInfo updateUI:YES];
-//}
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
+{
+    NSLog(@"Received notification (non-silent): %@", userInfo);
+    [self addMessageFromRemoteNotification:userInfo updateUI:YES];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -278,6 +279,7 @@ int badResponseCounter = 0;
     // register for types of remote notifications
     [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
 
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert |
                                              UNAuthorizationOptionSound |
@@ -388,6 +390,68 @@ int badResponseCounter = 0;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     _currentState = @"AD_TERMINATE";
     NSLog(@"%@ applicationWillTerminate", _currentState);
+}
+
+#pragma mark - UNUserNotificationCenterDelegate
+
+// Called when a notification is delivered while app is in foreground
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+
+    NSLog(@"🔔 UNUserNotificationCenterDelegate willPresentNotification called");
+    NSLog(@"🔔 Notification content: %@", notification.request.content.userInfo);
+
+    // Handle the notification payload
+    NSDictionary *userInfo = notification.request.content.userInfo;
+    [self handleNotificationPayload:userInfo];
+
+    // Show notification even when app is in foreground
+    completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionBadge);
+}
+
+// Called when user taps on a notification
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+         withCompletionHandler:(void (^)(void))completionHandler {
+
+    NSLog(@"🔔 UNUserNotificationCenterDelegate didReceiveNotificationResponse called");
+    NSLog(@"🔔 Response notification: %@", response.notification.request.content.userInfo);
+
+    // Handle the notification payload
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    [self handleNotificationPayload:userInfo];
+
+    completionHandler();
+}
+
+// Helper method to handle notification payload
+- (void)handleNotificationPayload:(NSDictionary *)userInfo {
+    NSString *extra = [userInfo valueForKey:@"extra"];
+    NSLog(@"🔔 handleNotificationPayload - extra: %@", extra);
+
+    if([extra isEqualToString:@"whereru"]) {
+        NSLog(@"🔔 whereru - silent push received");
+        retryCounter = 0;
+        NSString *asker = [userInfo valueForKey:@"asker"];
+
+        [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+        float batteryLevel = [[UIDevice currentDevice] batteryLevel];
+        batteryLevel *= 100;
+        NSLog(@"🔔 batteryLevel is %f", batteryLevel);
+
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+        self.locationManager.activityType = CLActivityTypeFitness;
+        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
+        [self postImhere:asker];
+    } else if ([extra isEqualToString:@"imhere"]) {
+        NSLog(@"🔔 imhere - location update received");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedLocationUpdate" object:nil userInfo:userInfo];
+    } else {
+        NSLog(@"🔔 default - trigger message fetch");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"notificationReceivedSoGetRoomMessages" object:nil userInfo:nil];
+    }
 }
 
 #pragma mark -

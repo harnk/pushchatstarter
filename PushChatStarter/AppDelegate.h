@@ -7,6 +7,7 @@
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import <UserNotifications/UserNotifications.h>
 #import "SingletonClass.h"
 
 #define ApplicationDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
@@ -15,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate>{
 //    CLLocationManager*      locationManager;
     CLLocation*             locationObject;
     NSTimer *backgroundTimer;
