@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property BOOL isBackgroundMode;
 @property (nonatomic, strong) NSDate *lastPostLiveUpdateTime;
+@property (nonatomic, strong) NSDate *lastMovementBasedUpdateTime;
 
 @end
 

@@ -112,7 +112,7 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(tellUserLocationUpdatesReceived)
+                                             selector:@selector(tellUserLocationUpdatesReceived:)
                                                  name:@"receivedLocationUpdate"
                                                object:nil];
     
@@ -1077,8 +1077,30 @@
     //    [[NSNotificationCenter defaultCenter] postNotificationName:@"messageDataChanged" object:self];
 }
 
--(void)tellUserLocationUpdatesReceived {
-    [self toastMsg:@"Receiving Updates"];
+-(void)tellUserLocationUpdatesReceived:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    NSLog(@"📍 tellUserLocationUpdatesReceived - userInfo: %@", userInfo);
+
+    // [self toastMsg:@"Receiving Updates"];
+
+    // Extract location and user info from payload
+    NSString *loc = [userInfo valueForKey:@"loc"];
+    NSString *who = [userInfo valueForKey:@"who"];
+
+    if (loc && who) {
+        NSLog(@"📍 Updating location for %@: %@", who, loc); 
+        [self toastMsg:[NSString stringWithFormat:@"📍 Updating %@", who]];
+
+        // Create dictionary with correct key format for updateAnnotationsWithMQTTData
+        NSDictionary *userLocation = @{
+            @"nickname": who,
+            @"location": loc,  // Must be "location" key with "lat, lng" string format
+            @"timestamp": [NSDate date]  // Include current timestamp
+        };
+
+        // Update map with this user's location (will also update timestamp)
+        [_mapManager updateAnnotationsWithMQTTData:userLocation];
+    }
 }
 
 #pragma mark -

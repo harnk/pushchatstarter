@@ -446,7 +446,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
         [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
         [self postImhere:asker];
     } else if ([extra isEqualToString:@"imhere"]) {
-        NSLog(@"🔔 imhere - location update received");
+        NSLog(@"🔔 imhere - location update received: %@", userInfo);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedLocationUpdate" object:nil userInfo:userInfo];
     } else {
         NSLog(@"🔔 default - trigger message fetch");
@@ -479,7 +479,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 {
     NSLog(@"Fire Up The GPS: self.locationManager startUpdatingLocation");
     // Start updating my own location
-    _deviceHasMoved = YES;
+    _deviceHasMoved = NO; // Reset to NO - device hasn't moved yet, GPS just started
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
@@ -592,12 +592,18 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
         if (!_isUpdating) {
             NSLog(@"%@ were not _isUpdating", _currentState);
             if (_deviceHasMoved) {
-                _isUpdating = YES;
-                [self postLiveUpdate];
-                _deviceHasMoved = NO;
-
-                // Need to check response for anyone still looking and set _isAnyoneStillLooking
-                
+                // Rate limit movement-based updates to minimum 60 seconds
+                NSTimeInterval timeSinceLastMovementUpdate = [_lastMovementBasedUpdateTime timeIntervalSinceNow] * -1;
+                if (!_lastMovementBasedUpdateTime || timeSinceLastMovementUpdate >= 60.0) {
+                    _isUpdating = YES;
+                    [self postLiveUpdate];
+                    _deviceHasMoved = NO; // Reset flag after attempting update
+                    _lastMovementBasedUpdateTime = [NSDate date];
+                } else {
+                    NSLog(@"%@ skipping movement update - rate limited (%.1f seconds since last)", _currentState, timeSinceLastMovementUpdate);
+                    // Reset flag even when rate limited to prevent stale state
+                    _deviceHasMoved = NO;
+                }
             }
         } else {
             NSLog(@"%@ no API call since _isUpdating is already YES = Busy", _currentState);
@@ -638,11 +644,12 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray *)locations {
     // This is the battery burner right here ... must optimize this
-    
+
     CLLocation *oldLoc = [[SingletonClass singleObject] myNewLocation];
     CLLocation *newLoc = [locations lastObject];
     CLLocationDistance distanceMoved = [oldLoc distanceFromLocation:newLoc];
-    if (distanceMoved < 0.01) {
+    // Increased threshold from 0.01 to 5 meters (~6 yards) to reduce excessive updates
+    if (distanceMoved < 5.0) {
         fprintf(stderr, ".");
         return;
     } else {
@@ -654,16 +661,16 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     //SCXTT RELEASE
     // If moved farther than 20 yards do an API call SCXTT - add logic
     _deviceHasMoved = YES;
-    
-    
+
+
     // Do NOT do this next line if SMVC is still active and looking
+    // Check _isUpdating flag to prevent duplicate requests
     NSTimeInterval timeSinceLastUpdate = [_lastPostLiveUpdateTime timeIntervalSinceNow] * -1;
-    if (!_lastPostLiveUpdateTime || timeSinceLastUpdate >= 30.0) {
-        [self postLiveUpdate]; //DEBUG - do this alot FOR NOW UNTIL I GET THIS ALL WORKING AGAIN
+    if (!_isUpdating && (!_lastPostLiveUpdateTime || timeSinceLastUpdate >= 900.0)) {
+        [self postLiveUpdate]; //DEBUG - do this alot FOR NOW UNTIL I GET THIS ALL WORKING AGAIN == SCXTT every 15 minutes while testing push notifications
         _lastPostLiveUpdateTime = [NSDate date];
     }
-    
-    
+
     if (_isBackgroundMode) {
         [self postMyLoc]; // API
     }
