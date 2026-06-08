@@ -187,12 +187,10 @@
                 NSLog(@"I FOUND [dict valueForKey:@nickname]:%@ ... setting its location to:%@", [userInfo valueForKey:@"nickname"], [userInfo valueForKey:@"location"]);
                 [ann setCoordinate:location];
 
-                // Update timestamp if provided
+                // Update timestamp if provided, otherwise use current time
                 NSDate *timestamp = [userInfo valueForKey:@"timestamp"];
-                if (timestamp) {
-                    ann.loctime = timestamp;
-                    NSLog(@"📍 Updated timestamp for %@ to current time", [userInfo valueForKey:@"nickname"]);
-                }
+                ann.loctime = timestamp ? timestamp : [NSDate date];
+                NSLog(@"📍 Updated timestamp for %@", [userInfo valueForKey:@"nickname"]);
             }
         }
     }
