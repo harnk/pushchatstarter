@@ -725,13 +725,13 @@
 
 - (void)postLeaveRequest {
 
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    ProgressHUD *hud = [ProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     hud.label.text = NSLocalizedString(@"Signing Out", nil);
 
     [[NetworkService sharedService] leaveWithUserId:[_dataModel userId]
         completion:^(BOOL success, NSError *error) {
             if ([self isViewLoaded]) {
-                [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+                [ProgressHUD hideHUDForView:self.navigationController.view animated:YES];
                 if (!success) {
                     ShowErrorAlert(error.localizedDescription ?: @"There was an error communicating with the server");
                 } else {
@@ -816,7 +816,7 @@
     NSString *roomName = [_dataModel secretCode];
     
     NetworkServiceRoomsCompletion wrappedCompletion = ^(NSArray<Room *> *rooms, NSError *error) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [ProgressHUD hideHUDForView:self.view animated:YES];
         _isUpdating = NO;
         
         if (error) {
@@ -885,7 +885,7 @@
                     NSString *roomName = [_dataModel secretCode];
                     
                     NetworkServiceRoomsCompletion completion = ^(NSArray<Room *> *rooms, NSError *error) {
-                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [ProgressHUD hideHUDForView:self.view animated:YES];
                         _isUpdating = NO;
                         
                         if (error) {
@@ -968,7 +968,7 @@
     {
         _isUpdating = YES;
         
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        ProgressHUD *hud = [ProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.label.text = NSLocalizedString(@"whereru loading ...", nil);
         
         NSString *userId = [_dataModel userId];
@@ -976,7 +976,7 @@
         NSString *roomName = [_dataModel secretCode];
         
         NetworkServiceRoomsCompletion completion = ^(NSArray<Room *> *rooms, NSError *error) {
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [ProgressHUD hideHUDForView:self.view animated:YES];
             _isUpdating = NO;
             
             if (error) {
@@ -1232,42 +1232,15 @@
 }
 
 -(void)toastMsg:(NSString *)toastStr {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    
-    // Configure for text only and offset down
-    hud.mode = MBProgressHUDModeText;
-    hud.label.text = toastStr;
-    //    hud.margin = 10.f;
-    //    hud.yOffset = 50.f;
-    hud.removeFromSuperViewOnHide = YES;
-    
-    [hud hideAnimated:YES afterDelay:1];
+    [ProgressHUD showToast:toastStr inView:self.navigationController.view duration:1.0];
 }
 
 -(void)longToastMsg:(NSString *)toastStr {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    
-    // Configure for text only and offset down
-    hud.mode = MBProgressHUDModeText;
-    hud.label.text = toastStr;
-    //    hud.margin = 10.f;
-    //    hud.yOffset = 50.f;
-    hud.removeFromSuperViewOnHide = YES;
-    
-    [hud hideAnimated:YES afterDelay:3];
+    [ProgressHUD showToast:toastStr inView:self.navigationController.view duration:3.0];
 }
 
 -(void)multiLineToastMsg:(NSString *)toastStr detailText:(NSString *)detailsText {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    
-    // Configure for text only and offset down
-    hud.frame = CGRectMake(0, 0, 120, 143);
-//    hud.mode = MBProgressHUDModeAnnularDeterminate;
-    hud.mode = MBProgressHUDModeText;
-    hud.label.text = toastStr;
-    hud.detailsLabel.text = detailsText;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hideAnimated:YES afterDelay:2];
+    [ProgressHUD showToast:toastStr detail:detailsText inView:self.navigationController.view duration:2.0];
 }
 
 - (void)didReceiveMemoryWarning {

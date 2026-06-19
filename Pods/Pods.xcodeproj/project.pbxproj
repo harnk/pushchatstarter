@@ -7,80 +7,62 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A6B059B43B9D50FF3998DBAD0B8D71E /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = C970ADB34BD1A39C435246BF7355CA33 /* UICKeyChainStore.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		104D9196010D2A8C52C0C19E9C9D52E8 /* MBProgressHUD-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A379AC9F486291C9A93044E4B2EE8F /* MBProgressHUD-dummy.m */; };
-		11D4DC1FCE5647EEA8484AA4A880AF8F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B042ECBD72A16FCC7170AC983A46F6D0 /* MBProgressHUD.m */; };
-		1DC5C0E0B8DD9F890045BE4CC13376E0 /* UICKeyChainStore-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 889D53BDFDA0084E756B6DA4247DE9BD /* UICKeyChainStore-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		26298152E5DC08A5598BE9ECEC427213 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A7DA6049D4EFC8D6F1AEC6AF36F4475 /* Foundation.framework */; };
-		2A29C9101ABE29545B655498BDBDC733 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A7DA6049D4EFC8D6F1AEC6AF36F4475 /* Foundation.framework */; };
-		4A2D7878579537881DD3859B3359F702 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2561BF744404FA8A82D15D480E208141 /* CoreGraphics.framework */; };
-		4BDAE879D3A3D17AE27D07159F57548B /* Pods-WhereRU-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 075CB96A593548E901F6C171E694FDFC /* Pods-WhereRU-dummy.m */; };
-		60DF3F98C607DC1F97EA2EB7D3E1E086 /* UICKeyChainStore-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0017981229D9FE40ABE2B194FCB0E3 /* UICKeyChainStore-dummy.m */; };
-		723D1925C39764631641D0DBFDF6833B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A7DA6049D4EFC8D6F1AEC6AF36F4475 /* Foundation.framework */; };
-		78FDD72B32331496A7AF310061BFA4B8 /* Pods-WhereRU-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A82EBC425BBEA6FD32D77E8AEB50984 /* Pods-WhereRU-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		84ED626E0697086F18A9D8C3768B5D0C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9488A2842A3933670589ADA99DE8CD /* Security.framework */; };
-		A1A1266FD70CEB545FD7602CC33F2F7B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19CC72A65281378EAFC4E0616072B9C0 /* QuartzCore.framework */; };
-		C993A4D0CFA51E567F458CA65C1298AA /* MBProgressHUD-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 60C0C490224B6981E8894346EB8F8974 /* MBProgressHUD-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F2C9F9038FBEFD951516694AE873A2B9 /* MBProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 007FC8FF3194E8688E22AFA1B291FC8A /* MBProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F4F539E2817C9B9AD96C3E2B741B3912 /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7143774EE14A51F4F036588CE8920970 /* UICKeyChainStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A6B059B43B9D50FF3998DBAD0B8D71E /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BE5968D114255260D19A8DE93B4031 /* UICKeyChainStore.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
+		1BA84E05B5E5988386FD77FA3FE23962 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F29E5F7EEDB83D0B063DAD0B5196072 /* Foundation.framework */; };
+		1DC5C0E0B8DD9F890045BE4CC13376E0 /* UICKeyChainStore-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9893A2BA4AC97B7BFC985830B5C2808F /* UICKeyChainStore-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		26298152E5DC08A5598BE9ECEC427213 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F29E5F7EEDB83D0B063DAD0B5196072 /* Foundation.framework */; };
+		60DF3F98C607DC1F97EA2EB7D3E1E086 /* UICKeyChainStore-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C3C249BDE7E14A7F3CF42FFBC7B76DC /* UICKeyChainStore-dummy.m */; };
+		6754354C083B6F30F5298ED7721B0C96 /* Pods-WhereRU-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A82EBC425BBEA6FD32D77E8AEB50984 /* Pods-WhereRU-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		84ED626E0697086F18A9D8C3768B5D0C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C330BC62C9ACD3F9E7AF138812EF298C /* Security.framework */; };
+		F4F539E2817C9B9AD96C3E2B741B3912 /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 0150FCA4D3A0C965AC42F9E2E4246087 /* UICKeyChainStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F79E58A3D31C5F0DC23111D4B1843A50 /* Pods-WhereRU-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 075CB96A593548E901F6C171E694FDFC /* Pods-WhereRU-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2AF6FED25BF0940BF8F3E81157CD9E94 /* PBXContainerItemProxy */ = {
+		FF161B2F37A1DF8572810FEC248E6212 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7406ECC476A62C8FA502AD0E8D1240BE;
 			remoteInfo = UICKeyChainStore;
 		};
-		2C6FA705E9575F90AF8878D8B2C67C1B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 82B0A41D3031FF27D78E17B0A9A46FB0;
-			remoteInfo = MBProgressHUD;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		007FC8FF3194E8688E22AFA1B291FC8A /* MBProgressHUD.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		0150FCA4D3A0C965AC42F9E2E4246087 /* UICKeyChainStore.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UICKeyChainStore.h; path = Lib/UICKeyChainStore/UICKeyChainStore.h; sourceTree = "<group>"; };
 		075CB96A593548E901F6C171E694FDFC /* Pods-WhereRU-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-WhereRU-dummy.m"; sourceTree = "<group>"; };
-		19CC72A65281378EAFC4E0616072B9C0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		2561BF744404FA8A82D15D480E208141 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		29C0D19690C79C29AF7DDF6536CD6368 /* UICKeyChainStore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = UICKeyChainStore.debug.xcconfig; sourceTree = "<group>"; };
+		1029F06BA180125CF10655C4CF2CA455 /* UICKeyChainStore-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "UICKeyChainStore-Info.plist"; sourceTree = "<group>"; };
+		1E7F3DFBF86DCF805933D57AE0EAB37B /* UICKeyChainStore-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UICKeyChainStore-prefix.pch"; sourceTree = "<group>"; };
 		2A82EBC425BBEA6FD32D77E8AEB50984 /* Pods-WhereRU-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-WhereRU-umbrella.h"; sourceTree = "<group>"; };
-		2ED5FA3512090E9A07110AE38E43C4EB /* MBProgressHUD-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MBProgressHUD-Info.plist"; sourceTree = "<group>"; };
+		2F29E5F7EEDB83D0B063DAD0B5196072 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		32F496DB55943654EDDCEABB2DE4E690 /* Pods-WhereRU-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-WhereRU-acknowledgements.plist"; sourceTree = "<group>"; };
 		3897052BFEAEA31C2B7FBD34B8D34289 /* Pods-WhereRU-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-WhereRU-Info.plist"; sourceTree = "<group>"; };
-		4B124CF4AF19BB6BB077DFDAF0548C7E /* UICKeyChainStore.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = UICKeyChainStore.modulemap; sourceTree = "<group>"; };
-		4C7966E3F9C46349989059E16CF39700 /* MBProgressHUD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.debug.xcconfig; sourceTree = "<group>"; };
-		5A7DA6049D4EFC8D6F1AEC6AF36F4475 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		60C0C490224B6981E8894346EB8F8974 /* MBProgressHUD-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-umbrella.h"; sourceTree = "<group>"; };
-		6244E36C1F916E413EFE81A455B98013 /* MBProgressHUD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MBProgressHUD.release.xcconfig; sourceTree = "<group>"; };
-		7143774EE14A51F4F036588CE8920970 /* UICKeyChainStore.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UICKeyChainStore.h; path = Lib/UICKeyChainStore/UICKeyChainStore.h; sourceTree = "<group>"; };
+		3CE0064C451AAA146028E37E0E30F008 /* UICKeyChainStore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = UICKeyChainStore.debug.xcconfig; sourceTree = "<group>"; };
+		634BC9067EEDC0EF71C67673E132CE8D /* UICKeyChainStore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = UICKeyChainStore.release.xcconfig; sourceTree = "<group>"; };
 		7C060FF4106DF12C2B98D9D03487AEAA /* Pods-WhereRU-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-WhereRU-frameworks.sh"; sourceTree = "<group>"; };
-		889D53BDFDA0084E756B6DA4247DE9BD /* UICKeyChainStore-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UICKeyChainStore-umbrella.h"; sourceTree = "<group>"; };
-		8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MBProgressHUD; path = MBProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C3C249BDE7E14A7F3CF42FFBC7B76DC /* UICKeyChainStore-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UICKeyChainStore-dummy.m"; sourceTree = "<group>"; };
+		982055C658EBB88E8A0D5107F2546A8A /* UICKeyChainStore.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = UICKeyChainStore.modulemap; sourceTree = "<group>"; };
+		9893A2BA4AC97B7BFC985830B5C2808F /* UICKeyChainStore-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UICKeyChainStore-umbrella.h"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A0A4D131DB063279AE8AF52001C682FE /* UICKeyChainStore */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = UICKeyChainStore; path = UICKeyChainStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A194E520F68403B12DF507873324CB6A /* Pods-WhereRU.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-WhereRU.modulemap"; sourceTree = "<group>"; };
-		A6A379AC9F486291C9A93044E4B2EE8F /* MBProgressHUD-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD-dummy.m"; sourceTree = "<group>"; };
+		A6BE5968D114255260D19A8DE93B4031 /* UICKeyChainStore.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
 		A71E296AC887C9567B1B017D296FBAD6 /* Pods-WhereRU-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-WhereRU-acknowledgements.markdown"; sourceTree = "<group>"; };
 		AEA947104AB36201AD4435CF2E026948 /* Pods-WhereRU.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-WhereRU.debug.xcconfig"; sourceTree = "<group>"; };
-		B042ECBD72A16FCC7170AC983A46F6D0 /* MBProgressHUD.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		B2E05FA8B8035C69275043994D96112E /* Pods-WhereRU.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-WhereRU.release.xcconfig"; sourceTree = "<group>"; };
-		B83F5276D1E1A20F1A947BCAA7651DCE /* MBProgressHUD-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD-prefix.pch"; sourceTree = "<group>"; };
-		C45B997052830C86636ED49B32C50AC0 /* MBProgressHUD.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MBProgressHUD.modulemap; sourceTree = "<group>"; };
-		C970ADB34BD1A39C435246BF7355CA33 /* UICKeyChainStore.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UICKeyChainStore.m; path = Lib/UICKeyChainStore/UICKeyChainStore.m; sourceTree = "<group>"; };
+		C330BC62C9ACD3F9E7AF138812EF298C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		D346A7D7BBAB0CEAF4A30A15C9E737C2 /* Pods-WhereRU */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-WhereRU"; path = Pods_WhereRU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DE497D1092E49A75A3EBB6345553C43B /* UICKeyChainStore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = UICKeyChainStore.release.xcconfig; sourceTree = "<group>"; };
-		EA0017981229D9FE40ABE2B194FCB0E3 /* UICKeyChainStore-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UICKeyChainStore-dummy.m"; sourceTree = "<group>"; };
-		F9F6C7F5A0B8199183B8B57482144B62 /* UICKeyChainStore-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "UICKeyChainStore-Info.plist"; sourceTree = "<group>"; };
-		FB9488A2842A3933670589ADA99DE8CD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
-		FE98A88D587420E646D0DA2FBB7E63E6 /* UICKeyChainStore-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UICKeyChainStore-prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AB8E62B3930B2E3F74188D915E28E9E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BA84E05B5E5988386FD77FA3FE23962 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ABE5AACB44C7A748409D1FA756EBB0DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -90,87 +72,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CA6527CF424B1AA12AF1D0BB36EBAF73 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4A2D7878579537881DD3859B3359F702 /* CoreGraphics.framework in Frameworks */,
-				723D1925C39764631641D0DBFDF6833B /* Foundation.framework in Frameworks */,
-				A1A1266FD70CEB545FD7602CC33F2F7B /* QuartzCore.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E72C878BEFE3C651871ABCCBE3C4FE2B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2A29C9101ABE29545B655498BDBDC733 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4100E4B481B3055723E8CBEABFA37B01 /* UICKeyChainStore */ = {
+		1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7143774EE14A51F4F036588CE8920970 /* UICKeyChainStore.h */,
-				C970ADB34BD1A39C435246BF7355CA33 /* UICKeyChainStore.m */,
-				7F14153C00A1AA7E645AE649C460E41E /* Support Files */,
+				6F3906880344F426015F35B4FA31944D /* iOS */,
 			);
-			name = UICKeyChainStore;
-			path = UICKeyChainStore;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		44C7C4FD03550A2FEC5DA6630C32B39B /* Products */ = {
+		6E55C6746A1E13D6EB583A4312C3CED4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */,
 				D346A7D7BBAB0CEAF4A30A15C9E737C2 /* Pods-WhereRU */,
 				A0A4D131DB063279AE8AF52001C682FE /* UICKeyChainStore */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		70351B3009CA21DB0136173FC59D8CEB /* iOS */ = {
+		6F3906880344F426015F35B4FA31944D /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				2561BF744404FA8A82D15D480E208141 /* CoreGraphics.framework */,
-				5A7DA6049D4EFC8D6F1AEC6AF36F4475 /* Foundation.framework */,
-				19CC72A65281378EAFC4E0616072B9C0 /* QuartzCore.framework */,
-				FB9488A2842A3933670589ADA99DE8CD /* Security.framework */,
+				2F29E5F7EEDB83D0B063DAD0B5196072 /* Foundation.framework */,
+				C330BC62C9ACD3F9E7AF138812EF298C /* Security.framework */,
 			);
 			name = iOS;
-			sourceTree = "<group>";
-		};
-		7AE0F5A0A181AC951B4B36CB9437A063 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				C45B997052830C86636ED49B32C50AC0 /* MBProgressHUD.modulemap */,
-				A6A379AC9F486291C9A93044E4B2EE8F /* MBProgressHUD-dummy.m */,
-				2ED5FA3512090E9A07110AE38E43C4EB /* MBProgressHUD-Info.plist */,
-				B83F5276D1E1A20F1A947BCAA7651DCE /* MBProgressHUD-prefix.pch */,
-				60C0C490224B6981E8894346EB8F8974 /* MBProgressHUD-umbrella.h */,
-				4C7966E3F9C46349989059E16CF39700 /* MBProgressHUD.debug.xcconfig */,
-				6244E36C1F916E413EFE81A455B98013 /* MBProgressHUD.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/MBProgressHUD";
-			sourceTree = "<group>";
-		};
-		7F14153C00A1AA7E645AE649C460E41E /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				4B124CF4AF19BB6BB077DFDAF0548C7E /* UICKeyChainStore.modulemap */,
-				EA0017981229D9FE40ABE2B194FCB0E3 /* UICKeyChainStore-dummy.m */,
-				F9F6C7F5A0B8199183B8B57482144B62 /* UICKeyChainStore-Info.plist */,
-				FE98A88D587420E646D0DA2FBB7E63E6 /* UICKeyChainStore-prefix.pch */,
-				889D53BDFDA0084E756B6DA4247DE9BD /* UICKeyChainStore-umbrella.h */,
-				29C0D19690C79C29AF7DDF6536CD6368 /* UICKeyChainStore.debug.xcconfig */,
-				DE497D1092E49A75A3EBB6345553C43B /* UICKeyChainStore.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/UICKeyChainStore";
 			sourceTree = "<group>";
 		};
 		A411281B33F62D4831F76FAA71CC4FEE /* Targets Support Files */ = {
@@ -181,43 +109,49 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		B01AF1BA1369D53543D2507FC5DBFEAB /* MBProgressHUD */ = {
+		A429E71C779A74B4312423E7B7A482D4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				007FC8FF3194E8688E22AFA1B291FC8A /* MBProgressHUD.h */,
-				B042ECBD72A16FCC7170AC983A46F6D0 /* MBProgressHUD.m */,
-				7AE0F5A0A181AC951B4B36CB9437A063 /* Support Files */,
+				DC7699392D69ECF88A55423053AED12C /* UICKeyChainStore */,
 			);
-			name = MBProgressHUD;
-			path = MBProgressHUD;
-			sourceTree = "<group>";
-		};
-		BA4F31F07263C99FC76E66D632A59F09 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				70351B3009CA21DB0136173FC59D8CEB /* iOS */,
-			);
-			name = Frameworks;
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				BA4F31F07263C99FC76E66D632A59F09 /* Frameworks */,
-				D0B5F51A5E18F26A9CB96C2416FB0837 /* Pods */,
-				44C7C4FD03550A2FEC5DA6630C32B39B /* Products */,
+				1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */,
+				A429E71C779A74B4312423E7B7A482D4 /* Pods */,
+				6E55C6746A1E13D6EB583A4312C3CED4 /* Products */,
 				A411281B33F62D4831F76FAA71CC4FEE /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		D0B5F51A5E18F26A9CB96C2416FB0837 /* Pods */ = {
+		D98BF9E44C40D49FF2BEB8A378F48276 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				B01AF1BA1369D53543D2507FC5DBFEAB /* MBProgressHUD */,
-				4100E4B481B3055723E8CBEABFA37B01 /* UICKeyChainStore */,
+				982055C658EBB88E8A0D5107F2546A8A /* UICKeyChainStore.modulemap */,
+				8C3C249BDE7E14A7F3CF42FFBC7B76DC /* UICKeyChainStore-dummy.m */,
+				1029F06BA180125CF10655C4CF2CA455 /* UICKeyChainStore-Info.plist */,
+				1E7F3DFBF86DCF805933D57AE0EAB37B /* UICKeyChainStore-prefix.pch */,
+				9893A2BA4AC97B7BFC985830B5C2808F /* UICKeyChainStore-umbrella.h */,
+				3CE0064C451AAA146028E37E0E30F008 /* UICKeyChainStore.debug.xcconfig */,
+				634BC9067EEDC0EF71C67673E132CE8D /* UICKeyChainStore.release.xcconfig */,
 			);
-			name = Pods;
+			name = "Support Files";
+			path = "../Target Support Files/UICKeyChainStore";
+			sourceTree = "<group>";
+		};
+		DC7699392D69ECF88A55423053AED12C /* UICKeyChainStore */ = {
+			isa = PBXGroup;
+			children = (
+				0150FCA4D3A0C965AC42F9E2E4246087 /* UICKeyChainStore.h */,
+				A6BE5968D114255260D19A8DE93B4031 /* UICKeyChainStore.m */,
+				D98BF9E44C40D49FF2BEB8A378F48276 /* Support Files */,
+			);
+			name = UICKeyChainStore;
+			path = UICKeyChainStore;
 			sourceTree = "<group>";
 		};
 		DD733A0D83ACF14BE7A1839B4A0B8313 /* Pods-WhereRU */ = {
@@ -240,20 +174,11 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		B5D73FBBE3085418AA04A3B4B8D080B8 /* Headers */ = {
+		7B12B83F482788D192CCC73AABFED1EE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2C9F9038FBEFD951516694AE873A2B9 /* MBProgressHUD.h in Headers */,
-				C993A4D0CFA51E567F458CA65C1298AA /* MBProgressHUD-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F592B54E170EB2BC2B26CEC932691EC0 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				78FDD72B32331496A7AF310061BFA4B8 /* Pods-WhereRU-umbrella.h in Headers */,
+				6754354C083B6F30F5298ED7721B0C96 /* Pods-WhereRU-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,38 +212,19 @@
 			productReference = A0A4D131DB063279AE8AF52001C682FE /* UICKeyChainStore */;
 			productType = "com.apple.product-type.framework";
 		};
-		82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 945C0F2B41CBADE68A142120AE9A4AF3 /* Build configuration list for PBXNativeTarget "MBProgressHUD" */;
-			buildPhases = (
-				B5D73FBBE3085418AA04A3B4B8D080B8 /* Headers */,
-				A29E3C9E62E3E86A20CAE1E7632313FC /* Sources */,
-				CA6527CF424B1AA12AF1D0BB36EBAF73 /* Frameworks */,
-				E664BDFE0B44D742638A43686ACB3008 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MBProgressHUD;
-			productName = MBProgressHUD;
-			productReference = 8B8FAB0D627B17EDE1366984278705D9 /* MBProgressHUD */;
-			productType = "com.apple.product-type.framework";
-		};
 		BA1C82CE16D2C0B7C6433B6F6731C2EF /* Pods-WhereRU */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 22C4A24F562B8227170E6E1BED9E8865 /* Build configuration list for PBXNativeTarget "Pods-WhereRU" */;
+			buildConfigurationList = 6DEFC42F0BDC8BA3C6A54D6B25F8BDAB /* Build configuration list for PBXNativeTarget "Pods-WhereRU" */;
 			buildPhases = (
-				F592B54E170EB2BC2B26CEC932691EC0 /* Headers */,
-				1C5C58616D0E9BB8D099C01BE18D3DD8 /* Sources */,
-				E72C878BEFE3C651871ABCCBE3C4FE2B /* Frameworks */,
-				901FBCF25BA86BCF2F111D061B38576B /* Resources */,
+				7B12B83F482788D192CCC73AABFED1EE /* Headers */,
+				83C631A4D30864C79AC88589353EF386 /* Sources */,
+				AB8E62B3930B2E3F74188D915E28E9E2 /* Frameworks */,
+				469CD2AA7411898FEE2A56FC92E968D4 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				2FC9D430F3D802CE499837CA5B214C3A /* PBXTargetDependency */,
-				722BDE64F079370EE97CBB8E35511482 /* PBXTargetDependency */,
+				3EB7362F55F1D2F8B0FAAF29D7CC32B5 /* PBXTargetDependency */,
 			);
 			name = "Pods-WhereRU";
 			productName = Pods_WhereRU;
@@ -345,11 +251,10 @@
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			minimizedProjectReferenceProxies = 0;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 44C7C4FD03550A2FEC5DA6630C32B39B /* Products */;
+			productRefGroup = 6E55C6746A1E13D6EB583A4312C3CED4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */,
 				BA1C82CE16D2C0B7C6433B6F6731C2EF /* Pods-WhereRU */,
 				7406ECC476A62C8FA502AD0E8D1240BE /* UICKeyChainStore */,
 			);
@@ -364,14 +269,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		901FBCF25BA86BCF2F111D061B38576B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E664BDFE0B44D742638A43686ACB3008 /* Resources */ = {
+		469CD2AA7411898FEE2A56FC92E968D4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -381,20 +279,11 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1C5C58616D0E9BB8D099C01BE18D3DD8 /* Sources */ = {
+		83C631A4D30864C79AC88589353EF386 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BDAE879D3A3D17AE27D07159F57548B /* Pods-WhereRU-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A29E3C9E62E3E86A20CAE1E7632313FC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				11D4DC1FCE5647EEA8484AA4A880AF8F /* MBProgressHUD.m in Sources */,
-				104D9196010D2A8C52C0C19E9C9D52E8 /* MBProgressHUD-dummy.m in Sources */,
+				F79E58A3D31C5F0DC23111D4B1843A50 /* Pods-WhereRU-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,26 +299,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2FC9D430F3D802CE499837CA5B214C3A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MBProgressHUD;
-			target = 82B0A41D3031FF27D78E17B0A9A46FB0 /* MBProgressHUD */;
-			targetProxy = 2C6FA705E9575F90AF8878D8B2C67C1B /* PBXContainerItemProxy */;
-		};
-		722BDE64F079370EE97CBB8E35511482 /* PBXTargetDependency */ = {
+		3EB7362F55F1D2F8B0FAAF29D7CC32B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = UICKeyChainStore;
 			target = 7406ECC476A62C8FA502AD0E8D1240BE /* UICKeyChainStore */;
-			targetProxy = 2AF6FED25BF0940BF8F3E81157CD9E94 /* PBXContainerItemProxy */;
+			targetProxy = FF161B2F37A1DF8572810FEC248E6212 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		5A0CFCC5EF2EFCFE969213B4A591E326 /* Release */ = {
+		1A9FFB90F93034AFCE59F0FB3A62F342 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6244E36C1F916E413EFE81A455B98013 /* MBProgressHUD.release.xcconfig */;
+			baseConfigurationReference = AEA947104AB36201AD4435CF2E026948 /* Pods-WhereRU.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -440,19 +325,55 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_PREFIX_HEADER = "Target Support Files/MBProgressHUD/MBProgressHUD-prefix.pch";
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD-Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD.modulemap";
-				PRODUCT_MODULE_NAME = MBProgressHUD;
-				PRODUCT_NAME = MBProgressHUD;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		23139363EC17A216359DE1D07EE1380C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B2E05FA8B8035C69275043994D96112E /* Pods-WhereRU.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -462,7 +383,7 @@
 		};
 		71611DFB187738B9BF45B2F19F85E78B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DE497D1092E49A75A3EBB6345553C43B /* UICKeyChainStore.release.xcconfig */;
+			baseConfigurationReference = 634BC9067EEDC0EF71C67673E132CE8D /* UICKeyChainStore.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -625,79 +546,9 @@
 			};
 			name = Release;
 		};
-		9A5E1A7AD2BEFFD7826A0B6527008376 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEA947104AB36201AD4435CF2E026948 /* Pods-WhereRU.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		A3BDCB5CE84E122D871B1CAD03542099 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4C7966E3F9C46349989059E16CF39700 /* MBProgressHUD.debug.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_PREFIX_HEADER = "Target Support Files/MBProgressHUD/MBProgressHUD-prefix.pch";
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/MBProgressHUD/MBProgressHUD.modulemap";
-				PRODUCT_MODULE_NAME = MBProgressHUD;
-				PRODUCT_NAME = MBProgressHUD;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		E4CF8BDCAA9B4799FFBA9AFA564D4AA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 29C0D19690C79C29AF7DDF6536CD6368 /* UICKeyChainStore.debug.xcconfig */;
+			baseConfigurationReference = 3CE0064C451AAA146028E37E0E30F008 /* UICKeyChainStore.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -729,55 +580,9 @@
 			};
 			name = Debug;
 		};
-		FE1644ACBCC0592D5C44FB80C76C47D7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2E05FA8B8035C69275043994D96112E /* Pods-WhereRU.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = NO;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-WhereRU/Pods-WhereRU.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		22C4A24F562B8227170E6E1BED9E8865 /* Build configuration list for PBXNativeTarget "Pods-WhereRU" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9A5E1A7AD2BEFFD7826A0B6527008376 /* Debug */,
-				FE1644ACBCC0592D5C44FB80C76C47D7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -796,11 +601,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		945C0F2B41CBADE68A142120AE9A4AF3 /* Build configuration list for PBXNativeTarget "MBProgressHUD" */ = {
+		6DEFC42F0BDC8BA3C6A54D6B25F8BDAB /* Build configuration list for PBXNativeTarget "Pods-WhereRU" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A3BDCB5CE84E122D871B1CAD03542099 /* Debug */,
-				5A0CFCC5EF2EFCFE969213B4A591E326 /* Release */,
+				1A9FFB90F93034AFCE59F0FB3A62F342 /* Debug */,
+				23139363EC17A216359DE1D07EE1380C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

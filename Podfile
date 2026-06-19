@@ -5,7 +5,6 @@ platform :ios, '15.0'
 target 'WhereRU' do
   use_frameworks!
 
-  pod 'MBProgressHUD', '~> 1.2'
   pod 'UICKeyChainStore', '~> 2.1'
 end
 
@@ -25,7 +24,7 @@ post_install do |installer|
   puts "\n🔧 Adding Privacy Manifests for old frameworks..."
 
   installer.pods_project.targets.each do |target|
-    if ['AFNetworking', 'MBProgressHUD', 'UICKeyChainStore'].include?(target.name)
+    if ['UICKeyChainStore'].include?(target.name)
       framework_path = "Pods/Target Support Files/#{target.name}"
       if Dir.exist?(framework_path)
         privacy_file = "#{framework_path}/PrivacyInfo.xcprivacy"

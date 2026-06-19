@@ -64,6 +64,7 @@
 		9EA13D662F8DE5130076E183 /* ServerURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA13D652F8DE5130076E183 /* ServerURLManager.m */; };
 		9EBC49202FC14E01005F17A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EBC491F2FC14E01005F17A7 /* PrivacyInfo.xcprivacy */; };
 		9EBDFCC71F72144D009317F0 /* pullhandle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EBDFCC61F72144D009317F0 /* pullhandle.png */; };
+		9ECAC6C92FE4F1280079D2E9 /* ProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAC6C82FE4F1270079D2E9 /* ProgressHUD.m */; };
 		9ED763B82F84A8D100CC5F4D /* APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763B72F84A8C800CC5F4D /* APIClient.m */; };
 		9ED763BA2F8CB00000CC5F4D /* NetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763B92F8CB00000CC5F4D /* NetworkService.m */; };
 		9ED763BC2F8CC00000CC5F4D /* MapManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED763BB2F8CC00000CC5F4D /* MapManager.m */; };
@@ -168,6 +169,8 @@
 		9EA13D652F8DE5130076E183 /* ServerURLManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ServerURLManager.m; sourceTree = "<group>"; };
 		9EBC491F2FC14E01005F17A7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		9EBDFCC61F72144D009317F0 /* pullhandle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pullhandle.png; sourceTree = "<group>"; };
+		9ECAC6C72FE4F1270079D2E9 /* ProgressHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressHUD.h; sourceTree = "<group>"; };
+		9ECAC6C82FE4F1270079D2E9 /* ProgressHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressHUD.m; sourceTree = "<group>"; };
 		9ED763B62F84A8C800CC5F4D /* APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
 		9ED763B72F84A8C800CC5F4D /* APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APIClient.m; sourceTree = "<group>"; };
 		9ED763B82F8CB00000CC5F4D /* NetworkService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkService.h; sourceTree = "<group>"; };
@@ -309,6 +312,8 @@
 		61489ECF1704226E0049C6F9 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9ECAC6C72FE4F1270079D2E9 /* ProgressHUD.h */,
+				9ECAC6C82FE4F1270079D2E9 /* ProgressHUD.m */,
 				9EA13D642F8DE5130076E183 /* ServerURLManager.h */,
 				9EA13D652F8DE5130076E183 /* ServerURLManager.m */,
 				9ED763B62F84A8C800CC5F4D /* APIClient.h */,
@@ -521,12 +526,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-WhereRU/Pods-WhereRU-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/UICKeyChainStore/UICKeyChainStore.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICKeyChainStore.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -543,6 +546,7 @@
 			files = (
 				9E7CE78B1AAAA88500C7364D /* Room.m in Sources */,
 				61489EA417041C660049C6F9 /* main.m in Sources */,
+				9ECAC6C92FE4F1280079D2E9 /* ProgressHUD.m in Sources */,
 				61489EA817041C660049C6F9 /* AppDelegate.m in Sources */,
 				9EA13D662F8DE5130076E183 /* ServerURLManager.m in Sources */,
 				61489EB417041C660049C6F9 /* ViewController.m in Sources */,

@@ -71,7 +71,7 @@
 
 - (void)postJoinRequest {
        
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    ProgressHUD *hud = [ProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = NSLocalizedString(@"Connecting", nil);
     
     NSDictionary *params = @{@"cmd":@"join",
@@ -88,7 +88,7 @@
                                   parameters:params
                                      success:^(id responseObject, NSHTTPURLResponse *httpResp) {
                                          if ([self isViewLoaded]) {
-                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             [ProgressHUD hideHUDForView:self.view animated:YES];
                                              if(httpResp.statusCode != 200) {
                                                  ShowErrorAlert(NSLocalizedString(@"There was an error communicating with the server", nil));
                                              } else {
@@ -98,7 +98,7 @@
                                      }
                                      failure:^(NSError *error) {
                                          if ([self isViewLoaded]) {
-                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             [ProgressHUD hideHUDForView:self.view animated:YES];
                                              ShowErrorAlert([error localizedDescription]);
                                          }
                                      }];

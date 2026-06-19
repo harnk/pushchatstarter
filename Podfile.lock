@@ -1,20 +1,16 @@
 PODS:
-  - MBProgressHUD (1.2.0)
   - UICKeyChainStore (2.2.1)
 
 DEPENDENCIES:
-  - MBProgressHUD (~> 1.2)
   - UICKeyChainStore (~> 2.1)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - MBProgressHUD
     - UICKeyChainStore
 
 SPEC CHECKSUMS:
-  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
 
-PODFILE CHECKSUM: f7f3dd5eff1b8790c0668baa9ce279a870652fb1
+PODFILE CHECKSUM: 2da6aad10c5e01fd6c549cdc4ee0dd5c4f1992d6
 
 COCOAPODS: 1.16.2

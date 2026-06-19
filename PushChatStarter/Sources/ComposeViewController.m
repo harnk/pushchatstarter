@@ -66,7 +66,7 @@
 {
     [_messageTextView resignFirstResponder];
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    ProgressHUD *hud = [ProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = NSLocalizedString(@"Sending", nil);
     
     NSString *text = self.messageTextView.text;
@@ -82,7 +82,7 @@
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params
                                      success:^(id responseObject, NSHTTPURLResponse *httpResp) {
-                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                         [ProgressHUD hideHUDForView:self.view animated:YES];
                                          if (httpResp.statusCode != 200) {
                                              ShowErrorAlert(NSLocalizedString(@"Could not send the message to the server", nil));
                                          } else {
@@ -91,7 +91,7 @@
                                      }
                                      failure:^(NSError *error) {
                                          if ([self isViewLoaded]) {
-                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                             [ProgressHUD hideHUDForView:self.view animated:YES];
                                              ShowErrorAlert([error localizedDescription]);
                                          }
                                      }];

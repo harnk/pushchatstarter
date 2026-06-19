@@ -13,7 +13,7 @@
     #import <Foundation/Foundation.h>
 	#import "defs.h"
     #import "AppDelegate.h"
-    #import "MBProgressHUD.h"
+    #import "ProgressHUD.h"
     #import "UICKeyChainStore.h"
     #import <Security/Security.h>
 #endif
