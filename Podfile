@@ -5,7 +5,6 @@ platform :ios, '15.0'
 target 'WhereRU' do
   use_frameworks!
 
-  pod 'AFNetworking', '~> 4.0'
   pod 'MBProgressHUD', '~> 1.2'
   pod 'UICKeyChainStore', '~> 2.1'
 end

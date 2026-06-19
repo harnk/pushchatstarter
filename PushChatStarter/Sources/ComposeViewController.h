@@ -8,7 +8,6 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "SingletonClass.h"
-#import <AFNetworking/AFNetworking.h>
 
 @class ComposeViewController;
 @class DataModel;
@@ -27,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, assign) DataModel* dataModel;
-@property (nonatomic, strong) AFHTTPSessionManager *client;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic) BOOL isUpdating;
 

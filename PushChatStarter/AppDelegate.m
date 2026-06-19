@@ -567,23 +567,41 @@ static void checkForLookers(AppDelegate *object, NSArray *jsonArray) {
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params
                                      success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
-                                         NSString* responseString = [NSString stringWithUTF8String:[responseObject bytes]];
-                                         
-                                         // Deal with me if I have been deleted from the active_users table in the DB
-                                         if (responseString.length == 0) {
-                                             badResponseCounter += 1;
-                                             if (badResponseCounter > 5) {
-                                                 [[SingletonClass singleObject] setImInARoom:NO];
-                                             }
-                                         } else {
-                                             badResponseCounter = 0;
-                                         }
-                                         
-                                         [NSTimer scheduledTimerWithTimeInterval: 5 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
-                                     }
-                                     failure:^(NSError *error) {
-                                         [NSTimer scheduledTimerWithTimeInterval: 10 target: self selector: @selector(resetIsUpdating) userInfo: nil repeats: NO];
-                                     }];
+        
+        NSString *responseString = nil;
+        
+        if (responseObject && [responseObject isKindOfClass:[NSData class]]) {
+            responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        }
+        
+        NSLog(@"Response Status: %ld | Body: %@", (long)httpResponse.statusCode, responseString ?: @"<empty or nil>");
+        
+        // Deal with me if I have been deleted from the active_users table
+        if (responseString.length == 0 || httpResponse.statusCode >= 400) {
+            badResponseCounter += 1;
+            if (badResponseCounter > 5) {
+                [[SingletonClass singleObject] setImInARoom:NO];
+            }
+        } else {
+            badResponseCounter = 0;
+        }
+        
+        [NSTimer scheduledTimerWithTimeInterval:5.0
+                                         target:self
+                                       selector:@selector(resetIsUpdating)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+    failure:^(NSError *error) {
+        NSLog(@"❌ postLiveUpdate failed: %@", error.localizedDescription);
+        badResponseCounter += 1;
+        
+        [NSTimer scheduledTimerWithTimeInterval:10.0
+                                         target:self
+                                       selector:@selector(resetIsUpdating)
+                                       userInfo:nil
+                                        repeats:NO];
+    }];
 }
 
 -(void) postMyLoc {

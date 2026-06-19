@@ -9,12 +9,11 @@
 #import "APIClient.h"
 #import "defs.h"
 #import "ServerURLManager.h"
-#import <AFNetworking/AFNetworking.h>
 
 extern NSString *gServerApiURL;
 
 @interface APIClient ()
-@property (nonatomic, strong, readwrite) AFHTTPSessionManager *sessionManager;
+@property (nonatomic, strong) NSURLSession *session;
 @end
 
 @implementation APIClient
@@ -30,43 +29,85 @@ extern NSString *gServerApiURL;
 
 - (instancetype)init {
     self = [super init];
+    if (self) {
+        [self setupSession];
+    }
     return self;
 }
 
-- (AFHTTPSessionManager *)sessionManager {
-    if (!_sessionManager) {
-        NSString *serverURL = gServerApiURL;
-        if (serverURL) {
-            NSURL *baseURL = [NSURL URLWithString:serverURL];
-            _sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-            _sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-            NSLog(@"✅ APIClient sessionManager created with server URL: %@", serverURL);
-        } else {
-            NSLog(@"⚠️ Server URL not yet initialized");
-        }
-    }
-    return _sessionManager;
+- (void)setupSession {
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = 30.0;
+    config.HTTPShouldSetCookies = NO;
+    
+    self.session = [NSURLSession sessionWithConfiguration:config];
 }
+
+- (NSURL *)baseURL {
+    NSString *serverURL = gServerApiURL;
+    if (!serverURL) {
+        NSLog(@"⚠️ Server URL not initialized");
+        return nil;
+    }
+    return [NSURL URLWithString:serverURL];
+}
+
+- (NSString *)urlEncode:(id)object {
+    NSString *string = [object description];
+    NSCharacterSet *allowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~"] invertedSet];
+    return [string stringByAddingPercentEncodingWithAllowedCharacters:allowedChars];
+}
+
+#pragma mark - Public Methods
 
 - (void)postToEndpoint:(NSString *)endpoint
             parameters:(NSDictionary *)params
                success:(APISuccessBlock)success
                failure:(APIFailureBlock)failure {
     
-    NSLog(@"🌐 POST %@%@ params:%@", self.sessionManager.baseURL.absoluteString, endpoint, params);
+    NSURL *base = [self baseURL];
+    if (!base) {
+        if (failure) failure([NSError errorWithDomain:@"APIClient" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Server URL not set"}]);
+        return;
+    }
     
-    [self.sessionManager POST:endpoint
-                   parameters:params
-                      headers:nil
-                     progress:nil
-                      success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                          NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                          NSLog(@"✅ Response Status: %ld", (long)httpResp.statusCode);
-                          if (success) success(responseObject, httpResp);
-                      } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                          NSLog(@"❌ Error: %@", error.localizedDescription);
-                          if (failure) failure(error);
-                      }];
+    NSURL *url = [base URLByAppendingPathComponent:endpoint];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+    if (params) {
+        NSMutableArray *queryItems = [NSMutableArray array];
+        [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [queryItems addObject:[NSString stringWithFormat:@"%@=%@", key, [self urlEncode:obj]]];
+        }];
+        NSString *bodyString = [queryItems componentsJoinedByString:@"&"];
+        request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    NSLog(@"🌐 POST %@ params: %@", url.absoluteString, params);
+    
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
+                                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                NSLog(@"❌ POST Error: %@", error.localizedDescription);
+                if (failure) failure(error);
+                return;
+            }
+            
+            NSLog(@"✅ Response Status: %ld", (long)httpResponse.statusCode);
+            
+            if (success) {
+                success(data, httpResponse);
+            }
+        });
+    }];
+    
+    [task resume];
 }
 
 - (void)getFromEndpoint:(NSString *)endpoint
@@ -74,20 +115,48 @@ extern NSString *gServerApiURL;
                 success:(APISuccessBlock)success
                 failure:(APIFailureBlock)failure {
     
-    NSLog(@"🌐 GET %@%@ params:%@", self.sessionManager.baseURL.absoluteString, endpoint, params);
+    NSURL *base = [self baseURL];
+    if (!base) {
+        if (failure) failure([NSError errorWithDomain:@"APIClient" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Server URL not set"}]);
+        return;
+    }
     
-    [self.sessionManager GET:endpoint
-                  parameters:params
-                     headers:nil
-                    progress:nil
-                     success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                         NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)task.response;
-                         NSLog(@"✅ Response Status: %ld", (long)httpResp.statusCode);
-                         if (success) success(responseObject, httpResp);
-                     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                         NSLog(@"❌ Error: %@", error.localizedDescription);
-                         if (failure) failure(error);
-                     }];
+    NSURLComponents *components = [NSURLComponents componentsWithURL:[base URLByAppendingPathComponent:endpoint] resolvingAgainstBaseURL:YES];
+    
+    if (params.count > 0) {
+        NSMutableArray *queryItems = [NSMutableArray array];
+        [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [queryItems addObject:[NSURLQueryItem queryItemWithName:key value:[obj description]]];
+        }];
+        components.queryItems = queryItems;
+    }
+    
+    NSURL *url = components.URL;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"GET";
+    
+    NSLog(@"🌐 GET %@", url.absoluteString);
+    
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
+                                                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                NSLog(@"❌ GET Error: %@", error.localizedDescription);
+                if (failure) failure(error);
+                return;
+            }
+            
+            NSLog(@"✅ Response Status: %ld", (long)httpResponse.statusCode);
+            
+            if (success) {
+                success(data, httpResponse);
+            }
+        });
+    }];
+    
+    [task resume];
 }
 
 @end

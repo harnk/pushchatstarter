@@ -7,7 +7,6 @@
 //
 
 #import "DataModel.h"
-#import <AFNetworking/AFNetworking.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LoginViewController : UIViewController
 
 @property (nonatomic, strong) DataModel* dataModel;
-@property (nonatomic, strong) AFHTTPSessionManager *client;
 @property (nonatomic) BOOL isUpdating;
 
 @end
