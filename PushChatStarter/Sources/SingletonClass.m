@@ -14,7 +14,9 @@
     static SingletonClass *single = nil;
     @synchronized (self)
     {
-        if (!single) single = [[SingletonClass alloc]init];
+        if (!single) {
+            single = [[SingletonClass alloc]init];
+        }
     }
     return single;
 }

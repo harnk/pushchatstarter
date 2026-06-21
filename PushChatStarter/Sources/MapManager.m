@@ -291,6 +291,15 @@
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     NSLog(@"didSelectAnnotationView");
+    if([view.annotation isKindOfClass:[VBAnnotation class]]) {
+        VBAnnotation *annotation = (VBAnnotation *)view.annotation;
+        if (![annotation.title isEqualToString:@"My Location"] && ![annotation.title isEqualToString:@"Current Location"]) {
+            // Request delegate to show block UI
+            if ([_delegate respondsToSelector:@selector(mapManagerDidRequestBlockUser:)]) {
+                [_delegate mapManagerDidRequestBlockUser:annotation.title];
+            }
+        }
+    }
 }
 
 -(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view

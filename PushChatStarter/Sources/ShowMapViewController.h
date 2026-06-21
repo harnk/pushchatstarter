@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *satMapButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *pinPickerButton;
+@property (nonatomic, strong) UIBarButtonItem *checkInButton;
 
 @property (nonatomic, assign) id<ComposeDelegate> delegate;
 @property (nonatomic, strong, readonly) DataModel* dataModel;

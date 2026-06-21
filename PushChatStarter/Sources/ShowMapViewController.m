@@ -17,6 +17,7 @@
 #import "Room.h"
 #import "NetworkService.h"
 #import "MapManager.h"
+#import "SingletonClass.h"
 
 #define SPAN_VALUE 0.005f
 
@@ -141,10 +142,12 @@
 
 - (void)setUpButtonBarItems {
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
+    _checkInButton = [[UIBarButtonItem alloc] initWithTitle:@"Check In" style:UIBarButtonItemStyleDone target:self action:@selector(checkInAction)];
+
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, nil] animated:YES];
-    
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, _checkInButton, nil] animated:YES];
+
     // Disable the problematic bluemenuitem button to fix layout constraints
     if (self.pinPickerButton) {
         self.pinPickerButton.enabled = NO;
@@ -164,7 +167,7 @@
         _mapManager.okToRecenterMap = YES;
     }
     self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
 }
 
@@ -274,39 +277,22 @@
         [[SingletonClass singleObject] setImInARoom:NO];
         [self showLoginViewController];
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Share Location"
-                                                                       message:@"Do you want to share your location with others in this room?"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
+        // Removed automatic location sharing - users must manually check in
+        [[SingletonClass singleObject] setImInARoom:NO];
+        [self toastMsg:@"Location sharing is off. Tap 'Check In' to share your location."];
+        [self postGetRoomMessages];
+        [self postGetRoom];
+        [self.tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
 
-        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"Share My Location"
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction * _Nonnull action) {
-            [[SingletonClass singleObject] setImInARoom:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"fireUpTheGPS" object:nil userInfo:nil];
-
-            // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
-            self.isUpdating = NO;
-            [self toastMsg:@"Updating locations"];
-//            [self findAction];
-            [self postGetRoomMessages];
-            [self postGetRoom];
-            [self.tableView reloadData];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
-        }];
-
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:^(UIAlertAction * _Nonnull action) {
-            // [[SingletonClass singleObject] setImInARoom:NO];
-            // [self showLoginViewController];
-            [self postLeaveRequest];
-        }];
-
-        [alert addAction:shareAction];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        // Show the check-in button if not already visible
+        if (![self.navigationItem.rightBarButtonItems containsObject:_checkInButton]) {
+            NSMutableArray *rightItems = [NSMutableArray arrayWithArray:self.navigationItem.rightBarButtonItems];
+            [rightItems addObject:_checkInButton];
+            self.navigationItem.rightBarButtonItems = rightItems;
+        }
     }
-    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -574,25 +560,22 @@
     
     
 //    NSLog(@"picker row is:%ld", (long)row);
-    
-    
-    
+
     NSString *pickerPin = [[_roomArray objectAtIndex:row] memberPinImage];
     NSString *dateString = [[_roomArray objectAtIndex:row] memberUpdateTime];
-    
-    
-        
+
+
     if ([_mapManager getPinAgeInMinutes:dateString ] > 10000.0) {
         pickerPin = @"inactivepin.png";
     }
 
-    
+
     pickerImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"pk%@",pickerPin]];
 //    pickerImageView.image = [UIImage imageNamed:[[_roomArray objectAtIndex:row] memberPinImage]];
     pickerViewLabel.backgroundColor = [UIColor clearColor];
     pickerViewLabel.text = [[_roomArray objectAtIndex:row] memberNickName];
 //    pickerViewLabel.font = [UIFont fontWithName:@"ChalkboardSE-Regular" size:20];
-    
+
     return pickerCustomView;
 }
 
@@ -610,7 +593,6 @@
 // tell the picker the title for a given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSString *title;
-//    title = [@"pin nickname " stringByAppendingFormat:@"%d",row];
     title = [[_roomArray objectAtIndex:row] memberNickName];
     return title;
 }
@@ -630,7 +612,7 @@
     _mapManager.centerOnThisGuy = [[_roomArray objectAtIndex:row] memberNickName];
     _mapManager.okToRecenterMap = YES;
 //    NSLog(@"Centering on this guy: %@", _mapManager.centerOnThisGuy);
-    
+
 //    self.title = [[_roomArray objectAtIndex:row] memberNickName];
 // SCXTT TO BE ADDED
 //    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[_roomArray objectAtIndex:row] memberNickName]];
@@ -717,7 +699,14 @@
 {
     [self.dataModel setJoinedChat:NO];
     [[SingletonClass singleObject] setImInARoom:NO];
-    
+
+    // Show the check-in button again when leaving
+    if (![self.navigationItem.rightBarButtonItems containsObject:_checkInButton]) {
+        NSMutableArray *rightItems = [NSMutableArray arrayWithArray:self.navigationItem.rightBarButtonItems];
+        [rightItems addObject:_checkInButton];
+        self.navigationItem.rightBarButtonItems = rightItems;
+    }
+
     // Show the Login screen. This requires the user to join a new
     // chat map group before he can return to the chat screen.
     [self showLoginViewController];
@@ -745,8 +734,8 @@
 {
     // old comment SCXTT make this next part coexist with the alertview that launches the app settings TBD
     UIAlertController *alert =
-    [UIAlertController alertControllerWithTitle:@"Sign Out of This Map Group"
-                                        message:@"Are you sure you wish to sign out of this map group? Your friends here will miss you!"
+    [UIAlertController alertControllerWithTitle:@"Exit This Map Group"
+                                        message:@"Are you sure you wish to exit this map group? Your friends here will miss you!"
                                  preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction *cancel =
@@ -809,6 +798,39 @@
     }
 }
 
+- (void)checkInAction {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Check In"
+                                                                   message:@"Share your location with others in this room?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *checkInAction = [UIAlertAction actionWithTitle:@"Check In"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+        [[SingletonClass singleObject] setImInARoom:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fireUpTheGPS" object:nil userInfo:nil];
+
+        // calling findAction to wake up devices but if isUpdating this might get skipped i think so force isUpdating to false
+        self.isUpdating = NO;
+        [self toastMsg:@"Location shared"];
+        [self postGetRoomMessages];
+        [self postGetRoom];
+        [self.tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"commenceGetRoomTimer" object:nil userInfo:nil];
+
+        // Hide the check-in button after successful check-in
+        NSMutableArray *rightItems = [NSMutableArray arrayWithArray:self.navigationItem.rightBarButtonItems];
+        [rightItems removeObject:_checkInButton];
+        self.navigationItem.rightBarButtonItems = rightItems;
+    }];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+
+    [alert addAction:checkInAction];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (void)fetchRoomsWithCompletion:(NetworkServiceRoomsCompletion)originalCompletion {
     NSString *userId = [_dataModel userId];
@@ -1134,6 +1156,26 @@
 
 - (void)mapManagerDidUpdatePinPickerEnabled:(BOOL)enabled {
     _pinPickerButton.enabled = enabled;
+}
+
+- (void)mapManagerDidRequestBlockUser:(NSString *)nickname {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Block User"
+                                                                   message:@"To block this user from seeing your location, you need to exit this room"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+
+    UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"Exit"
+                                                         style:UIAlertActionStyleDestructive
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+        [self postLeaveRequest];
+    }];
+
+    [alert addAction:cancelAction];
+    [alert addAction:exitAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {

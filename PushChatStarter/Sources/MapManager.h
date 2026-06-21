@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)mapManagerDidRequestReturnToAllWithMessage:(NSString *)message;
 - (void)mapManagerDidRequestToast:(NSString *)toastStr detailText:(NSString *)detailText;
 - (void)mapManagerDidUpdatePinPickerEnabled:(BOOL)enabled;
+- (void)mapManagerDidRequestBlockUser:(NSString *)nickname;
 @end
 
 @interface MapManager : NSObject <MKMapViewDelegate>
