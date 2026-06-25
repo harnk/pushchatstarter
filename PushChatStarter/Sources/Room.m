@@ -12,15 +12,16 @@
 
 @implementation Room
 
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString; {
-    
+-(id)initWithRoomName:(NSString *)rName andMemberUserId:(NSString *)mUserId andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString; {
+
     NSString *myPinImages[11] = {@"blue.png",@"cyan.png",@"darkgreen.png",@"gold.png",
         @"green.png",@"orange.png",@"pink.png",@"purple.png",@"red.png",@"yellow.png",
         @"cyangray.png"};
-    
+
     self = [super init];
     if (self) {
         self.roomName = rName;
+        self.memberUserId = mUserId;
         self.memberNickName = mNickName;
         self.memberLocation = mLocation;
         self.memberUpdateTime = mLocTime;

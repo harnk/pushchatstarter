@@ -100,7 +100,7 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
     NSDictionary *params = @{@"cmd":@"liveupdate",
                              @"user_id":userId,
                              @"location":location};
-    
+
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params
                                      success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
@@ -121,6 +121,94 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
                                              return;
                                          }
                                          if (completion) completion(jsonArray, nil);
+                                     } failure:^(NSError *error) {
+                                         if (completion) completion(nil, error);
+                                     }];
+}
+
+- (void)blockUserWithUserId:(NSString *)userId
+            blockedUserId:(NSString *)blockedUserId
+                completion:(NetworkServiceSimpleCompletion)completion {
+    NSDictionary *params = @{@"cmd":@"block",
+                             @"user_id":userId,
+                             @"blocked_user_id":blockedUserId};
+
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
+                                         if (httpResponse.statusCode != 200) {
+                                             NSError *error = [NSError errorWithDomain:NetworkServiceErrorDomain
+                                                                                  code:httpResponse.statusCode
+                                                                              userInfo:@{NSLocalizedDescriptionKey: @"Server returned non-200 status"}];
+                                             if (completion) completion(NO, error);
+                                             return;
+                                         }
+                                         if (completion) completion(YES, nil);
+                                     } failure:^(NSError *error) {
+                                         if (completion) completion(NO, error);
+                                     }];
+}
+
+- (void)unblockUserWithUserId:(NSString *)userId
+              blockedUserId:(NSString *)blockedUserId
+                  completion:(NetworkServiceSimpleCompletion)completion {
+    NSDictionary *params = @{@"cmd":@"unblock",
+                             @"user_id":userId,
+                             @"blocked_user_id":blockedUserId};
+
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
+                                         if (httpResponse.statusCode != 200) {
+                                             NSError *error = [NSError errorWithDomain:NetworkServiceErrorDomain
+                                                                                  code:httpResponse.statusCode
+                                                                              userInfo:@{NSLocalizedDescriptionKey: @"Server returned non-200 status"}];
+                                             if (completion) completion(NO, error);
+                                             return;
+                                         }
+                                         if (completion) completion(YES, nil);
+                                     } failure:^(NSError *error) {
+                                         if (completion) completion(NO, error);
+                                     }];
+}
+
+- (void)getBlockedUsersWithUserId:(NSString *)userId
+                       completion:(void (^)(NSArray<NSString *> *blockedUserIds, NSError *error))completion {
+    NSDictionary *params = @{@"cmd":@"getblocked",
+                             @"user_id":userId};
+
+    [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
+                                  parameters:params
+                                     success:^(id responseObject, NSHTTPURLResponse *httpResponse) {
+                                         if (httpResponse.statusCode != 200) {
+                                             NSError *error = [NSError errorWithDomain:NetworkServiceErrorDomain
+                                                                                  code:httpResponse.statusCode
+                                                                              userInfo:@{NSLocalizedDescriptionKey: @"Server returned non-200 status"}];
+                                             if (completion) completion(nil, error);
+                                             return;
+                                         }
+
+                                         NSError *e = nil;
+                                         NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                                         options:NSJSONReadingMutableContainers
+                                                                                           error:&e];
+                                         if (!jsonArray) {
+                                             NSError *parseError = [NSError errorWithDomain:NetworkServiceErrorDomain
+                                                                                       code:NetworkServiceErrorInvalidJSON
+                                                                                   userInfo:@{NSLocalizedDescriptionKey: e.localizedDescription ?: @"Invalid JSON"}];
+                                             if (completion) completion(nil, parseError);
+                                             return;
+                                         }
+
+                                         NSMutableArray *blockedUserIds = [NSMutableArray array];
+                                         for (NSDictionary *item in jsonArray) {
+                                             NSString *blockedUserId = [item objectForKey:@"blocked_user_id"];
+                                             if (blockedUserId) {
+                                                 [blockedUserIds addObject:blockedUserId];
+                                             }
+                                         }
+
+                                         if (completion) completion(blockedUserIds, nil);
                                      } failure:^(NSError *error) {
                                          if (completion) completion(nil, error);
                                      }];
@@ -171,22 +259,24 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
         NSLog(@"NetworkService Error parsing JSON: %@", e);
         return rooms;
     }
-    
+
     NSString *myPinImages[11] = {@"blue.png", @"cyan.png", @"darkgreen.png", @"gold.png",
         @"green.png", @"orange.png", @"pink.png", @"purple.png", @"red.png", @"yellow.png",
         @"cyangray.png"};
-    
+
     int i = 0;
     for (NSDictionary *item in jsonArray) {
         if (i > 10) { i = 0; }
+        NSString *mUserId = [item objectForKey:@"user_id"];
         NSString *mNickName = [item objectForKey:@"nickname"];
         NSString *mLocation = [item objectForKey:@"location"];
         NSString *gmtDateStr = [item objectForKey:@"loc_time"];
         NSString *useThisPinImage = myPinImages[i];
-        
+
         if (![mLocation isEqual:@"0.000000, 0.000000"]) {
             Room *roomObj = [[Room alloc] initWithRoomName:roomName
-                                         andMemberNickName:mNickName
+                                         andMemberUserId:mUserId
+                                        andMemberNickName:mNickName
                                         andMemberLocation:mLocation
                                         andMemberLocTime:gmtDateStr
                                        andMemberPinImage:useThisPinImage];
@@ -194,7 +284,7 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
         }
         i++;
     }
-    
+
     return rooms;
 }
 

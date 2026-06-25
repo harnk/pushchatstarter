@@ -141,20 +141,7 @@
 }
 
 - (void)setUpButtonBarItems {
-    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
-    _checkInButton = [[UIBarButtonItem alloc] initWithTitle:@"Check In" style:UIBarButtonItemStyleDone target:self action:@selector(checkInAction)];
-
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, _checkInButton, nil] animated:YES];
-
-    // Disable the problematic bluemenuitem button to fix layout constraints
-    if (self.pinPickerButton) {
-        self.pinPickerButton.enabled = NO;
-        // Hide it or replace with proper sized button
-        self.pinPickerButton.title = @"Pins";
-        self.pinPickerButton.enabled = YES;
-    }
+    [self updateNavigationBar];
 }
 
 -(void) returnToAllWithMessage:(NSString *)toastMsg {
@@ -167,8 +154,7 @@
         _mapManager.okToRecenterMap = YES;
     }
     self.title = [NSString stringWithFormat:@"[%@]", [_dataModel secretCode]];
-    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+    [self updateNavigationBar];
 }
 
 -(void) returnToAll {
@@ -561,8 +547,16 @@
     
 //    NSLog(@"picker row is:%ld", (long)row);
 
-    NSString *pickerPin = [[_roomArray objectAtIndex:row] memberPinImage];
-    NSString *dateString = [[_roomArray objectAtIndex:row] memberUpdateTime];
+    // Filter out blocked users for the picker
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
+    for (Room *item in _roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            [unblockedRoomArray addObject:item];
+        }
+    }
+
+    NSString *pickerPin = [[unblockedRoomArray objectAtIndex:row] memberPinImage];
+    NSString *dateString = [[unblockedRoomArray objectAtIndex:row] memberUpdateTime];
 
 
     if ([_mapManager getPinAgeInMinutes:dateString ] > 10000.0) {
@@ -573,7 +567,7 @@
     pickerImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"pk%@",pickerPin]];
 //    pickerImageView.image = [UIImage imageNamed:[[_roomArray objectAtIndex:row] memberPinImage]];
     pickerViewLabel.backgroundColor = [UIColor clearColor];
-    pickerViewLabel.text = [[_roomArray objectAtIndex:row] memberNickName];
+    pickerViewLabel.text = [[unblockedRoomArray objectAtIndex:row] memberNickName];
 //    pickerViewLabel.font = [UIFont fontWithName:@"ChalkboardSE-Regular" size:20];
 
     return pickerCustomView;
@@ -581,7 +575,13 @@
 
 // tell the picker how many rows are available for a given component
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    NSUInteger numRows = [_roomArray count];
+    // Filter out blocked users for the picker
+    NSUInteger numRows = 0;
+    for (Room *item in _roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            numRows++;
+        }
+    }
     return numRows;
 }
 
@@ -592,8 +592,15 @@
 
 // tell the picker the title for a given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    // Filter out blocked users for the picker
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
+    for (Room *item in _roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            [unblockedRoomArray addObject:item];
+        }
+    }
     NSString *title;
-    title = [[_roomArray objectAtIndex:row] memberNickName];
+    title = [[unblockedRoomArray objectAtIndex:row] memberNickName];
     return title;
 }
 
@@ -605,18 +612,26 @@
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component {
+    // Filter out blocked users for the picker
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
+    for (Room *item in _roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            [unblockedRoomArray addObject:item];
+        }
+    }
+
     // Handle the selection
-    [self multiLineToastMsg:@"Locating" detailText:[[_roomArray objectAtIndex:row] memberNickName]];
+    [self multiLineToastMsg:@"Locating" detailText:[[unblockedRoomArray objectAtIndex:row] memberNickName]];
     [myPickerView removeFromSuperview];
     _pickerIsUp = NO;
-    _mapManager.centerOnThisGuy = [[_roomArray objectAtIndex:row] memberNickName];
+    _mapManager.centerOnThisGuy = [[unblockedRoomArray objectAtIndex:row] memberNickName];
     _mapManager.okToRecenterMap = YES;
 //    NSLog(@"Centering on this guy: %@", _mapManager.centerOnThisGuy);
 
-//    self.title = [[_roomArray objectAtIndex:row] memberNickName];
+//    self.title = [[unblockedRoomArray objectAtIndex:row] memberNickName];
 // SCXTT TO BE ADDED
-//    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[_roomArray objectAtIndex:row] memberNickName]];
-    self.title = [NSString stringWithFormat:@"%@", [[_roomArray objectAtIndex:row] memberNickName]];
+//    self.title = [NSString stringWithFormat:@" %@ (xx mph)", [[unblockedRoomArray objectAtIndex:row] memberNickName]];
+    self.title = [NSString stringWithFormat:@"%@", [[unblockedRoomArray objectAtIndex:row] memberNickName]];
     
     
 //    UIButton *button =  [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1134,10 +1149,57 @@
 
 - (void)handleUserJoinedRoom {
     [self toastMsg:@"Joining room..."];
+    [self loadBlockedUsers];
     [self postGetRoomMessages];
     [self postGetRoom];
     [self.tableView reloadData];
     [_mapManager updateAnnotationsFromRoomArray:_roomArray];
+}
+
+- (void)loadBlockedUsers {
+    NSString *myUserId = [_dataModel userId];
+
+    [[NetworkService sharedService] getBlockedUsersWithUserId:myUserId
+                                                       completion:^(NSArray<NSString *> *blockedUserIds, NSError *error) {
+        if ([self isViewLoaded]) {
+            if (error) {
+                NSLog(@"Failed to load blocked users: %@", error.localizedDescription);
+                return;
+            }
+
+            // Update local cache
+            [[SingletonClass singleObject].blockedUserIds removeAllObjects];
+            [[SingletonClass singleObject].blockedUserIds addObjectsFromArray:blockedUserIds];
+            NSLog(@"Loaded %lu blocked users from server", (unsigned long)blockedUserIds.count);
+
+            // Update navigation bar
+            [self updateNavigationBar];
+        }
+    }];
+}
+
+- (void)updateNavigationBar {
+    BOOL hasBlockedUsers = [[SingletonClass singleObject].blockedUserIds count] > 0;
+
+    UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
+    UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
+    _checkInButton = [[UIBarButtonItem alloc] initWithTitle:@"Check In" style:UIBarButtonItemStyleDone target:self action:@selector(checkInAction)];
+
+    if (hasBlockedUsers) {
+        UIBarButtonItem *btnBlockedUsers = [[UIBarButtonItem alloc] initWithTitle:@"Blocked" style:UIBarButtonItemStylePlain target:self action:@selector(showBlockedUsers)];
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnBlockedUsers, nil] animated:YES];
+    } else {
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+    }
+
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, _checkInButton, nil] animated:YES];
+
+    // Disable the problematic bluemenuitem button to fix layout constraints
+    if (self.pinPickerButton) {
+        self.pinPickerButton.enabled = NO;
+        self.pinPickerButton.title = @"Pins";
+        self.pinPickerButton.enabled = YES;
+    }
 }
 
 - (void)handleReceivedNewMQTTData:(NSNotification *)notification {
@@ -1159,22 +1221,141 @@
 }
 
 - (void)mapManagerDidRequestBlockUser:(NSString *)nickname {
+    // Find the user_id for this nickname from the room array
+    Room *targetRoom = nil;
+    for (Room *room in _roomArray) {
+        if ([room.memberNickName isEqualToString:nickname]) {
+            targetRoom = room;
+            break;
+        }
+    }
+
+    if (!targetRoom) {
+        [self multiLineToastMsg:@"Error" detailText:@"User not found"];
+        return;
+    }
+
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Block User"
-                                                                   message:@"To block this user from seeing your location, you need to exit this room"
+                                                                   message:[NSString stringWithFormat:@"Block %@ from seeing your location?", nickname]
                                                             preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
 
-    UIAlertAction *exitAction = [UIAlertAction actionWithTitle:@"Exit"
+    UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block"
                                                          style:UIAlertActionStyleDestructive
                                                        handler:^(UIAlertAction * _Nonnull action) {
-        [self postLeaveRequest];
+        NSString *myUserId = [_dataModel userId];
+        [[NetworkService sharedService] blockUserWithUserId:myUserId
+                                              blockedUserId:targetRoom.memberUserId
+                                                  completion:^(BOOL success, NSError *error) {
+            if ([self isViewLoaded]) {
+                if (success) {
+                    [[SingletonClass singleObject] addBlockedUser:targetRoom.memberUserId];
+                    [self updateNavigationBar];
+                    [self multiLineToastMsg:@"User blocked" detailText:nickname];
+                    // Refresh the map to remove the blocked user
+                    [self postGetRoom];
+                } else {
+                    ShowErrorAlert(error.localizedDescription ?: @"Failed to block user");
+                }
+            }
+        }];
     }];
 
     [alert addAction:cancelAction];
-    [alert addAction:exitAction];
+    [alert addAction:blockAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)showBlockedUsers {
+    NSString *myUserId = [_dataModel userId];
+
+    [[NetworkService sharedService] getBlockedUsersWithUserId:myUserId
+                                                       completion:^(NSArray<NSString *> *blockedUserIds, NSError *error) {
+        if ([self isViewLoaded]) {
+            if (error) {
+                ShowErrorAlert(error.localizedDescription ?: @"Failed to load blocked users");
+                return;
+            }
+
+            if (blockedUserIds.count == 0) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Blocked Users"
+                                                                               message:@"No blocked users"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+                return;
+            }
+
+            // Update local cache
+            [[SingletonClass singleObject].blockedUserIds removeAllObjects];
+            [[SingletonClass singleObject].blockedUserIds addObjectsFromArray:blockedUserIds];
+
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Blocked Users"
+                                                                           message:@"Select a user to unblock"
+                                                                    preferredStyle:UIAlertControllerStyleActionSheet];
+
+            for (NSString *userId in blockedUserIds) {
+                // Find the nickname for this user_id from the room array
+                NSString *nickname = userId;
+                for (Room *room in _roomArray) {
+                    if ([room.memberUserId isEqualToString:userId]) {
+                        nickname = room.memberNickName;
+                        break;
+                    }
+                }
+
+                UIAlertAction *unblockAction = [UIAlertAction actionWithTitle:nickname
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * _Nonnull action) {
+                    [self confirmUnblockUser:userId nickname:nickname];
+                }];
+                [alert addAction:unblockAction];
+            }
+
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                                   style:UIAlertActionStyleCancel
+                                                                 handler:nil];
+            [alert addAction:cancelAction];
+
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
+}
+
+- (void)confirmUnblockUser:(NSString *)userId nickname:(NSString *)nickname {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Unblock User"
+                                                                   message:[NSString stringWithFormat:@"Unblock %@?", nickname]
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *unblockAction = [UIAlertAction actionWithTitle:@"Unblock"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+        NSString *myUserId = [_dataModel userId];
+        [[NetworkService sharedService] unblockUserWithUserId:myUserId
+                                              blockedUserId:userId
+                                                  completion:^(BOOL success, NSError *error) {
+            if ([self isViewLoaded]) {
+                if (success) {
+                    [[SingletonClass singleObject] removeBlockedUser:userId];
+                    [self updateNavigationBar];
+                    [self multiLineToastMsg:@"User unblocked" detailText:nickname];
+                    [self postGetRoom];
+                } else {
+                    ShowErrorAlert(error.localizedDescription ?: @"Failed to unblock user");
+                }
+            }
+        }];
+    }];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+
+    [alert addAction:unblockAction];
+    [alert addAction:cancelAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

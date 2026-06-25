@@ -26,7 +26,7 @@
 - (void)updateAnnotationsFromRoomArray:(NSArray<Room *> *)roomArray {
     CLLocationCoordinate2D location, southWest, northEast;
     MKCoordinateRegion region;
-    
+
     // seed the region values with my current location and to set the span later to include all the pins
     NSString *mLoc = [[SingletonClass singleObject] myLocStr];
     NSArray *strs = [mLoc componentsSeparatedByString:@","];
@@ -36,10 +36,18 @@
 
     NSLog(@"SMVC updatePointsOnMapWithAPIData");
     NSLog(@"SMVC My loc:%@", mLoc);
-    
+
     [self checkPinPickerButton:roomArray];
-    
+
+    // Filter out blocked users for immediate client-side feedback
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
     for (Room *item in roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            [unblockedRoomArray addObject:item];
+        }
+    }
+
+    for (Room *item in unblockedRoomArray) {
         BOOL whoFound = NO;
         if (![item.memberLocation isEqual:@"0.000000, 0.000000"]) {
             
@@ -237,7 +245,15 @@
 }
 
 - (void)checkPinPickerButton:(NSArray<Room *> *)roomArray {
-    if ([roomArray count] == 0) {
+    // Filter out blocked users for the picker
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
+    for (Room *item in roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:item.memberUserId]) {
+            [unblockedRoomArray addObject:item];
+        }
+    }
+
+    if ([unblockedRoomArray count] == 0) {
         if ([_delegate respondsToSelector:@selector(mapManagerDidUpdatePinPickerEnabled:)]){
             [_delegate mapManagerDidUpdatePinPickerEnabled:NO];
         }

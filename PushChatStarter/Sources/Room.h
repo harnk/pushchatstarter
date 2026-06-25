@@ -13,16 +13,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Room : NSObject
 
 @property (strong, nonatomic) NSString *roomName; // db active_users secret_code
+@property (strong, nonatomic) NSString *memberUserId;
 @property (strong, nonatomic) NSString *memberNickName;
 @property (strong, nonatomic) NSString *memberLocation;
 @property (strong, nonatomic) NSString *memberUpdateTime;
 @property (strong, nonatomic) NSString *memberPinImage;
 //@property (strong, nonatomic) NSDate *memberUpdateTime;
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Class Methods
 
--(id)initWithRoomName:(NSString *)rName andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString;
+-(id)initWithRoomName:(NSString *)rName andMemberUserId:(NSString *)mUserId andMemberNickName:(NSString *)mNickName andMemberLocation:(NSString *)mLocation andMemberLocTime:(NSString *)mLocTime andMemberPinImage:(NSString *)mPinImageString;
 -(NSInteger)getPinAgeInMinutes:(NSString *)gmtDateStr;
 
 @end

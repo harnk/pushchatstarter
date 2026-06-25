@@ -54,6 +54,20 @@ typedef void (^NetworkServiceLiveUpdateCompletion)(NSArray * _Nullable jsonArray
                     location:(NSString *)location
                   completion:(NetworkServiceLiveUpdateCompletion)completion;
 
+// Block a user (cmd: "block")
+- (void)blockUserWithUserId:(NSString *)userId
+            blockedUserId:(NSString *)blockedUserId
+                completion:(NetworkServiceSimpleCompletion)completion;
+
+// Unblock a user (cmd: "unblock")
+- (void)unblockUserWithUserId:(NSString *)userId
+              blockedUserId:(NSString *)blockedUserId
+                  completion:(NetworkServiceSimpleCompletion)completion;
+
+// Get list of blocked users (cmd: "getblocked")
+- (void)getBlockedUsersWithUserId:(NSString *)userId
+                       completion:(void (^)(NSArray<NSString *> *blockedUserIds, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

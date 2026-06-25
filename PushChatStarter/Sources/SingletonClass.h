@@ -16,5 +16,10 @@
 @property (nonatomic) BOOL notificationsAreDisabled;
 @property (nonatomic) BOOL imInARoom;
 @property BOOL mapIsActive;
+@property (nonatomic, strong) NSMutableSet *blockedUserIds;
+
+- (void)addBlockedUser:(NSString *)userId;
+- (void)removeBlockedUser:(NSString *)userId;
+- (BOOL)isUserBlocked:(NSString *)userId;
 
 @end
