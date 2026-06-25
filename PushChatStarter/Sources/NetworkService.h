@@ -57,6 +57,7 @@ typedef void (^NetworkServiceLiveUpdateCompletion)(NSArray * _Nullable jsonArray
 // Block a user (cmd: "block")
 - (void)blockUserWithUserId:(NSString *)userId
             blockedUserId:(NSString *)blockedUserId
+         blockedNickname:(NSString *)blockedNickname
                 completion:(NetworkServiceSimpleCompletion)completion;
 
 // Unblock a user (cmd: "unblock")
@@ -66,7 +67,7 @@ typedef void (^NetworkServiceLiveUpdateCompletion)(NSArray * _Nullable jsonArray
 
 // Get list of blocked users (cmd: "getblocked")
 - (void)getBlockedUsersWithUserId:(NSString *)userId
-                       completion:(void (^)(NSArray<NSString *> *blockedUserIds, NSError *error))completion;
+                       completion:(void (^)(NSArray<NSDictionary *> *blockedUsers, NSError *error))completion;
 
 @end
 

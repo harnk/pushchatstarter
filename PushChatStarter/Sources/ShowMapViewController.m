@@ -1160,7 +1160,7 @@
     NSString *myUserId = [_dataModel userId];
 
     [[NetworkService sharedService] getBlockedUsersWithUserId:myUserId
-                                                       completion:^(NSArray<NSString *> *blockedUserIds, NSError *error) {
+                                                       completion:^(NSArray<NSDictionary *> *blockedUsers, NSError *error) {
         if ([self isViewLoaded]) {
             if (error) {
                 NSLog(@"Failed to load blocked users: %@", error.localizedDescription);
@@ -1169,8 +1169,13 @@
 
             // Update local cache
             [[SingletonClass singleObject].blockedUserIds removeAllObjects];
-            [[SingletonClass singleObject].blockedUserIds addObjectsFromArray:blockedUserIds];
-            NSLog(@"Loaded %lu blocked users from server", (unsigned long)blockedUserIds.count);
+            for (NSDictionary *item in blockedUsers) {
+                NSString *userId = [item objectForKey:@"blocked_user_id"];
+                if (userId) {
+                    [[SingletonClass singleObject].blockedUserIds addObject:userId];
+                }
+            }
+            NSLog(@"Loaded %lu blocked users from server", (unsigned long)blockedUsers.count);
 
             // Update navigation bar
             [self updateNavigationBar];
@@ -1249,6 +1254,7 @@
         NSString *myUserId = [_dataModel userId];
         [[NetworkService sharedService] blockUserWithUserId:myUserId
                                               blockedUserId:targetRoom.memberUserId
+                                           blockedNickname:nickname
                                                   completion:^(BOOL success, NSError *error) {
             if ([self isViewLoaded]) {
                 if (success) {
@@ -1273,14 +1279,14 @@
     NSString *myUserId = [_dataModel userId];
 
     [[NetworkService sharedService] getBlockedUsersWithUserId:myUserId
-                                                       completion:^(NSArray<NSString *> *blockedUserIds, NSError *error) {
+                                                       completion:^(NSArray<NSDictionary *> *blockedUsers, NSError *error) {
         if ([self isViewLoaded]) {
             if (error) {
                 ShowErrorAlert(error.localizedDescription ?: @"Failed to load blocked users");
                 return;
             }
 
-            if (blockedUserIds.count == 0) {
+            if (blockedUsers.count == 0) {
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Blocked Users"
                                                                                message:@"No blocked users"
                                                                         preferredStyle:UIAlertControllerStyleAlert];
@@ -1291,21 +1297,20 @@
 
             // Update local cache
             [[SingletonClass singleObject].blockedUserIds removeAllObjects];
-            [[SingletonClass singleObject].blockedUserIds addObjectsFromArray:blockedUserIds];
+            for (NSDictionary *item in blockedUsers) {
+                NSString *userId = [item objectForKey:@"blocked_user_id"];
+                if (userId) {
+                    [[SingletonClass singleObject].blockedUserIds addObject:userId];
+                }
+            }
 
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Blocked Users"
                                                                            message:@"Select a user to unblock"
                                                                     preferredStyle:UIAlertControllerStyleActionSheet];
 
-            for (NSString *userId in blockedUserIds) {
-                // Find the nickname for this user_id from the room array
-                NSString *nickname = userId;
-                for (Room *room in _roomArray) {
-                    if ([room.memberUserId isEqualToString:userId]) {
-                        nickname = room.memberNickName;
-                        break;
-                    }
-                }
+            for (NSDictionary *item in blockedUsers) {
+                NSString *userId = [item objectForKey:@"blocked_user_id"];
+                NSString *nickname = [item objectForKey:@"blocked_nickname"] ?: userId;
 
                 UIAlertAction *unblockAction = [UIAlertAction actionWithTitle:nickname
                                                                        style:UIAlertActionStyleDefault

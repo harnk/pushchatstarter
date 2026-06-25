@@ -128,10 +128,12 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
 
 - (void)blockUserWithUserId:(NSString *)userId
             blockedUserId:(NSString *)blockedUserId
+         blockedNickname:(NSString *)blockedNickname
                 completion:(NetworkServiceSimpleCompletion)completion {
     NSDictionary *params = @{@"cmd":@"block",
                              @"user_id":userId,
-                             @"blocked_user_id":blockedUserId};
+                             @"blocked_user_id":blockedUserId,
+                             @"blocked_nickname":blockedNickname ?: @""};
 
     [[APIClient sharedClient] postToEndpoint:ServerPostPathURL
                                   parameters:params
@@ -173,7 +175,7 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
 }
 
 - (void)getBlockedUsersWithUserId:(NSString *)userId
-                       completion:(void (^)(NSArray<NSString *> *blockedUserIds, NSError *error))completion {
+                       completion:(void (^)(NSArray<NSDictionary *> *blockedUsers, NSError *error))completion {
     NSDictionary *params = @{@"cmd":@"getblocked",
                              @"user_id":userId};
 
@@ -200,15 +202,7 @@ NSString * const NetworkServiceErrorDomain = @"NetworkServiceErrorDomain";
                                              return;
                                          }
 
-                                         NSMutableArray *blockedUserIds = [NSMutableArray array];
-                                         for (NSDictionary *item in jsonArray) {
-                                             NSString *blockedUserId = [item objectForKey:@"blocked_user_id"];
-                                             if (blockedUserId) {
-                                                 [blockedUserIds addObject:blockedUserId];
-                                             }
-                                         }
-
-                                         if (completion) completion(blockedUserIds, nil);
+                                         if (completion) completion(jsonArray, nil);
                                      } failure:^(NSError *error) {
                                          if (completion) completion(nil, error);
                                      }];
