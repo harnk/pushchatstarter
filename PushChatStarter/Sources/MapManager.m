@@ -174,9 +174,11 @@
         } else {
             _mapViewSouthWest = [[CLLocation alloc] initWithLatitude:southWest.latitude longitude:southWest.longitude];
             _mapViewNorthEast = [[CLLocation alloc] initWithLatitude:northEast.latitude longitude:northEast.longitude];
-            
+
             CLLocationDistance meters = [_mapViewSouthWest distanceFromLocation:_mapViewNorthEast];
-            
+            // Add 50% padding to ensure all pins are visible
+            meters = meters * 1.5;
+
             region = _mapView.region;
             [self reCenterMap:region meters:meters];
         }

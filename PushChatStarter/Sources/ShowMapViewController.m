@@ -644,7 +644,8 @@
     
     
     UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(returnToAll)];
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnDone, nil] animated:YES];
+    UIBarButtonItem *btnBlockUsers = [[UIBarButtonItem alloc] initWithTitle:@"Block" style:UIBarButtonItemStylePlain target:self action:@selector(showBlockableUsers)];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnDone, btnBlockUsers, nil] animated:YES];
 
     CLLocationCoordinate2D location;
     MKCoordinateRegion region;
@@ -1189,12 +1190,13 @@
     UIBarButtonItem *btnSignOut = [[UIBarButtonItem alloc] initWithTitle:@"Exit Room" style:UIBarButtonItemStylePlain target:self action:@selector(exitAction)];
     UIBarButtonItem *btnRefresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(findAction)];
     _checkInButton = [[UIBarButtonItem alloc] initWithTitle:@"Check In" style:UIBarButtonItemStyleDone target:self action:@selector(checkInAction)];
+    UIBarButtonItem *btnBlockUsers = [[UIBarButtonItem alloc] initWithTitle:@"Block" style:UIBarButtonItemStylePlain target:self action:@selector(showBlockableUsers)];
 
     if (hasBlockedUsers) {
         UIBarButtonItem *btnBlockedUsers = [[UIBarButtonItem alloc] initWithTitle:@"Blocked" style:UIBarButtonItemStylePlain target:self action:@selector(showBlockedUsers)];
-        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnBlockedUsers, nil] animated:YES];
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnBlockedUsers, btnBlockUsers, nil] animated:YES];
     } else {
-        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, nil] animated:YES];
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnSignOut, btnBlockUsers, nil] animated:YES];
     }
 
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnRefresh, _checkInButton, nil] animated:YES];
@@ -1259,6 +1261,84 @@
             if ([self isViewLoaded]) {
                 if (success) {
                     [[SingletonClass singleObject] addBlockedUser:targetRoom.memberUserId];
+                    [self updateNavigationBar];
+                    [self multiLineToastMsg:@"User blocked" detailText:nickname];
+                    // Refresh the map to remove the blocked user
+                    [self postGetRoom];
+                } else {
+                    ShowErrorAlert(error.localizedDescription ?: @"Failed to block user");
+                }
+            }
+        }];
+    }];
+
+    [alert addAction:cancelAction];
+    [alert addAction:blockAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)showBlockableUsers {
+    // Filter out blocked users from the room array
+    NSMutableArray *unblockedRoomArray = [NSMutableArray array];
+    for (Room *room in _roomArray) {
+        if (![[SingletonClass singleObject] isUserBlocked:room.memberUserId]) {
+            [unblockedRoomArray addObject:room];
+        }
+    }
+
+    if (unblockedRoomArray.count == 0) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Block User"
+                                                                       message:@"No users available to block"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Block User"
+                                                                   message:@"Select a user to block"
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+
+    for (Room *room in unblockedRoomArray) {
+        NSString *nickname = room.memberNickName;
+        NSString *userId = room.memberUserId;
+
+        UIAlertAction *blockAction = [UIAlertAction actionWithTitle:nickname
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+            [self confirmBlockUser:userId nickname:nickname];
+        }];
+        [alert addAction:blockAction];
+    }
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    [alert addAction:cancelAction];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)confirmBlockUser:(NSString *)userId nickname:(NSString *)nickname {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Block User"
+                                                                   message:[NSString stringWithFormat:@"Block %@ from seeing your location?", nickname]
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+
+    UIAlertAction *blockAction = [UIAlertAction actionWithTitle:@"Block"
+                                                         style:UIAlertActionStyleDestructive
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+        NSString *myUserId = [_dataModel userId];
+        [[NetworkService sharedService] blockUserWithUserId:myUserId
+                                              blockedUserId:userId
+                                           blockedNickname:nickname
+                                                  completion:^(BOOL success, NSError *error) {
+            if ([self isViewLoaded]) {
+                if (success) {
+                    [[SingletonClass singleObject] addBlockedUser:userId];
                     [self updateNavigationBar];
                     [self multiLineToastMsg:@"User blocked" detailText:nickname];
                     // Refresh the map to remove the blocked user
